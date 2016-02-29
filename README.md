@@ -6,12 +6,9 @@ git commit -m "message"
 git push
  
 adicionar folder:
-cd folder
-git init
-git remote add origin https://gitlab.com/pedro14p/LFEA.git
-git add .
+git add folder
 git commit -m "message"
-git push -u origin master
+git push 
 
 
 editar um file:
