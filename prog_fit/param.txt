@@ -1,0 +1,7 @@
+opcao:grafico
+titulo:Taxa de coincidencias em funcao do angulo;Rc [s^-1]; Angulo [º]
+func:
+xmin:-20
+xmax:20
+ymin:0
+ymax:15
