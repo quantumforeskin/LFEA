@@ -1,0 +1,85 @@
+\documentclass[8pt,a4paper,portuguese]{extarticle}
+\usepackage{xcolor,colortbl}
+\usepackage{graphics}
+\newcommand{\mc}[2]{\multicolumn{#1}{c}{#2}}
+\definecolor{Gray}{gray}{0.85}
+\definecolor{LightGreen}{RGB}{213,253,216}
+\definecolor{LightRed}{RGB}{245,211,211}
+\definecolor{LightBlue}{RGB}{181,228,247}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{hhline}
+\usepackage{amssymb,amsmath}
+\usepackage[utf8]{inputenc}
+
+\newcolumntype{a}{>{\columncolor{Gray}}c}
+\newcolumntype{b}{>{\columncolor{white}}c}
+
+\begin{document} 
+\begin{table}[htbp]
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{c|c|c|c|c|c|c|c|c|c}
+\hline
+\hline
+\textbf{Pico} & \textbf{Centróide} & \textbf{FWHM} & \textbf{ROI NET} & \textbf{ROI INT} & \multicolumn{1}{c}{\textbf{Limite}} & \textbf{de Canal} & \multicolumn{1}{c}{\textbf{Limite}} & \textbf{de Tensão (V)} & \textbf{Corr. Ruído ($\boldsymbol\xi$)} \\ \hline \hline
+A – 511 keV & $ 298.58 \pm 0.06 $ & 25.84 & $ 30641 \pm 348 $ & $ 37173 \pm 193 $ & 260 & 336 & 2.3 & 2.84 & $ 0.82 \pm 0.01 $ \\ \hline
+A – 1274 keV & $ 704.28 \pm 0.24 $ & 44.48 & $ 6072 \pm 197 $ & $ 7524 \pm 87 $ & – & – & – & – & – \\ \hline
+B – 511 keV & $ 261.65 \pm 0.02 $ & 23.41 & $ 340484 \pm 1106 $ & $ 410146 \pm 640 $ & 224 & 292 & 1.96 & 2.34 & $ 0.83 \pm 0 $ \\ \hline
+B – 1274 keV & $ 617.29 \pm 0.07 $ & 40.17 & $ 60762 \pm 572 $ & $ 76410 \pm 276 $ & – & – & – & – & – \\ \hline \hline
+\end{tabular}}
+
+\label{}
+\end{table}
+
+
+\begin{table}[htbp]
+\begin{tabular}{c|c|c|c|c|c|c|c}
+\hline
+\hline
+\textbf{$\boldsymbol\theta$ (º)} & $\mathbf{t_{aquisicao} \, (s)}$ & $\mathbf{C_1}$ & $\mathbf{C_2}$ & $\mathbf{C_3}$ & $\mathbf{R_{c_1corr.} \, (s^{-1})}$ & $\mathbf{R_{c_2corr.} \, (s^{-1})}$ & $\mathbf{R_{c_3corr.} \, (s^{-1})}$ \\ \hline \hline
+-20 & 120 & $ 14942 \pm 122 $ & $ 13664 \pm 117 $ & $ 148 \pm 12 $ & $ 102.64 \pm 1.53 $ & $ 94.53 \pm 0.88 $ & $ 1.06 \pm 0.10 $ \\ \hline
+-15 & 90 & $ 11185 \pm 106 $ & $ 10271 \pm 101 $ & $ 727 \pm 27 $ & $ 102.44 \pm 1.60 $ & $ 94.74 \pm 1.00 $ & $ 7.91 \pm 0.30 $ \\ \hline
+-12 & 60 & $ 7448 \pm 86 $ & $ 6802 \pm 82 $ & $ 831 \pm 29 $ & $ 102.32 \pm 1.74 $ & $ 94.11 \pm 1.19 $ & $ 13.68 \pm 0.48 $ \\ \hline
+-10 & 30 & $ 3789 \pm 62 $ & $ 3678 \pm 61 $ & $ 658 \pm 26 $ & $ 104.11 \pm 2.13 $ & $ 101.78 \pm 1.72 $ & $ 21.75 \pm 0.86 $ \\ \hline
+-9 & 30 & $ 3659 \pm 60 $ & $ 3582 \pm 60 $ & $ 729 \pm 27 $ & $ 100.53 \pm 2.08 $ & $ 99.12 \pm 1.69 $ & $ 24.13 \pm 0.90 $ \\ \hline
+-8 & 30 & $ 3760 \pm 61 $ & $ 3647 \pm 60 $ & $ 811 \pm 28 $ & $ 103.31 \pm 2.12 $ & $ 100.92 \pm 1.71 $ & $ 26.85 \pm 0.95 $ \\ \hline
+-7 & 30 & $ 3843 \pm 62 $ & $ 3372 \pm 58 $ & $ 830 \pm 29 $ & $ 105.59 \pm 2.15 $ & $ 93.31 \pm 1.64 $ & $ 27.49 \pm 0.96 $ \\ \hline
+-6 & 30 & $ 3680 \pm 61 $ & $ 3411 \pm 58 $ & $ 905 \pm 30 $ & $ 101.11 \pm 2.09 $ & $ 94.39 \pm 1.65 $ & $ 30.00 \pm 1.00 $ \\ \hline
+-5 & 30 & $ 3594 \pm 60 $ & $ 3217 \pm 57 $ & $ 961 \pm 31 $ & $ 98.75 \pm 2.06 $ & $ 89.02 \pm 1.60 $ & $ 31.88 \pm 1.03 $ \\ \hline
+-4 & 30 & $ 3600 \pm 60 $ & $ 3354 \pm 58 $ & $ 995 \pm 32 $ & $ 98.91 \pm 2.06 $ & $ 92.81 \pm 1.64 $ & $ 33.01 \pm 1.05 $ \\ \hline
+-3 & 30 & $ 3764 \pm 61 $ & $ 3417 \pm 58 $ & $ 1146 \pm 34 $ & $ 103.42 \pm 2.12 $ & $ 94.55 \pm 1.65 $ & $ 38.03 \pm 1.13 $ \\ \hline
+-2 & 30 & $ 3680 \pm 61 $ & $ 3560 \pm 60 $ & $ 1243 \pm 35 $ & $ 101.11 \pm 2.09 $ & $ 98.51 \pm 1.69 $ & $ 41.26 \pm 1.18 $ \\ \hline
+-1 & 30 & $ 3630 \pm 60 $ & $ 3404 \pm 58 $ & $ 1199 \pm 35 $ & $ 99.74 \pm 2.07 $ & $ 94.19 \pm 1.65 $ & $ 39.80 \pm 1.15 $ \\ \hline
+0 & 30 & $ 3685 \pm 61 $ & $ 3364 \pm 58 $ & $ 1175 \pm 34 $ & $ 101.25 \pm 2.09 $ & $ 93.09 \pm 1.64 $ & $ 39.00 \pm 1.14 $ \\ \hline
+1 & 30 & $ 3617 \pm 60 $ & $ 3323 \pm 58 $ & $ 1115 \pm 33 $ & $ 99.38 \pm 2.07 $ & $ 91.95 \pm 1.63 $ & $ 37.01 \pm 1.11 $ \\ \hline
+2 & 30 & $ 3803 \pm 62 $ & $ 3343 \pm 58 $ & $ 1063 \pm 33 $ & $ 104.49 \pm 2.14 $ & $ 92.51 \pm 1.63 $ & $ 35.26 \pm 1.09 $ \\ \hline
+3 & 30 & $ 3599 \pm 60 $ & $ 3322 \pm 58 $ & $ 981 \pm 31 $ & $ 98.89 \pm 2.06 $ & $ 91.93 \pm 1.63 $ & $ 32.54 \pm 1.04 $ \\ \hline
+4 & 30 & $ 3661 \pm 61 $ & $ 3326 \pm 58 $ & $ 895 \pm 30 $ & $ 100.59 \pm 2.08 $ & $ 92.04 \pm 1.63 $ & $ 29.67 \pm 1.00 $ \\ \hline
+5 & 30 & $ 3725 \pm 61 $ & $ 3564 \pm 60 $ & $ 881 \pm 30 $ & $ 102.35 \pm 2.11 $ & $ 98.62 \pm 1.69 $ & $ 29.19 \pm 0.99 $ \\ \hline
+6 & 30 & $ 3677 \pm 61 $ & $ 3355 \pm 58 $ & $ 772 \pm 28 $ & $ 101.03 \pm 2.09 $ & $ 92.84 \pm 1.64 $ & $ 25.57 \pm 0.93 $ \\ \hline
+7 & 30 & $ 3754 \pm 61 $ & $ 3347 \pm 58 $ & $ 671 \pm 26 $ & $ 103.15 \pm 2.12 $ & $ 92.62 \pm 1.64 $ & $ 22.20 \pm 0.86 $ \\ \hline
+8 & 30 & $ 3693 \pm 61 $ & $ 3447 \pm 59 $ & $ 650 \pm 25 $ & $ 101.47 \pm 2.10 $ & $ 95.38 \pm 1.66 $ & $ 21.50 \pm 0.85 $ \\ \hline
+9 & 30 & $ 3641 \pm 60 $ & $ 3271 \pm 57 $ & $ 515 \pm 23 $ & $ 100.04 \pm 2.08 $ & $ 90.51 \pm 1.62 $ & $ 17.01 \pm 0.76 $ \\ \hline
+10 & 30 & $ 3637 \pm 60 $ & $ 3345 \pm 58 $ & $ 433 \pm 21 $ & $ 99.93 \pm 2.07 $ & $ 92.56 \pm 1.63 $ & $ 14.27 \pm 0.69 $ \\ \hline
+12 & 60 & $ 7375 \pm 86 $ & $ 6548 \pm 81 $ & $ 558 \pm 24 $ & $ 101.32 \pm 1.73 $ & $ 90.60 \pm 1.17 $ & $ 9.14 \pm 0.39 $ \\ \hline
+15 & 90 & $ 11059 \pm 105 $ & $ 10049 \pm 100 $ & $ 400 \pm 20 $ & $ 101.29 \pm 1.59 $ & $ 92.69 \pm 0.98 $ & $ 4.28 \pm 0.22 $ \\ \hline
+20 & 120 & $ 14704 \pm 121 $ & $ 13274 \pm 115 $ & $ 62 \pm 8 $ & $ 101.00 \pm 1.51 $ & $ 91.83 \pm 0.86 $ & $ 0.35 \pm 0.07 $ \\ \hline \hline
+\end{tabular}
+\label{}
+\end{table}
+
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{c|c|c|c}
+\hline
+\hline
+\multicolumn{1}{c|}{\textbf{1º Momento}} & \textbf{2º Momento} & \textbf{3º Momento} & \textbf{4º Momento} \\ \hline
+\multicolumn{1}{c|}{-0.65} & \multicolumn{1}{c|}{37.21} & \multicolumn{1}{c|}{4.72} & \multicolumn{1}{c}{3584.16} \\ \hline \hline
+– & \textbf{Desvio Padrão} & \textbf{Assimetria} & \textbf{Kurtosis} \\ \hline
+– & \multicolumn{1}{c|}{6.10} & \multicolumn{1}{c|}{0.021} & \multicolumn{1}{c}{2.59} \\ \hline \hline
+\end{tabular}
+\label{}
+\end{table}
+
+
+\end{document}
