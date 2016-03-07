@@ -1,0 +1,82 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage{bold-extra}
+%\usepackage{float}
+%\restylefloat{table}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[latin1]{inputenc}
+\usepackage[portuguese]{babel}
+%\usepackage[utf8]{inputenc}
+\usepackage[tmargin=0.5in,bmargin=0.5in, hmargin=0.3in ]{geometry}
+\usepackage{indentfirst}
+\usepackage{abstract}
+\usepackage{gensymb}
+\usepackage{amstext}
+\usepackage{makeidx}
+\usepackage{sectsty}
+\usepackage{booktabs}
+\usepackage{floatrow}
+\usepackage{hyperref}
+\floatsetup[table]{capposition=bottom}
+\sectionfont{\large\bf\selectfont}
+\subsectionfont{\hspace{0.1mm}\fontsize{10}{10}\selectfont}
+\renewcommand\thesubsection{\Alph{subsection}}
+%\renewcommand\thesection{\Roman{section}.}
+\long\def\/*#1*/{}
+\setlength{\skip\footins}{0.5cm}
+\usepackage{tabularx}
+\usepackage{changepage}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{mathtools}
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+
+\begin{document}
+
+\title{\bf\Large{\vspace{-19mm} PET: Tomografia por emissão de positrões}\vspace{-1.5mm}}
+\author{\small{Pedro Pereira 78****\/*\thanks{mail.do.man@tecnico.ulisboa.pt}*/ , Miguel Gonçalves\/*\thanks{o.mail.do.miguel@gmail.com}*/ , Clara Pereira 79156\/*\thanks{clara.pereira@tecnico.ulisboa.pt}*/} \vspace{-1mm}\\\small{(Grupo 3C)}\vspace{1mm}\\\textit{\small{Instituto Superior Técnico}}\vspace{-1mm}\\ \textit{\small{Mestrado Integrado em Engenharia Fí­sica Tecnológica}}\vspace{-1mm}
+\\ \textit{\small{Laboratório de Fí­sica Experimental Avançada}}\vspace{-1mm}
+\date{\small{Março de 2016}}
+}
+\maketitle
+
+\vspace{-8mm}
+\renewcommand{\abstractname}{Resumo}
+
+\begin{abstract}
+ \textit{ Neste trabalho estuda-se ...}
+
+
+\end{abstract}
+
+\begin{multicols}{2}
+
+\section{Introduç\~{a}o}
+\subsection{Esquema de decaimento $^{22} Na$}
+
+\section{Coincid\^{e}ncias $\gamma - \gamma$ e correlaç\~{o}es angulares}
+
+\subsection{Procedimento e Montagem}
+
+\subsection{Análise de resultados}
+\subsubsection{Espectro da fonte radioactiva $^{22} Na$}
+\subsubsection{Regulaç\~{a}o dos limiares inferior e superior dos analisadores monocanal}
+\subsubsection{Registo do fundo de coincid\^{e}ncias fortuitas}
+\subsubsection{Efici\^{e}ncia do fotopico}
+\subsubsection{Distribuiç\~{a}o angular dos dois $\gamma$ de aniquilaç\~{a}o}
+\section{Conclusões}
+
+
+\end{multicols}
+
+\bibliographystyle{hplain}
+\bibliography{biblio}
+
+\end{document}
