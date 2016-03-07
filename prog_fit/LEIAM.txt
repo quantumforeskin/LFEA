@@ -1,0 +1,16 @@
+
+O histograma dos rates das coincidencias corre-se normalmente com o main e o Opt.
+
+Criei o Opt2.C e o main2.C para dar para fazer 2 graficos e não foder o outro que já estava feito. Aquilo está só para 2 agora, depois fazemos mais geral quando tivermos tempo.
+
+Para fazer os graficos do A e do B num alterem na make o main.C e Opt.C para main2.C e Opt2.C, façam make e depois:
+
+./main2.exe param2.txt dadosA.txt dadosB.txt
+
+
+
+Os erros dos rates para os detetores A e B não se intersectam e provavelmente é porque a %
+de eventos sem ruído calculada com os ROI int e ROI net é diferente para os 2. Se repararem
+se não considerarmos essa correcção, os erros das contagens já se intersectam, por isso deve
+mesmo ser disso. Tentamos fazer outra medição na aula para ver se dão mais parecidos? É que ainda
+há aquela questão das eficiências darem muito altas com a correcção...
