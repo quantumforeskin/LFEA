@@ -27,7 +27,7 @@ int main(int argc, char **argv)
   
   cout << "Hail Eris! All hail Discordia!" << endl;
 
-  const int N = 2; //nr de ficheiros de dados que se pretende plotar 
+  const int N = 6; //nr de ficheiros de dados que se pretende plotar 
 
   if (argc != N+2)
   {
@@ -139,7 +139,7 @@ int main(int argc, char **argv)
 
     cout << "BATATA" << endl;
     vector<double> dim = Decisao[0]->Return_dims();
-    mg->Draw("AP");
+    mg->Draw("AC*");
     mg->GetXaxis()->SetLimits(dim[0],dim[1]);
     mg->SetMinimum(dim[2]);
     mg->SetMaximum(dim[3]);
