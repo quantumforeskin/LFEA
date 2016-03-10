@@ -27,7 +27,7 @@ int main(int argc, char **argv)
   
   cout << "Hail Eris! All hail Discordia!" << endl;
 
-  const int N = 6; //nr de ficheiros de dados que se pretende plotar 
+  const int N = 7; //nr de ficheiros de dados que se pretende plotar 
 
   if (argc != N+2)
   {

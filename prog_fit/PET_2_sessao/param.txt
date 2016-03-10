@@ -4,4 +4,4 @@ func:
 xmin:-30
 xmax:30
 ymin:0
-ymax:10
+ymax:12
