@@ -27,15 +27,25 @@ int main(int argc, char **argv)
   
   cout << "Hail Eris! All hail Discordia!" << endl;
 
-  if (argc != 4)
+  const int N = 2; //nr de ficheiros de dados que se pretende plotar 
+
+  if (argc != N+2)
   {
     cout << "Faltam argumentos. Ler manual." << endl;
     return 0;
   }
 
   const char* paramf = argv[1];
-  const char* dadosf = argv[2];
-  const char* dadosf2 = argv[3];
+
+  
+  const char* dados[N];
+
+  for(int i=0; i<N; i++){
+
+    dados[i] = argv[i+2];
+
+  }
+  
 
   ifstream det(paramf);
   if(det.is_open())
@@ -54,11 +64,19 @@ int main(int argc, char **argv)
   c1->GetFrame()->SetFillColor(21);
   c1->GetFrame()->SetBorderSize(12);
 
-  Opt *Decisao = new Opt(paramf, dadosf);
-  Opt *Decisao2 = new Opt(paramf, dadosf2);
-  vector<string> cenas = Decisao->Escolher(); 
-  TMultiGraph *mg = new TMultiGraph("mg","mg");
-  //mg->SetTitle(titulo.c_str());
+
+  
+  Opt *Decisao[N];
+
+  for(int i=0;i<N;i++){
+
+    Decisao[i] = new Opt(paramf,dados[i]);
+
+  }
+  
+
+  vector<string> cenas = Decisao[0]->Escolher(); //os paramf sao os msmos para todas por isso e indiferente
+  TMultiGraph *mg = new TMultiGraph("mg","mg"); 
   mg->SetTitle(cenas[1].c_str());
 
 
@@ -68,11 +86,19 @@ int main(int argc, char **argv)
 
   if (escolha == "grafico")
   {
-    TGraphErrors* gr = Decisao->Grafico(2);
-    TGraphErrors* gr2 = Decisao2->Grafico(4);
-    mg->Add(gr);
-    mg->Add(gr2);
+    
+    for(int i=0;i<N;i++){
+
+
+      TGraphErrors* gr = Decisao[i]->Grafico(i+2);//mando a cor como argumento
+      mg->Add(gr);
+
+
+    }
+    
   }
+
+  /*
   else if (escolha == "histograma")
   {
     TH1F* hist=Decisao->Histograma();
@@ -104,10 +130,15 @@ int main(int argc, char **argv)
 
   }
 
+
+  */
+
+
+
   if (escolha !="histograma") {
 
     cout << "BATATA" << endl;
-    vector<double> dim = Decisao->Return_dims();
+    vector<double> dim = Decisao[0]->Return_dims();
     mg->Draw("AP");
     mg->GetXaxis()->SetLimits(dim[0],dim[1]);
     mg->SetMinimum(dim[2]);
@@ -115,11 +146,20 @@ int main(int argc, char **argv)
     c1->Update();
   }
 
+  
+
   c1->Modified();
   c1->Print("plot.pdf");
   getchar();
 
   theApp.Terminate();
+
+  
+  for(int i=0;i<N;i++){
+    delete Decisao[i];
+    delete dados[i];
+  }
+  
 
   return 0;
 }
