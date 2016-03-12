@@ -19,6 +19,8 @@
 //Header's nao de ROOT
 #include <iostream>  //Porque razoes
 #include <fstream>  //Ficheiros
+#include <sstream> //para passar int para string
+#include <string>
 #include "Opt2.h"  //Classe que faz coisas
 
 using namespace std;
@@ -92,6 +94,13 @@ int main(int argc, char **argv)
 
 
       TGraphErrors* gr = Decisao[i]->Grafico(i+2);//mando a cor como argumento
+
+      int d = -3+i;
+      string d_string = static_cast<ostringstream*>( &(ostringstream() << d) )->str();
+      string title="d = " + d_string;
+      const char* c_title = title.c_str();
+      gr->SetTitle(c_title);
+
       mg->Add(gr);
 
 
@@ -105,6 +114,11 @@ int main(int argc, char **argv)
 
 
       TGraphPolar* gr = Decisao[i]->GraficoPolar(i+2);//mando a cor como argumento
+      int d = -3+i;
+      string d_string = static_cast<ostringstream*>( &(ostringstream() << d) )->str();
+      string title="d = " + d_string + "cm";
+      const char* c_title = title.c_str();
+      gr->SetTitle(c_title);
       mg->Add(gr);
 
 
@@ -162,7 +176,7 @@ int main(int argc, char **argv)
   }
 
   
-
+  c1->BuildLegend();
   c1->Modified();
   c1->Print("plot.pdf");
   getchar();
