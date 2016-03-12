@@ -1,0 +1,2 @@
+./main2.exe PET_2_sessao/param.txt PET_2_sessao/corr_-3.txt PET_2_sessao/corr_-2.txt PET_2_sessao/corr_-1.txt PET_2_sessao/corr_0.txt  PET_2_sessao/corr_1.txt PET_2_sessao/corr_2.txt PET_2_sessao/corr_3.txt 
+

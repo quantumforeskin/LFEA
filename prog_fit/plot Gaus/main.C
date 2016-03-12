@@ -7,7 +7,6 @@
 #include "TApplication.h"  //Janela
 #include "TAxis.h"  //Eixos dos graficos
 #include "TMultiGraph.h"  //Varios graficos sobrepostos
-#include "TGraphPolar.h" //grafico polar
 #include "TStyle.h"  //Caixa do fit
 #include "TF1.h"  //Funcoes
 #include "TPaveStats.h"  //Customizacao da caixa de parametros do fit
@@ -19,9 +18,7 @@
 //Header's nao de ROOT
 #include <iostream>  //Porque razoes
 #include <fstream>  //Ficheiros
-#include <sstream> //para passar int para string
-#include <string>
-#include "Opt2.h"  //Classe que faz coisas
+#include "Opt.h"  //Classe que faz coisas
 
 using namespace std;
 
@@ -30,25 +27,14 @@ int main(int argc, char **argv)
   
   cout << "Hail Eris! All hail Discordia!" << endl;
 
-  const int N = 7; //nr de ficheiros de dados que se pretende plotar 
-
-  if (argc != N+2)
+  if (argc != 3)
   {
     cout << "Faltam argumentos. Ler manual." << endl;
     return 0;
   }
 
   const char* paramf = argv[1];
-
-  
-  const char* dados[N];
-
-  for(int i=0; i<N; i++){
-
-    dados[i] = argv[i+2];
-
-  }
-  
+  const char* dadosf = argv[2];
 
   ifstream det(paramf);
   if(det.is_open())
@@ -67,19 +53,10 @@ int main(int argc, char **argv)
   c1->GetFrame()->SetFillColor(21);
   c1->GetFrame()->SetBorderSize(12);
 
-
-  
-  Opt *Decisao[N];
-
-  for(int i=0;i<N;i++){
-
-    Decisao[i] = new Opt(paramf,dados[i]);
-
-  }
-  
-
-  vector<string> cenas = Decisao[0]->Escolher(); //os paramf sao os msmos para todas por isso e indiferente
-  TMultiGraph *mg = new TMultiGraph("mg","mg"); 
+  Opt *Decisao = new Opt(paramf, dadosf);
+  vector<string> cenas = Decisao->Escolher(); 
+  TMultiGraph *mg = new TMultiGraph("mg","mg");
+  //mg->SetTitle(titulo.c_str());
   mg->SetTitle(cenas[1].c_str());
 
 
@@ -89,45 +66,9 @@ int main(int argc, char **argv)
 
   if (escolha == "grafico")
   {
-    
-    for(int i=0;i<N;i++){
-
-
-      TGraphErrors* gr = Decisao[i]->Grafico(i+2);//mando a cor como argumento
-
-      int d = -3+i;
-      string d_string = static_cast<ostringstream*>( &(ostringstream() << d) )->str();
-      string title="d = " + d_string;
-      const char* c_title = title.c_str();
-      gr->SetTitle(c_title);
-
-      mg->Add(gr);
-
-
-    }
-    
+    TGraphErrors* gr = Decisao->Grafico();
+    mg->Add(gr);
   }
-
-  else if (escolha == "polar"){
-
-    for(int i=0;i<N;i++){
-
-
-      TGraphPolar* gr = Decisao[i]->GraficoPolar(i+2);//mando a cor como argumento
-      int d = -3+i;
-      string d_string = static_cast<ostringstream*>( &(ostringstream() << d) )->str();
-      string title="d = " + d_string + "cm";
-      const char* c_title = title.c_str();
-      gr->SetTitle(c_title);
-      mg->Add(gr);
-
-
-    }
-
-
-  }
-
-  /*
   else if (escolha == "histograma")
   {
     TH1F* hist=Decisao->Histograma();
@@ -141,7 +82,7 @@ int main(int argc, char **argv)
   }
   else if (escolha == "fit")
   {
-    TGraphErrors* gr = Decisao->Grafico(1);
+    TGraphErrors* gr = Decisao->Grafico();
     gStyle->SetOptFit();
     for(int i=0; i<=19; i++)
       //cout << "erro de x:" << gr->GetErrorX(i) << " erro de y:" << gr->GetErrorY(i) << endl;
@@ -159,36 +100,22 @@ int main(int argc, char **argv)
 
   }
 
-
-  */
-
-
-
   if (escolha !="histograma") {
 
     cout << "BATATA" << endl;
-    vector<double> dim = Decisao[0]->Return_dims();
-    mg->Draw("AC*");
+    vector<double> dim = Decisao->Return_dims();
+    mg->Draw("AP");
     mg->GetXaxis()->SetLimits(dim[0],dim[1]);
     mg->SetMinimum(dim[2]);
     mg->SetMaximum(dim[3]);
     c1->Update();
   }
 
-  
-  c1->BuildLegend();
   c1->Modified();
   c1->Print("plot.pdf");
   getchar();
 
   theApp.Terminate();
-
-  
-  for(int i=0;i<N;i++){
-    delete Decisao[i];
-    delete dados[i];
-  }
-  
 
   return 0;
 }
