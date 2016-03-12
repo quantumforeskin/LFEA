@@ -1,4 +1,5 @@
 #include "TGraphErrors.h"
+#include "TGraphPolar.h" 
 #include "TH1F.h"
 #include "TNamed.h"
 #include <vector>
@@ -16,6 +17,7 @@ class Opt
     vector<string> Escolher();
     TH1F* Histograma();
     TGraphErrors* Ajuste(TGraphErrors* gr);
+    TGraphPolar* GraficoPolar(int);
     TGraphErrors* Grafico(int color);
     vector<double> Return_dims();
 

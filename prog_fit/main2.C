@@ -7,6 +7,7 @@
 #include "TApplication.h"  //Janela
 #include "TAxis.h"  //Eixos dos graficos
 #include "TMultiGraph.h"  //Varios graficos sobrepostos
+#include "TGraphPolar.h" //grafico polar
 #include "TStyle.h"  //Caixa do fit
 #include "TF1.h"  //Funcoes
 #include "TPaveStats.h"  //Customizacao da caixa de parametros do fit
@@ -96,6 +97,20 @@ int main(int argc, char **argv)
 
     }
     
+  }
+
+  else if (escolha == "polar"){
+
+    for(int i=0;i<N;i++){
+
+
+      TGraphPolar* gr = Decisao[i]->GraficoPolar(i+2);//mando a cor como argumento
+      mg->Add(gr);
+
+
+    }
+
+
   }
 
   /*

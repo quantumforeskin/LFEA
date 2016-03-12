@@ -50,7 +50,7 @@ Opt::Opt(string fparam, string fdados)
 vector<string> Opt::Escolher()
 {
   cout << opcao << endl;
-  if ( (opcao!="fit") & (opcao!="grafico") & (opcao!="histograma") )
+  if ( (opcao!="fit") & (opcao!="grafico") & (opcao!="histograma")&(opcao!="polar") )
   {
     opcao.clear();
     cout << "opcao invalida. adeus" << endl;
@@ -61,6 +61,23 @@ vector<string> Opt::Escolher()
   return mainsender;
 }
 
+
+TGraphPolar* Opt::GraficoPolar(int color){
+
+   Double_t rmin=0;
+   Double_t rmax=3.1415*2;
+   Double_t r[1000];
+   Double_t theta[1000];
+   TF1 * fp1 = new TF1("fplot","cos(x)",rmin,rmax);
+   for (Int_t ipt = 0; ipt < 1000; ipt++) {
+      r[ipt] = ipt*(rmax-rmin)/1000+rmin;
+      theta[ipt] = fp1->Eval(r[ipt]);
+   }
+   TGraphPolar * grP1 = new TGraphPolar(1000,r,theta);
+   grP1->SetLineColor(color);
+   return grP1;
+
+}
 
 //Faz um ajuste
 TGraphErrors* Opt::Ajuste(TGraphErrors* gr1)
@@ -94,6 +111,7 @@ TGraphErrors* Opt::Ajuste(TGraphErrors* gr1)
 TGraphErrors* Opt::Grafico(int color)
 {
   cout << "Eu quero fazer um grafico e ja consigo!" << endl;
+
   //int n=5;
   TGraphErrors *gr1 = new TGraphErrors(dados.c_str(),"%lg %lg %lg %lg");
   //Double_t x[n] = {1,2,3,4,5};
@@ -122,6 +140,24 @@ TGraphErrors* Opt::Grafico(int color)
 
 
   return gr1;
+
+  /*
+  ////////Grafico Polar//////////////////////////////
+   Double_t rmin=0;
+   Double_t rmax=3.1415*2;
+   Double_t r[1000];
+   Double_t theta[1000];
+   TF1 * fp1 = new TF1("fplot","cos(x)",rmin,rmax);
+   for (Int_t ipt = 0; ipt < 1000; ipt++) {
+      r[ipt] = ipt*(rmax-rmin)/1000+rmin;
+      theta[ipt] = fp1->Eval(r[ipt]);
+   }
+   TGraphPolar * grP1 = new TGraphPolar(1000,r,theta);
+   cout << dados.c_str(), "%lg " << endl;
+   grP1->SetLineColor(color);
+   return grP1;
+  */
+
 }
 
 
