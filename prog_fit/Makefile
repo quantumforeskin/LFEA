@@ -18,9 +18,9 @@ SRC2= fitter.C
 OBJ2= $(SRC2:.C=.o)
 EXE2= fitter.exe
 
-SRC3= main2.C Opt2.C
+SRC3= main.C Opt.C
 OBJ3= $(SRC3:.C=.o)
-EXE3= main2.exe
+EXE3= main.exe
 
 SRC4= calib.C
 OBJ4= $(SRC4:.C=.o)

@@ -97,7 +97,7 @@ int main(int argc, char **argv)
 
       int d = -3+i;
       string d_string = static_cast<ostringstream*>( &(ostringstream() << d) )->str();
-      string title="d = " + d_string;
+      string title="d = " + d_string + " cm";
       const char* c_title = title.c_str();
       gr->SetTitle(c_title);
 
