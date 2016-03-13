@@ -1,0 +1,16 @@
+-------> Na makefile, substituir
+
+		SRC3= main.C Opt.C
+		OBJ3= $(SRC3:.C=.o)
+		EXE3= main.exe
+
+	por 
+
+		SRC3= main2.C Opt2.C
+		OBJ3= $(SRC3:.C=.o)
+		EXE3= main2.exe
+
+-------> Correr:
+./main2.exe PET_2_sessao/param.txt PET_2_sessao/corr_-3.txt PET_2_sessao/corr_-2.txt PET_2_sessao/corr_-1.txt PET_2_sessao/corr_0.txt  PET_2_sessao/corr_1.txt PET_2_sessao/corr_2.txt PET_2_sessao/corr_3.txt 
+
+warning: manter a ordem dos dados a começar nos relativos a -3 porque a legenda tem em conta essa ordem
