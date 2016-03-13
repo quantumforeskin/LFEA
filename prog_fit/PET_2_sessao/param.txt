@@ -1,4 +1,4 @@
-opcao:grafico
+opcao:polar
 titulo:Taxa de coincidencias em funcao do angulo; #theta   [ ^{o} ] ; R_{c} [ s^{-1} ];
 func:
 xmin:-30
