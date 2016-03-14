@@ -1,5 +1,5 @@
 opcao:fit
-titulo:Taxa de coincidencias em funcao do angulo; Angulo   [ ^{o} ] ; R_{c} [ s^{-1} ];
+titulo: R_c \text{ normalizado em função de } \theta \text{ - ajuste a uma Gaussiana}; #theta  [ ^{o} ] ; \frac{R_{c}}{R_{max}} [ s^{-1} ];
 func:TMath::Gaus(x,[0],[1])
 xmin:-20
 xmax:20
