@@ -80,7 +80,7 @@ TGraphPolar* Opt::GraficoPolar(int color){
 }
 
 //Faz um ajuste
-TGraphErrors* Opt::Ajuste(TGraphErrors* gr1)
+void Opt::Ajuste(TGraphErrors* gr1)
 {
   cout << "Eu quero fazer um ajuste e jame deixam." << endl;
 
