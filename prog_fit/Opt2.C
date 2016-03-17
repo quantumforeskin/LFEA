@@ -64,23 +64,37 @@ vector<string> Opt::Escolher()
 
 TGraphPolar* Opt::GraficoPolar(int color){
 
-   Double_t rmin=0;
-   Double_t rmax=3.1415*2;
-   Double_t r[1000];
-   Double_t theta[1000];
-   TF1 * fp1 = new TF1("fplot","cos(x)",rmin,rmax);
-   for (Int_t ipt = 0; ipt < 1000; ipt++) {
-      r[ipt] = ipt*(rmax-rmin)/1000+rmin;
-      theta[ipt] = fp1->Eval(r[ipt]);
-   }
+
+	string data_array[37][4]; //You can make it dynamic to handle as much as the file has
+	ifstream in_file("PET_3_sessao/pos_1.txt", ios::binary);
+	//Check if the file is open
+	if(!in_file.is_open()){
+		cout << "File not opened..." << endl;
+	}
+	//read the file (two columns) to the array
+	for(int i=0; !in_file.eof(); i++){
+		in_file >> data_array[i][0];
+		in_file >> data_array[i][1];
+		in_file >> data_array[i][2];
+		in_file >> data_array[i][3];
+	}
+	
+	//Display the array
+	double col1[37];
+	double col2[37];
+	for(int i=0; i<37; i++){
+	  col1[i]=atof(data_array[i][0].c_str());
+	  col2[i]=atof(data_array[i][0].c_str());
+	  cout << data_array[i][0] << ", " << data_array[i][1] << '\n';
+	}
    TGraphPolar * grP1 = new TGraphPolar(1000,r,theta);
-   grP1->SetLineColor(color);
-   return grP1;
+    grP1->SetLineColor(color);
+    return grP1;
 
 }
 
 //Faz um ajuste
-TGraphErrors* Opt::Ajuste(TGraphErrors* gr1)
+void Opt::Ajuste(TGraphErrors* gr1)
 {
   cout << "Eu quero fazer um ajuste e jame deixam." << endl;
 

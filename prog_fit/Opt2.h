@@ -16,7 +16,7 @@ class Opt
     Opt(string, string);
     vector<string> Escolher();
     TH1F* Histograma();
-    TGraphErrors* Ajuste(TGraphErrors* gr);
+    void Ajuste(TGraphErrors* gr);
     TGraphPolar* GraficoPolar(int);
     TGraphErrors* Grafico(int color);
     vector<double> Return_dims();

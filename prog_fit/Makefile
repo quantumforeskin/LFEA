@@ -18,17 +18,17 @@ SRC2= fitter.C
 OBJ2= $(SRC2:.C=.o)
 EXE2= fitter.exe
 
-SRC3= main2.C Opt2.C
+SRC3= main.C Opt.C
 OBJ3= $(SRC3:.C=.o)
-EXE3= main2.exe
+EXE3= main.exe
 
-SRC4= calib.C
+SRC4= main2.C Opt2.C
 OBJ4= $(SRC4:.C=.o)
-EXE4= calib.exe
+EXE4= main2.exe
 
 
 ##Routines
-all: Fit
+all: main main2
 
 ## .o generator
 %.o:%.C 
@@ -42,11 +42,11 @@ Fitter: $(OBJ2)
 	$(CC) -o $(EXE2) $(OBJ2) $(LDFLAGS) 
 	@echo Hard Drive copied, sent and deleted. Shutting down...
 
-Fit: $(OBJ3)
+main: $(OBJ3)
 	$(CC) -o $(EXE3) $(OBJ3) $(LDFLAGS) 
 	@echo Hard Drive copied, sent and deleted. Shutting down...
 
-Teste: $(OBJ4)
+main2: $(OBJ4)
 	$(CC) -o $(EXE4) $(OBJ4) $(LDFLAGS) 
 	@echo Hard Drive copied, sent and deleted. Shutting down...
 
@@ -54,4 +54,4 @@ Teste: $(OBJ4)
 
 
 clean:
-	rm -rf *~ *.o $(EXE2)
+	rm -rf *~ *.o $(EXE2) $(EXE3) $(EXE4)
