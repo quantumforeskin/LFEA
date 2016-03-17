@@ -2,6 +2,7 @@
 #include "fstream"
 #include "TF1.h"
 #include "TStyle.h"
+#include "TMath.h"
 #include <cstdlib>
 #include <iostream>
 
@@ -66,7 +67,7 @@ TGraphPolar* Opt::GraficoPolar(int color){
 
 
 	string data_array[37][4]; //You can make it dynamic to handle as much as the file has
-	ifstream in_file("PET_3_sessao/pos_1.txt", ios::binary);
+	ifstream in_file(dados.c_str(), ios::binary);
 	//Check if the file is open
 	if(!in_file.is_open()){
 		cout << "File not opened..." << endl;
@@ -80,15 +81,25 @@ TGraphPolar* Opt::GraficoPolar(int color){
 	}
 	
 	//Display the array
-	double col1[37];
-	double col2[37];
-	for(int i=0; i<37; i++){
-	  col1[i]=atof(data_array[i][0].c_str());
-	  col2[i]=atof(data_array[i][0].c_str());
-	  cout << data_array[i][0] << ", " << data_array[i][1] << '\n';
+	static int N=37;
+	double col1[N];
+	double col2[N];
+	double col3[N];
+	double col4[N];
+	for(Int_t i=0; i<N; i++){
+	  col1[i]=atof(data_array[i][0].c_str())*TMath::Pi()/180;
+	  col2[i]=atof(data_array[i][1].c_str());
+	  //<< col1[i] << "  " << col2[i] << endl;
+	  col3[i]=atof(data_array[i][2].c_str())*TMath::Pi()/180;
+	  col4[i]=atof(data_array[i][3].c_str());
 	}
-   TGraphPolar * grP1 = new TGraphPolar(1000,r,theta);
-    grP1->SetLineColor(color);
+    TGraphPolar * grP1 = new TGraphPolar(37,col1,col2,col3,col4);
+    grP1->SetLineColor(2);
+    grP1->SetMarkerStyle(20);
+    grP1->SetMarkerSize(1.);
+    grP1->SetMarkerColor(color+2);
+    grP1->SetLineWidth(2);
+    grP1->SetMaximum(10);
     return grP1;
 
 }

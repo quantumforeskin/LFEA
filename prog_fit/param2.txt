@@ -1,4 +1,4 @@
-opcao:grafico
+opcao:polar
 titulo:Taxa de coincidencias em funcao do angulo;Rc [s^-1]; Angulo [º]
 func:
 xmin:-20
