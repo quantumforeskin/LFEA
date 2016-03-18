@@ -166,17 +166,19 @@ int main(int argc, char **argv)
 
   if (escolha !="histograma") {
 
-    cout << "BATATA" << endl;
-    vector<double> dim = Decisao[0]->Return_dims();
-    mg->Draw("AC*");
-    mg->GetXaxis()->SetLimits(dim[0],dim[1]);
-    mg->SetMinimum(dim[2]);
-    mg->SetMaximum(dim[3]);
+    mg->Draw("PE");
+
+    if(escolha!="polar"){
+      vector<double> dim = Decisao[0]->Return_dims();
+      mg->GetXaxis()->SetLimits(dim[0],dim[1]);
+      mg->SetMinimum(dim[2]);
+      mg->SetMaximum(dim[3]);
+    }
     c1->Update();
   }
 
   
-  c1->BuildLegend();
+  //c1->BuildLegend();
   c1->Modified();
   c1->Print("plot.pdf");
   getchar();
