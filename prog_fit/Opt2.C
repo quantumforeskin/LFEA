@@ -95,8 +95,8 @@ TGraphPolar* Opt::GraficoPolar(int color){
 	}
     TGraphPolar * grP1 = new TGraphPolar(37,col1,col2,col3,col4);
     grP1->SetLineColor(2);
-    grP1->SetMarkerStyle(20);
-    grP1->SetMarkerSize(1.);
+    grP1->SetMarkerStyle(8);
+    grP1->SetMarkerSize(0.45);
     grP1->SetMarkerColor(color+2);
     grP1->SetLineWidth(2);
     grP1->SetMaximum(10);

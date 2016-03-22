@@ -116,7 +116,7 @@ int main(int argc, char **argv)
       TGraphPolar* gr = Decisao[i]->GraficoPolar(i+2);//mando a cor como argumento
       int d = -3+i;
       string d_string = static_cast<ostringstream*>( &(ostringstream() << d) )->str();
-      string title="d = " + d_string + "cm";
+      string title= " ";//"d = " + d_string + "cm";
       const char* c_title = title.c_str();
       gr->SetTitle(c_title);
       mg->Add(gr);
