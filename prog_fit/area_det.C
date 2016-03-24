@@ -17,7 +17,7 @@ int main(){
 
   //Recta 1
   double a1u=to_rad(20);
-  double a2u=to_rad(30);
+  double a2u=to_rad(50);
 
   //declive da reta  y = mu*x + c
   double mu=(r2*sin(a2u) - r1*sin(a1u))/(r2*cos(a2u) - r1*cos(a1u));

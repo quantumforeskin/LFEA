@@ -92,10 +92,10 @@ int main(int argc, char **argv)
     
     for(int i=0;i<N;i++){
 
-
       TGraphErrors* gr = Decisao[i]->Grafico(i+2);//mando a cor como argumento
+      
 
-      int d = -3+i;
+      float d = -3.81+i*1.27;
       string d_string = static_cast<ostringstream*>( &(ostringstream() << d) )->str();
       string title="d = " + d_string + " cm";
       const char* c_title = title.c_str();
@@ -114,11 +114,26 @@ int main(int argc, char **argv)
 
 
       TGraphPolar* gr = Decisao[i]->GraficoPolar(i+2);//mando a cor como argumento
-      int d = -3+i;
+      float d = -3.81+i*1.27;
       string d_string = static_cast<ostringstream*>( &(ostringstream() << d) )->str();
       string title= " ";//"d = " + d_string + "cm";
       const char* c_title = title.c_str();
       gr->SetTitle(c_title);
+      mg->Add(gr);
+
+
+    }
+
+
+  }
+
+
+  else if (escolha == "polar_area"){
+
+    for(int i=0;i<N;i++){
+
+
+      TGraphPolar* gr = Decisao[i]->GraficoPolarArea(i+2);//mando a cor como argumento
       mg->Add(gr);
 
 
@@ -166,19 +181,21 @@ int main(int argc, char **argv)
 
   if (escolha !="histograma") {
 
+
+    //mg->Draw("PE"); // a opcao C* une os pontos com linhas atraves de interpolacao
     mg->Draw("PE");
 
-    if(escolha!="polar"){
+    if(escolha!="polar" && escolha!="polar_area"){
       vector<double> dim = Decisao[0]->Return_dims();
       mg->GetXaxis()->SetLimits(dim[0],dim[1]);
       mg->SetMinimum(dim[2]);
       mg->SetMaximum(dim[3]);
+
+      c1->BuildLegend();//Legenda
     }
     c1->Update();
   }
 
-  
-  //c1->BuildLegend();
   c1->Modified();
   c1->Print("plot.pdf");
   getchar();

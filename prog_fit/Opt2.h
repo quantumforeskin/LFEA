@@ -18,6 +18,7 @@ class Opt
     TH1F* Histograma();
     void Ajuste(TGraphErrors* gr);
     TGraphPolar* GraficoPolar(int);
+    TGraphPolar* GraficoPolarArea(int);
     TGraphErrors* Grafico(int color);
     vector<double> Return_dims();
 

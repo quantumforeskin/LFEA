@@ -9,6 +9,15 @@
 using namespace std;
 //merdas
 
+
+
+double to_rad(double a){
+
+  return a*3.14159265359/180;
+
+}//da jeito
+
+
 //Construtor
 Opt::Opt(string fparam, string fdados)
 {
@@ -51,7 +60,7 @@ Opt::Opt(string fparam, string fdados)
 vector<string> Opt::Escolher()
 {
   cout << opcao << endl;
-  if ( (opcao!="fit") & (opcao!="grafico") & (opcao!="histograma")&(opcao!="polar") )
+  if ( (opcao!="fit") & (opcao!="grafico") & (opcao!="histograma")&(opcao!="polar") & (opcao!="polar_area") )
   {
     opcao.clear();
     cout << "opcao invalida. adeus" << endl;
@@ -81,7 +90,7 @@ TGraphPolar* Opt::GraficoPolar(int color){
 	}
 	
 	//Display the array
-	static int N=37;
+	static int N=36;
 	double col1[N];
 	double col2[N];
 	double col3[N];
@@ -93,10 +102,10 @@ TGraphPolar* Opt::GraficoPolar(int color){
 	  col3[i]=atof(data_array[i][2].c_str())*TMath::Pi()/180;
 	  col4[i]=atof(data_array[i][3].c_str());
 	}
-    TGraphPolar * grP1 = new TGraphPolar(37,col1,col2,col3,col4);
+    TGraphPolar * grP1 = new TGraphPolar(N,col1,col2,col3,col4);
     grP1->SetLineColor(2);
-    grP1->SetMarkerStyle(8);
-    grP1->SetMarkerSize(0.45);
+    grP1->SetMarkerStyle(20);
+    grP1->SetMarkerSize(0.75);
     grP1->SetMarkerColor(color+2);
     grP1->SetLineWidth(2);
     grP1->SetMaximum(10);
@@ -235,4 +244,58 @@ TH1F* Opt::Histograma()
 vector<double> Opt::Return_dims()
 {
   return dim;
+}
+
+
+TGraphPolar* Opt::GraficoPolarArea(int color){
+
+  double r1=2.54;
+  double r2=3.81;
+
+  //Recta 1
+  double a1u=to_rad(10);
+  double a2u=to_rad(30);
+
+  //declive da reta  y = mu*x + c
+  double mu=(r2*sin(a2u) - r1*sin(a1u))/(r2*cos(a2u) - r1*cos(a1u));
+  double cu = r2*sin(a2u) - mu*r2*cos(a2u);
+
+  //Para coord polares
+  double x0 = -cu/mu; //interseccao da reta com y=0
+  double theta_x0 = atan(mu);//angulo da reta em relacao ao ponto x0
+
+  static int N=10;
+  Double_t theta[N];
+  Double_t r[N];
+  Double_t etheta[N];
+  Double_t er[N];
+
+  theta[0]=0;
+  r[0]=x0;
+  etheta[0]=0;
+  r[0]=x0/10;
+
+  int i=1;
+  double dx=0;
+  while(i<N){
+    dx+=0.1;
+    double x = x0+dx;
+    double y = mu*x+cu;
+    double theta_0 = atan(y/(x0+y/tan(theta_x0))); //angulo da reta em relacao a origem do ref polar
+    double r_0 = y/sin(theta_0);
+    theta[i] = theta_0;
+    etheta[i] = theta_0/10;
+    cout << theta[i] << endl;
+    r[i] = r_0;
+    er[i] = r_0/100;
+    i++;
+  }
+  TGraphPolar * grP1 = new TGraphPolar(N,theta,r,etheta,er);
+    grP1->SetLineColor(2);
+    grP1->SetMarkerStyle(8);
+    grP1->SetMarkerSize(0.45);
+    grP1->SetMarkerColor(color+2);
+    grP1->SetLineWidth(2);
+    return grP1;
+
 }
