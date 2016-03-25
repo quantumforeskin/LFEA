@@ -1,7 +1,0 @@
-opcao:grafico
-titulo: \text{Taxa de coincidencias em função da distância no eixo} ; \text{Distância y}; R_{c} [ s^{-1} ]
-func:TMath::Gaus(x,[0],[1])
-xmin:-3.5
-xmax:3.5
-ymin:5
-ymax:12
