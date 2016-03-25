@@ -71,7 +71,7 @@ void Opt::Ajuste(TGraphErrors* gr1)
   f1->SetLineColor(kBlue);
   f1->SetLineWidth(2);
 
-  f1->SetParameters(-0.001,-0.5);
+  //f1->SetParameters(-0.001,-0.5);
   //f1->SetParameters(1,0.001,8000,118.,10);
   //f1->SetParLimits(4,0,100000);
   //f1->SetParLimits(3,95.,110.);
@@ -79,7 +79,8 @@ void Opt::Ajuste(TGraphErrors* gr1)
   gr1->Fit("f1","MF");
 
   gr1->SetMarkerColor(kRed);
-  gr1->SetMarkerStyle(7);
+  gr1->SetMarkerStyle(34);
+  gr1->SetMarkerSize(2);
   gr1->SetLineColor(kBlack);
 
   cout << gr1->GetErrorY(0) << " " << gr1->GetErrorY(1) << " " << gr1->GetErrorY(2) << " " << gr1->GetErrorY(3) << endl;
