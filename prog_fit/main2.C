@@ -30,8 +30,8 @@ int main(int argc, char **argv)
   
   cout << "Hail Eris! All hail Discordia!" << endl;
 
-  const int N = 1; //nr de ficheiros de dados que se pretende plotar 
-  //const int N = 7;
+  //const int N = 1; //nr de ficheiros de dados que se pretende plotar 
+  const int N = 7;
   if (argc != N+2)
   {
     cout << "Faltam argumentos. Ler manual." << endl;
