@@ -182,8 +182,8 @@ int main(int argc, char **argv)
   if (escolha !="histograma") {
 
 
-    //mg->Draw("PE"); // a opcao C* une os pontos com linhas atraves de interpolacao
-    mg->Draw("AC*");
+    //mg->Draw("PE"); // para plot polar
+    mg->Draw("AC*"); //para plot normal
 
     if(escolha!="polar" && escolha!="polar_area"){
       vector<double> dim = Decisao[0]->Return_dims();
