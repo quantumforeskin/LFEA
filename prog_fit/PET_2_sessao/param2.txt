@@ -1,0 +1,7 @@
+opcao:grafico
+titulo: \text{Taxa de coincidencias em função da distância no eixo} ; \text{Distância y (cm)}; R_{c} [ s^{-1} ]
+func:
+xmin:-4.1
+xmax:4.1
+ymin:5
+ymax:12
