@@ -1,7 +1,0 @@
-opcao:grafico
-titulo:Taxa de coincidencias em funcao do angulo; #varphi   [ ^{o} ] ; R_{c} [ s^{-1} ];
-func:
-xmin:0
-xmax:360
-ymin:0
-ymax:12
