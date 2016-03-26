@@ -79,7 +79,7 @@ void Opt::Ajuste(TGraphErrors* gr1)
   gr1->Fit("f1","MF");
 
   gr1->SetMarkerColor(kRed);
-  gr1->SetMarkerStyle(34);
+  gr1->SetMarkerStyle(1);
   gr1->SetMarkerSize(2);
   gr1->SetLineColor(kBlack);
 
