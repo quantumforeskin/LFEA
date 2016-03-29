@@ -1,7 +1,7 @@
-opcao:polar
+opcao:grafico
 titulo:Taxa de coincidencias em funcao do angulo;Rc [s^-1]; Angulo [º]
 func:
-xmin:-20
-xmax:20
+xmin:0
+xmax:360
 ymin:0
-ymax:40
+ymax:12

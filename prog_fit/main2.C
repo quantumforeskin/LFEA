@@ -31,7 +31,7 @@ int main(int argc, char **argv)
   cout << "Hail Eris! All hail Discordia!" << endl;
 
   //const int N = 1; //nr de ficheiros de dados que se pretende plotar 
-  const int N = 7;
+  const int N = 1;
   if (argc != N+2)
   {
     cout << "Faltam argumentos. Ler manual." << endl;
@@ -92,12 +92,16 @@ int main(int argc, char **argv)
     
     for(int i=0;i<N;i++){
 
-      TGraphErrors* gr = Decisao[i]->Grafico(i+2);//mando a cor como argumento
-      
+      TGraphErrors* gr;
+      if(i!=3){
+	gr = Decisao[i]->Grafico(i+2);//mando a cor como argumento
+      }else{
+	gr = Decisao[i]->Grafico(12);
+      }
 
       float d = -3.81+i*1.27;
       string d_string = static_cast<ostringstream*>( &(ostringstream() << d) )->str();
-      string title="d = " + d_string + " cm";
+      string title="x = " + d_string + " cm";
       const char* c_title = title.c_str();
       gr->SetTitle(c_title);
 
