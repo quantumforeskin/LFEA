@@ -87,6 +87,15 @@ int main(int argc, char **argv)
   string escolha = cenas[0];  
   cout << escolha << endl;
 
+  //Para por aqui os titulos que quisermos dar
+  string title[N];
+  //title[0]="Fonte 1 - x = 3.81cm";
+  //title[1]="Fonte 2 - x = 2.54cm";
+
+  for(int i=0;i<N;i++)
+    title[i] = "POE UM TITULO!!!";
+
+
   if (escolha == "grafico")
   {
     
@@ -99,10 +108,15 @@ int main(int argc, char **argv)
 	gr = Decisao[i]->Grafico(12);
       }
 
-      float d = -3.81+i*1.27;
-      string d_string = static_cast<ostringstream*>( &(ostringstream() << d) )->str();
-      string title="x = " + d_string + " cm";
-      const char* c_title = title.c_str();
+      //Para criar legenda automaticamente com as varias posicoes 
+
+      //float d = -3.81+i*1.27;
+      //string d_string = static_cast<ostringstream*>( &(ostringstream() << d) )->str();
+      //string title="x = " + d_string + " cm";
+      //const char* c_title = title.c_str();
+
+
+      const char* c_title = title[i].c_str();
       gr->SetTitle(c_title);
 
       mg->Add(gr);
