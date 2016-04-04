@@ -89,11 +89,15 @@ int main(int argc, char **argv)
 
   //Para por aqui os titulos que quisermos dar
   string title[N];
-  //title[0]="Fonte 1 - x = 3.81cm";
-  //title[1]="Fonte 2 - x = 2.54cm";
-
-  for(int i=0;i<N;i++)
-    title[i] = "POE UM TITULO!!!";
+  title[0]="x = -3.81cm";
+  title[1]="x = -2.54cm";
+  title[2]="x = -1.27cm";
+  title[3]="x = 0 cm";
+  title[4]="x = 1.27 cm";
+  title[5]="x = 2.54cm";
+  title[6]="x = 3.81 cm";
+  //for(int i=0;i<N;i++)
+  //title[i] = "POE UM TITULO!!!";
 
 
   if (escolha == "grafico")
