@@ -11,8 +11,8 @@ void histo_aqui()
 
   //SINOGRAMA
   
-  TCanvas c;
-  //c = new TCanvas("c","c",700,700);
+  //TCanvas c;
+  c = new TCanvas("c","c",700,700);
   
   int phi[24] = {0,15,30,45,60,75,90,105,120,135,150,165,180,195,210,225,240,255,270,285,300,315,330,345};
   int the[13] = {-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30};
@@ -57,20 +57,31 @@ void histo_aqui()
     TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue,NCont);
     gStyle->SetNumberContours(NCont);
   
+    //distancia da fonte aos detectores
+    double d=20.8;
+    double d1AB=3.81; //fonte forte
+    double d2AB=2.54; // fonte fraca
 
     //Fonte forte
-    TF1 *f = new TF1("a","180/TMath::Pi()*TMath::ACos(2.7297*TMath::Tan(x*TMath::Pi()/180))",-20.32,20.32);
-    TF1 *f2 = new TF1("b","360-180/TMath::Pi()*TMath::ACos(2.7297*TMath::Tan(x*TMath::Pi()/180))",-20.32,20.32);
+    //TF1 *f = new TF1("a","180/TMath::Pi()*TMath::ACos(2.7297*TMath::Tan(x*TMath::Pi()/180))",-20.32,20.32);
+    //TF1 *f2 = new TF1("b","360-180/TMath::Pi()*TMath::ACos(2.7297*TMath::Tan(x*TMath::Pi()/180))",-20.32,20.32);
+
+
+    double limits1 = 20.969;
+    TF1 *f = new TF1("a","180/TMath::Pi()*TMath::ACos(20.8/3.81*TMath::Sin(x*TMath::Pi()/180)/(1+TMath::Cos(x*TMath::Pi()/180)))",-limits1,limits1);
+    TF1 *f2 = new TF1("b","360-180/TMath::Pi()*TMath::ACos(20.8/3.81*TMath::Sin(x*TMath::Pi()/180)/(1+TMath::Cos(x*TMath::Pi()/180)))",-limits1,limits1);
     f->SetLineColor(1);
     f2->SetLineColor(1);
 
     //Fonte fraca
-    double limit = 13.863;
-    TF1 *ff = new TF1("aa","-90+180/TMath::Pi()*TMath::ACos(4.0945*TMath::Tan(x*TMath::Pi()/180))",-limit,limit);
-    TF1 *ff2 = new TF1("bb","360-90+180/TMath::Pi()*TMath::ACos(4.0945*TMath::Tan(x*TMath::Pi()/180))",-limit,limit);
-    TF1 *ff3 = new TF1("bb","360-90-180/TMath::Pi()*TMath::ACos(4.0945*TMath::Tan(x*TMath::Pi()/180))",-limit,limit);
-    f->SetLineColor(1);
-    f2->SetLineColor(1);
+    //double limit = 13.863;
+    double limit=14.0651;
+    TF1 *ff = new TF1("aa","-90+180/TMath::Pi()*TMath::ACos(20.8/2.54*TMath::Sin(x*TMath::Pi()/180)/(1+TMath::Cos(x*TMath::Pi()/180)))",-limit,limit);
+    TF1 *ff2 = new TF1("bb","360-90+180/TMath::Pi()*TMath::ACos(20.8/2.54*TMath::Sin(x*TMath::Pi()/180)/(1+TMath::Cos(x*TMath::Pi()/180)))",-limit,limit);
+    TF1 *ff3 = new TF1("bb","360-90-180/TMath::Pi()*TMath::ACos(20.8/2.54*TMath::Sin(x*TMath::Pi()/180)/(1+TMath::Cos(x*TMath::Pi()/180)))",-limit,limit);
+    ff->SetLineColor(3);
+    ff2->SetLineColor(3);
+    ff3->SetLineColor(3);
 
 
   gStyle->SetOptStat(0); //tirar a tabela de estatisticas
