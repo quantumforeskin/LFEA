@@ -11,6 +11,7 @@ void histo_aqui()
 
   //SINOGRAMA
   
+  /*
   //TCanvas c;
   c = new TCanvas("c","c",700,700);
   
@@ -94,7 +95,7 @@ void histo_aqui()
   //hist->Draw("");
   c.Print("sinograma.png");
   
-  
+  */
 
 
 
@@ -119,7 +120,7 @@ void histo_aqui()
   
   
   //RECONSTRUCAO
-  /*
+  
   //c = new TCanvas("c","c",600,700);
   TCanvas c;
 
@@ -178,8 +179,5 @@ void histo_aqui()
   hist->Draw("contz"); //countour
   //hist->Draw("SURF2Z"); //3D
   c.Print("recons_cont.png");
-  
-  
-  */
   
 }
