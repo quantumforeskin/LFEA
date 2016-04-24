@@ -1,0 +1,7 @@
+opcao:fit
+titulo: ;Dist#hat{a}ncia em x;#theta_{centroid}[ ^{o} ]
+func:[0]+x*[1]
+xmin:-4
+xmax:4
+ymin:-20
+ymax:20

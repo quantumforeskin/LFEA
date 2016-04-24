@@ -1,7 +1,0 @@
-opcao:grafico
-titulo:Espetro 22Na; Canal ; Contagens;
-func:
-xmin:0
-xmax:1024
-ymin:0
-ymax:700

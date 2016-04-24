@@ -1,0 +1,5 @@
+Intervalo de ângulos que considerei não detectável
+
+Pos2(2.54cm): [-20,20] e [160,200]
+
+Pos3(3.81cm): [-50,50] e [130,230]

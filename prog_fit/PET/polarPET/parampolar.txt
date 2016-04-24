@@ -1,0 +1,7 @@
+opcao:polar
+titulo:Taxa de coincidencias em funcao do angulo; #theta   [ ^{o} ] ; R_{c} [ s^{-1} ];
+func:
+xmin:-20
+xmax:20
+ymin:0
+ymax:12
