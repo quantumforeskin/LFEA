@@ -1,0 +1,7 @@
+opcao:grafico
+titulo: ;R [#Omega];H[Oe]
+func:[0]+x*[1]
+xmin:-55
+xmax:55
+ymin:3.8
+ymax:4

@@ -1,0 +1,7 @@
+opcao:fit
+titulo: ;Corrente [mA];Tensao[ mV ]
+func:[0]+x*[1]
+xmin:-10.1
+xmax:10.1
+ymin:-39.7
+ymax:39.7
