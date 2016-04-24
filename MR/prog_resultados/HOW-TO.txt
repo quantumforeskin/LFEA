@@ -1,0 +1,9 @@
+
+- Dividir os dados de cada aquisição em 2 ficheiros, 1 com os relativos ao primeiro varrimento 
+e outro com os relativos ao segundo. Eu tenho guardado esses ficheiros numa pasta "data".
+
+- Abrir o programa main_result.C e preencher TUDO o que está nas "COISAS A PREENCHER PARA A ANÁLISE".
+
+- Correr: make result
+
+- É criado um ficheiro com os parâmetros e erros calculados e um pdf com o gráfico MR(H).
