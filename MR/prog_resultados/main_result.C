@@ -38,7 +38,7 @@ int main(int argc, char **argv)
   double I=0.0010094;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
-  double eh = 0.0001;//erro campo VALOR ESTA MAL TEMOS DE ESTIMA-LO DEPOIS
+  double eh = 0.3;//erro campo VALOR ESTA MAL TEMOS DE ESTIMA-LO DEPOIS
 
   //Limites da curva linear --> Para fazer o fit
   double low_lim=-5;
@@ -65,7 +65,7 @@ int main(int argc, char **argv)
          N++;
   }
 
-  N--;
+  //N--;
   
   cout << N << endl;
 
@@ -78,23 +78,37 @@ int main(int argc, char **argv)
   file.open (file1.c_str());
 
   int i=0;
-  while(!file.eof())
+  int test=0;
+  while(!file.eof() && test==0)
     {
+
       file >> H[i] >> R[i]; // extracts 2 floating point values seperated by whitespace
+      cout << i << " " << H[i] << endl;
       R[i]=R[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
       eR[i] = eV/I + R[i]/I*eI; //erro resistencia
       i++;
+
+
+      if(i>=N)
+	test=1;
       // do something with them
     }
 
+  //cout << "i " << i << endl;
+
+
+  cout << "aaaaaa" << endl;
 
   ///////////////////Tirar os dados do file 2 - varrimento 2////////////////////////////
   ifstream file_2;
-  file_2.open (file2.c_str());
+  file_2.open(file2.c_str());
 
+
+  /*
   static int N2=0;
 
-  
+
+
   char cur2 = '\0';
   char last2 = '\0';
 
@@ -106,25 +120,32 @@ int main(int argc, char **argv)
 
   N2--;
 
+  
+  cout << N2 << endl;
+
+
+  */
   double *H2 = new double[N];
   double *R2 = new double[N];
   double *eR2 = new double[N];
-
 
   file_2.close();
   file_2.open (file2.c_str());
 
   i=0;
-  while(!file_2.eof())
+  test=0;
+  while(!file_2.eof() && test==0)
     {
+
       file_2 >> H2[i] >> R2[i]; // extracts 2 floating point values seperated by whitespace
       R2[i]=R2[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
       eR2[i] = eV/I + R2[i]/I*eI; //erro resistencia
       i++;
+
+      if(i>=N)
+	test=1;
       // do something with them
     }
-
-
 
 
   ///////INTERPOLACAO//////////////////////////
@@ -170,8 +191,6 @@ int main(int argc, char **argv)
   double Rap2 = *std::max_element(R2,R2+N);
   double eRap2 = *std::max_element(eR2,eR2+N);
 
-
-
   //////////////Grafico MR(H) com os respectivos erros/////////////////////////
 
   ///Varrimento 1
@@ -197,13 +216,12 @@ int main(int argc, char **argv)
   //MR_H->SetLineColor(kBlue);
 
 
-
   ///Varrimento 2
 
-  double *MR2 = new double[N2];
-  double *eH2 = new double[N2];
-  double *eMR2 = new double[N2];
-  for(int i=0;i<N2;i++){
+  double *MR2 = new double[N];
+  double *eH2 = new double[N];
+  double *eMR2 = new double[N];
+  for(int i=0;i<N;i++){
 
     //Os erros eV, eI e eH sao os mesmos para ambos os varrimentos
     double e_mr2= eR2[i]/Rp + R2[i]/(Rp2*Rp2)*eR2[i]; //erro magneto-resistencia
@@ -215,11 +233,9 @@ int main(int argc, char **argv)
   }
   
 
-  TGraphErrors *MR_H2 = new TGraphErrors(N2,H2,MR2,eH2,eMR2);
+  TGraphErrors *MR_H2 = new TGraphErrors(N,H2,MR2,eH2,eMR2);
   MR_H2->SetMarkerColor(kRed);
   MR_H2->SetMarkerStyle(7);
-
-
 
 
 
@@ -249,7 +265,7 @@ int main(int argc, char **argv)
 
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
-  TGraphErrors *R_H2 = new TGraphErrors(N2,H2,R2,eH2,eR2);//grafico R(H) para fazer o fit
+  TGraphErrors *R_H2 = new TGraphErrors(N,H2,R2,eH2,eR2);//grafico R(H) para fazer o fit
   R_H2->Fit("f2","MF","",low_lim2,high_lim2);
   double b2=f2->GetParameter(0); // ordenada na origem
   double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
@@ -302,6 +318,7 @@ int main(int argc, char **argv)
 
 
   file.close();
+  file_2.close();
   //delete  g;
   //delete gr1; // A classe do prof deve fazer delete aos objectos, quando descomento da segmentation violation
   //delete  cubic;
