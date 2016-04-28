@@ -191,6 +191,15 @@ int main(int argc, char **argv)
   double Rap2 = *std::max_element(R2,R2+N);
   double eRap2 = *std::max_element(eR2,eR2+N);
 
+
+  // Media do Rp e Rap
+  double Rp_med = (Rp+Rp2)/2;
+  double eRp_med = (eRp+eRp2)/2;
+  double Rap_med = (Rap+Rap2)/2;
+  double eRap_med = (eRap+eRap2)/2;
+
+
+
   //////////////Grafico MR(H) com os respectivos erros/////////////////////////
 
   ///Varrimento 1
@@ -224,7 +233,7 @@ int main(int argc, char **argv)
   for(int i=0;i<N;i++){
 
     //Os erros eV, eI e eH sao os mesmos para ambos os varrimentos
-    double e_mr2= eR2[i]/Rp + R2[i]/(Rp2*Rp2)*eR2[i]; //erro magneto-resistencia
+    double e_mr2= eR2[i]/Rp2 + R2[i]/(Rp2*Rp2)*eR2[i]; //erro magneto-resistencia
 
     eH2[i]=eh; //dado no inicio do prog
     eMR2[i]=e_mr2;//em percentagem
@@ -294,7 +303,7 @@ int main(int argc, char **argv)
   //Ficheiro com os resultados
   ofstream resultados;
   resultados.open (res_label.c_str());
-  resultados << "Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n"  << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n";
+  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" <<  "---------------------" << "\n" << "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n";
   resultados.close();
 
 
