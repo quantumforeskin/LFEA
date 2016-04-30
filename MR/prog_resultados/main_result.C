@@ -30,21 +30,21 @@ int main(int argc, char **argv)
 
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  string res_label = "resultados_SV4_B.txt";//Nome do ficheiro onde sao apresentados os resultados
-  string plot_label = "SV4_B.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
-  string file1="../3s/data/SV4_B_50_2a.txt"; //directoria dos dados do primeiro varrimento 
-  string file2="../3s/data/SV4_B_50_2b.txt"; //directoria dos dados do segundo varrimento
+  string res_label = "resultados_SV1_A.txt";//Nome do ficheiro onde sao apresentados os resultados
+  string plot_label = "SV1_A.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  string file1="../2s/data_SV1_40.txt"; //directoria dos dados do primeiro varrimento 
+  string file2="../2s/data_SV1_40_2.txt"; //directoria dos dados do segundo varrimento
 
-  double I=0.0010094;//corrente
+  double I=0.0010004;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
   double eh = 0.0001;//erro campo VALOR ESTA MAL TEMOS DE ESTIMA-LO DEPOIS
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-5;
-  double high_lim=20;
-  double low_lim2=-5;
-  double high_lim2=20;
+  double low_lim=-13;
+  double high_lim=-8;
+  double low_lim2=-21;
+  double high_lim2=-17;
 
   //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
 
@@ -55,6 +55,8 @@ int main(int argc, char **argv)
 
   static int N=0;
 
+
+  cout << "ola" << endl;
   
   char cur = '\0';
   char last = '\0';
@@ -72,7 +74,6 @@ int main(int argc, char **argv)
   double *H = new double[N];
   double *R = new double[N];
   double *eR = new double[N];
-
 
   file.close();
   file.open (file1.c_str());
@@ -123,8 +124,6 @@ int main(int argc, char **argv)
       i++;
       // do something with them
     }
-
-
 
 
   ///////INTERPOLACAO//////////////////////////
