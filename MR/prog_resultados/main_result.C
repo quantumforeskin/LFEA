@@ -14,6 +14,9 @@
 #include<iomanip>
 #include<TLine.h>
 #include<TLatex.h>
+#include<TArrow.h>
+#include<TLegend.h>
+#include<TPaveText.h>
 #include<fstream>
 
 
@@ -38,12 +41,12 @@ int main(int argc, char **argv)
   double I=0.0010094;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
-  double eh = 0.3;//erro campo VALOR ESTA MAL TEMOS DE ESTIMA-LO DEPOIS
+  double eh = 0.01;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-5;
+  double low_lim=0;
   double high_lim=20;
-  double low_lim2=-5;
+  double low_lim2=0;
   double high_lim2=20;
 
   //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
@@ -83,21 +86,18 @@ int main(int argc, char **argv)
     {
 
       file >> H[i] >> R[i]; // extracts 2 floating point values seperated by whitespace
-      cout << i << " " << H[i] << endl;
       R[i]=R[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
       eR[i] = eV/I + R[i]/I*eI; //erro resistencia
-      i++;
+      i++; 
 
 
       if(i>=N)
 	test=1;
-      // do something with them
+
     }
 
-  //cout << "i " << i << endl;
 
 
-  cout << "aaaaaa" << endl;
 
   ///////////////////Tirar os dados do file 2 - varrimento 2////////////////////////////
   ifstream file_2;
@@ -136,7 +136,6 @@ int main(int argc, char **argv)
   test=0;
   while(!file_2.eof() && test==0)
     {
-
       file_2 >> H2[i] >> R2[i]; // extracts 2 floating point values seperated by whitespace
       R2[i]=R2[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
       eR2[i] = eV/I + R2[i]/I*eI; //erro resistencia
@@ -263,26 +262,26 @@ int main(int argc, char **argv)
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
   TGraphErrors *R_H = new TGraphErrors(N,H,R,eH,eR);//Grafico R(H) para dazer o fit
-  R_H->Fit("f1","MF","",low_lim,high_lim);
+  R_H->Fit("f1","","",low_lim,high_lim);
   double b=f1->GetParameter(0); //ordenada na origem 
   double eb =  f1->GetParError(0); // erro da ordenada na origem 
   double a=f1->GetParameter(1); //declive
   double ea =  f1->GetParError(0); //erro do declive 
 
   double dH1=(R_half_med-b)/a; //H correspondente a R a meia altura
-  double edH1=(eR_half_med+eb)/a + (R_half_med-b)/(a*a)*ea;
+  double edH1=(eR_half_med+eb)/a + TMath::Abs(R_half_med-b)/(a*a)*ea;
 
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
   TGraphErrors *R_H2 = new TGraphErrors(N,H2,R2,eH2,eR2);//grafico R(H) para fazer o fit
-  R_H2->Fit("f2","MF","",low_lim2,high_lim2);
+  R_H2->Fit("f2","","",low_lim2,high_lim2);
   double b2=f2->GetParameter(0); // ordenada na origem
   double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
   double a2=f2->GetParameter(1); //declive
   double ea2 =  f2->GetParError(0); //erro do declive 
 
   double dH2=(R_half_med-b2)/a2; //H correspondente a R a meia altura
-  double edH2=(eR_half_med+eb2)/a2 + (R_half_med-b2)/(a2*a2)*ea2;
+  double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
 
 
   // Campo coercivo
@@ -326,6 +325,117 @@ int main(int argc, char **argv)
   mg->Add(MR_H2);
 
 
+
+ /////////////////// Arrows para as orientacoes /////////////////////////////////////////////////////////////////////////////
+  float arrow_step = 0.0025;//Distancia entre arrows
+  float arrow_offset = 0.0035;//Distancia do arrow mais proximo do grafico ao grafico
+
+
+  //Regiao 1/////////////////////////
+
+  float ax1 = H[0]/2-10;
+  float ay1 = MR[0];
+
+  // H 
+  TArrow *r1ar1 = new TArrow(ax1,ay1+arrow_offset+arrow_step,ax1+10,ay1+arrow_offset+arrow_step,0.02,"|>");
+  r1ar1->SetLineColor(1);
+  r1ar1->SetFillColor(1);
+
+  // Mpl
+  TArrow *r1ar2 = new TArrow(ax1,ay1+arrow_offset+2*arrow_step,ax1+10,ay1+arrow_offset+2*arrow_step,0.02,"|>");
+  r1ar2->SetLineColor(8);
+  r1ar2->SetFillColor(8);
+
+
+  // Mfl
+  TArrow *r1ar3 = new TArrow(ax1,ay1+arrow_offset+3*arrow_step,ax1+10,ay1+arrow_offset+3*arrow_step,0.02,"|>");
+  r1ar3->SetLineColor(9);
+  r1ar3->SetFillColor(9);
+
+
+  // J
+  float axj=40;
+  float ayj=0;
+  TArrow *arj = new TArrow(axj,ayj,axj+10,ayj,0.02,"|>");
+  arj->SetLineColor(49);
+  arj->SetFillColor(49);
+  TPaveText *text_j = new TPaveText(axj,ayj+5,axj+10,ayj+5);
+  text_j->SetLabel("J");
+
+
+  // Ku
+  float axku=axj;
+  float ayku=ayj+10;
+  TArrow *arku = new TArrow(axku,ayku,axku+10,ayku,0.02,"<|>");
+  arku->SetLineColor(49);
+  arku->SetFillColor(49);
+  TPaveText *text_ku = new TPaveText(axku,ayku+5,axku+10,ayku+5);
+  text_ku->SetLabel("Ku");
+
+
+  //Regiao 2///////
+
+  float ax2 = Hoff-10.;
+  float ay2 = (R_half-Rp)/Rp;
+
+  TArrow *r2ar1 = new TArrow(ax2,ay2+arrow_offset+arrow_step,ax2+10,ay2+arrow_offset+arrow_step,0.02,"|>");
+  r2ar1->SetLineColor(1);
+  r2ar1->SetFillColor(1);
+
+  TArrow *r2ar2 = new TArrow(ax2,ay2+arrow_offset+2*arrow_step,ax2+10,ay2+arrow_offset+2*arrow_step,0.02,"|>");
+  r2ar2->SetLineColor(8);
+  r2ar2->SetFillColor(8);
+
+
+  TArrow *r2ar3 = new TArrow(ax2,ay2+arrow_offset+3*arrow_step,ax2+10,ay2+arrow_offset+3*arrow_step,0.02,"|>");
+  r2ar3->SetLineColor(9);
+  r2ar3->SetFillColor(9);
+
+
+
+  //Regiao 3///////
+
+  float ax3 = -H[0]/2+10;
+  float ay3 = MR[N-2];
+
+  TArrow *r3ar1 = new TArrow(ax3,ay3-arrow_offset-4*arrow_step,ax3+10,ay3-arrow_offset-4*arrow_step,0.02,"|>");
+  r3ar1->SetLineColor(1);
+  r3ar1->SetFillColor(1);
+
+  TArrow *r3ar2 = new TArrow(ax3,ay3-arrow_offset-3*arrow_step,ax3+10,ay3-arrow_offset-3*arrow_step,0.02,"|>");
+  r3ar2->SetLineColor(8);
+  r3ar2->SetFillColor(8);
+
+  TArrow *r3ar3 = new TArrow(ax3,ay3-arrow_offset-2*arrow_step,ax3+10,ay3-arrow_offset-2*arrow_step,0.02,"|>");
+  r3ar3->SetLineColor(9);
+  r3ar3->SetFillColor(9);
+
+
+  //Legenda///////////////////////////
+
+  TLegend* leg;
+
+  //Usa-se a condicao para nao por a legenda em cima dos dados
+  if(S1<0){
+    leg = new TLegend(0.62,0.7,0.9,0.9);//(x1,y1,x2,y2)
+  }else{
+    leg = new TLegend(0.1,0.7,0.38,0.9);//(x1,y1,x2,y2)
+  }
+  //leg->SetHeader("Orientac#tilde{o}es");
+  leg->AddEntry(MR_H,"Varrimento 1","p");
+  leg->AddEntry(MR_H2,"Varrimento 2","p");
+
+
+  leg->AddEntry(r1ar1,"M","l");
+  leg->AddEntry(r1ar2,"J","l");
+  leg->AddEntry(r1ar3,"H","l");
+  leg->AddEntry(arj,"J","l");
+  leg->AddEntry(arku,"ku","l");
+
+
+
+
+
   file.close();
   file_2.close();
   //delete  g;
@@ -346,9 +456,35 @@ int main(int argc, char **argv)
 
 
   mg->Draw("AP");
-
   mg->GetXaxis()->SetTitle("H (Oe)");
   mg->GetYaxis()->SetTitle("MR");
+
+  
+  //arrows
+  r1ar1->Draw();
+  r2ar1->Draw();
+  r3ar1->Draw();
+
+  r1ar2->Draw();
+  r2ar2->Draw();
+  r3ar2->Draw();
+
+  r1ar3->Draw();
+  r2ar3->Draw();
+  r3ar3->Draw();
+
+  arj->Draw();
+  arku->Draw();
+  text_j->Draw();
+  text_ku->Draw();
+
+
+  
+
+  //legenda
+  leg->Draw();
+  
+
 
 
   c1->Update();
