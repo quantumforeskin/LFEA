@@ -10,6 +10,11 @@ result:lib3Trab2.a main_result.o
 	g++ -o main_result.exe main_result.o $(mylib) $(rootlibs)
 	@echo "\n\n" The executable file main_result.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./main_result.exe "\n\n"  
 	@echo  "          (__) \n          (oo) \n    /------\/ \n   / |    || \n*    /\---/\ \n     ~~   ~~ "
+result2:lib3Trab2.a main_result_SV3_4.o
+	g++ -o main_result_SV3_4.exe main_result_SV3_4.o $(mylib) $(rootlibs)
+	@echo "\n\n" The executable file main_result_SV3_4.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./main_result_SV3_4.exe "\n\n" 
+main_result_SV3_4.o: main_result_SV3_4.C cFCgraphics.h
+	g++ -c main_result_SV3_4.C $(rootlibs)
 main_result.o: main_result.C cFCgraphics.h
 	g++ -c main_result.C $(rootlibs)
 DataInterpolator.o: DataInterpolator.C DataInterpolator.h
