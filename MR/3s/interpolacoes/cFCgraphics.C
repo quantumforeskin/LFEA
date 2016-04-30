@@ -97,9 +97,9 @@ void cFCgraphics::Draw(string sopt) {
 	((TF1*)to)->SetLineWidth(4); 
 	((TF1*)to)->SetLineColor(kBlue+2);   
       } else if (to->InheritsFrom("TGraph")) { 
-	//         ((TGraph*)to)->SetMarkerColor(kRed+3); 
-	 //         ((TGraph*)to)->SetMarkerStyle(22); 
-	 //         ((TGraph*)to)->SetMarkerSize(0.5); 
+	//((TGraph*)to)->SetMarkerColor(kRed+3); 
+	//        ((TGraph*)to)->SetMarkerStyle(22); 
+	//        ((TGraph*)to)->SetMarkerSize(3); 
         gopt="AP";
       }
       to->Draw(gopt.c_str());
@@ -138,7 +138,7 @@ TPad* cFCgraphics::CreatePad(string PadName) {
 }
 
 void cFCgraphics::AddObject(TObject *obj, string PadName) {
-  if (obj->InheritsFrom("TF1") | obj->InheritsFrom("TH1")  ) { 
+  if (obj->InheritsFrom("TF1") | obj->InheritsFrom("TH1") | obj->InheritsFrom("TGraph")  ) { 
     cout << Form("[cFCgraphics::AddObject] %s added to Pad %s...\n", obj->GetName(), PadName.c_str());
   }
   itMpad = Mpad.find(PadName);
@@ -155,13 +155,13 @@ void cFCgraphics::AddObject(TObject *obj, string PadName) {
 }
 
 void cFCgraphics::AddObject(TObject *obj, string PadName, string sopt) {
-  if (obj->InheritsFrom("TF1") | obj->InheritsFrom("TH1")  ) { 
+  if (obj->InheritsFrom("TF1") | obj->InheritsFrom("TH1") | obj->InheritsFrom("TGraph") ) { 
     cout << Form("[cFCgraphics::AddObject] %s added to Pad %s...\n", obj->GetName(), PadName.c_str());
   }
   itMpad = Mpad.find(PadName);
   if (itMpad != Mpad.end()) {
     itMpad->second->cd();
-    //    obj->AppendPad();
+    //obj->AppendPad();
     obj->Draw(sopt.c_str());
   }
   itMpad->second->Update();

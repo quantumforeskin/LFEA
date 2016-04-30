@@ -4,6 +4,6 @@ e outro com os relativos ao segundo. Eu tenho guardado esses ficheiros numa past
 
 - Abrir o programa main_result.C e preencher TUDO o que está nas "COISAS A PREENCHER PARA A ANÁLISE".
 
-- Correr: make result
+- Compilar: make result
 
 - É criado um ficheiro com os parâmetros e erros calculados e um pdf com o gráfico MR(H).

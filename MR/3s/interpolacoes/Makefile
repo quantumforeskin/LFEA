@@ -6,15 +6,12 @@ objects4=Decay.o Element.o PhysProcess.o BetaDecay.o cFCgraphics.o
 
 help:
 	@echo "run:\n\n\t\"make decay\" to compile Decay.C program\n\n\t\"make Springs\"to compile Springs.C program\n\n\t\"make Interpolator\" to compile mainInterpolator.C program\n\n\t\"make tex\" to produce pdf report\n\n\t\"make clean\" to delete .o files\n"     
-tex:
-	pdflatex groupB11Trab2.tex
-	evince groupB11Trab2.pdf &
-Interpolator:lib3Trab2.a mainInterpolator.o
-	g++ -o mainInterpolator.exe mainInterpolator.o $(mylib) $(rootlibs)
-	@echo "\n\n" The executable file mainInterpolator.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./mainInterpolator.exe "\n\n"  
+result:lib3Trab2.a main_result.o
+	g++ -o main_result.exe main_result.o $(mylib) $(rootlibs)
+	@echo "\n\n" The executable file main_result.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./main_result.exe "\n\n"  
 	@echo  "          (__) \n          (oo) \n    /------\/ \n   / |    || \n*    /\---/\ \n     ~~   ~~ "
-mainInterpolator.o: mainInterpolator.C cFCgraphics.h
-	g++ -c mainInterpolator.C $(rootlibs)
+main_result.o: main_result.C cFCgraphics.h
+	g++ -c main_result.C $(rootlibs)
 DataInterpolator.o: DataInterpolator.C DataInterpolator.h
 	g++ -c DataInterpolator.C $(rootlibs)
 cFCgraphics.o: cFCgraphics.C cFCgraphics.h
