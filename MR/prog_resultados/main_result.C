@@ -16,6 +16,7 @@
 #include<TLatex.h>
 #include<TArrow.h>
 #include<TLegend.h>
+#include<TText.h>
 #include<TPaveText.h>
 #include<fstream>
 
@@ -33,15 +34,15 @@ int main(int argc, char **argv)
 
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  string res_label = "resultados_SV4_B.txt";//Nome do ficheiro onde sao apresentados os resultados
-  string plot_label = "SV4_B.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
-  string file1="../3s/data/SV4_B_50_2a.txt"; //directoria dos dados do primeiro varrimento 
-  string file2="../3s/data/SV4_B_50_2b.txt"; //directoria dos dados do segundo varrimento
+  string res_label = "resultados_SV4_D.txt";//Nome do ficheiro onde sao apresentados os resultados
+  string plot_label = "SV4_D.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  string file1="../3s/data/SV4_D_50_2a.txt"; //directoria dos dados do primeiro varrimento 
+  string file2="../3s/data/SV4_D_50_2b.txt"; //directoria dos dados do segundo varrimento
 
   double I=0.0010094;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
-  double eh = 0.01;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
+  double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
   //Limites da curva linear --> Para fazer o fit
   double low_lim=0;
@@ -104,27 +105,6 @@ int main(int argc, char **argv)
   file_2.open(file2.c_str());
 
 
-  /*
-  static int N2=0;
-
-
-
-  char cur2 = '\0';
-  char last2 = '\0';
-
-  while (file_2.get(cur2)) {
-      if (cur2 == '\n' ||
-          (cur2 == '\f' && last2 == '\r'))
-         N2++;
-  }
-
-  N2--;
-
-  
-  cout << N2 << endl;
-
-
-  */
   double *H2 = new double[N];
   double *R2 = new double[N];
   double *eR2 = new double[N];
@@ -146,33 +126,6 @@ int main(int argc, char **argv)
       // do something with them
     }
 
-
-  ///////INTERPOLACAO//////////////////////////
-  /*
-
-
-  TF1 *cubic;
-  TGraph *g;
-  double *K;
-
-  DataInterpolator Test(N,H,R);
-  cout<<"Pontos de Data"<<endl;
-
-
-  for(int i=0;i<N;i++)
-    cout<<H[i]<<" "<<R[i]<<endl;
-
-  
-  cubic=Test.DataInterpolator::CubicSpline(K);
-  cubic->SetLineWidth(2);
-  cubic->SetLineColor(kRed);
-  cubic->SetTitle("Cubic Spline and Polynomial Interpolation");
-
-  g=Test.Draw(N);
-  g->SetMarkerStyle(31);
-  g->SetTitle("Data Points");
-  */
- 
 
   /////////////////////////Rp e Rap////////////////////////////////////////////////
 
@@ -208,11 +161,11 @@ int main(int argc, char **argv)
   double *eMR = new double[N];
   for(int i=0;i<N;i++){
 
-    double e_mr= eR[i]/Rp + R[i]/(Rp*Rp)*eR[i]; //erro magneto-resistencia
+    double e_mr= eR[i]/Rp + R[i]/(Rp*Rp)*eRp; //erro magneto-resistencia
 
     eH[i]=eh; //dado no inicio do prog
-    eMR[i]=e_mr;//em percentagem
-    MR[i]=(R[i]-Rp)/Rp;//em percentagem
+    eMR[i]=e_mr;
+    MR[i]=(R[i]-Rp)/Rp;
 
   }
   
@@ -221,7 +174,6 @@ int main(int argc, char **argv)
   MR_H->SetMarkerStyle(6);
   MR_H->SetMarkerColor(kBlue);
   MR_H->SetFillColor(kBlue);
-  //MR_H->SetLineColor(kBlue);
 
 
   ///Varrimento 2
@@ -232,7 +184,7 @@ int main(int argc, char **argv)
   for(int i=0;i<N;i++){
 
     //Os erros eV, eI e eH sao os mesmos para ambos os varrimentos
-    double e_mr2= eR2[i]/Rp2 + R2[i]/(Rp2*Rp2)*eR2[i]; //erro magneto-resistencia
+    double e_mr2= eR2[i]/Rp2 + R2[i]/(Rp2*Rp2)*eRp2; //erro magneto-resistencia
 
     eH2[i]=eh; //dado no inicio do prog
     eMR2[i]=e_mr2;//em percentagem
@@ -292,11 +244,11 @@ int main(int argc, char **argv)
   double Hoff=(dH2+dH1)/2;
   double eHoff = (edH1+edH2)/2; //erro
 
-  //// Sensibilidade e erros
+  //// Sensibilidade e erros (em percentagem)
   double S1 = a/Rp*100; //Varrimento 1
-  double eS1 = f1->GetParError(1); 
+  double eS1 = (ea/Rp + a/(Rp*Rp)*eRp)*100; 
   double S2 = a2/Rp2*100; //Varrimento 2
-  double eS2 = f2->GetParError(1);
+  double eS2 = (ea2/Rp2 + a2/(Rp2*Rp2)*eRp2)*100;
 
 
   //Ficheiro com os resultados
@@ -320,13 +272,13 @@ int main(int argc, char **argv)
 
 
 
-  TMultiGraph *mg = new TMultiGraph("mg","Magnetoresistencia em funcao do campo magnetico");
+  TMultiGraph *mg = new TMultiGraph("mg","");
   mg->Add(MR_H);
   mg->Add(MR_H2);
 
 
 
- /////////////////// Arrows para as orientacoes /////////////////////////////////////////////////////////////////////////////
+ /////////////////// ARROWS PARA AS ORIENTACOES /////////////////////////////////////////////////////////////////////////////
   float arrow_step = 0.0025;//Distancia entre arrows
   float arrow_offset = 0.0035;//Distancia do arrow mais proximo do grafico ao grafico
 
@@ -334,25 +286,25 @@ int main(int argc, char **argv)
   //Regiao 1/////////////////////////
 
   float ax1 = H[0]/2-10;
-  float ay1 = MR[0];
+  float ay1 = MR[0]+0.005;
 
   // H 
-  TArrow *r1ar1 = new TArrow(ax1,ay1+arrow_offset+arrow_step,ax1+10,ay1+arrow_offset+arrow_step,0.02,"|>");
+  TArrow *r1ar1 = new TArrow(ax1,ay1+arrow_offset,ax1+10,ay1+arrow_offset,0.02,"<|");
   r1ar1->SetLineColor(1);
   r1ar1->SetFillColor(1);
 
   // Mpl
-  TArrow *r1ar2 = new TArrow(ax1,ay1+arrow_offset+2*arrow_step,ax1+10,ay1+arrow_offset+2*arrow_step,0.02,"|>");
+  TArrow *r1ar2 = new TArrow(ax1,ay1+arrow_offset-arrow_step,ax1+10,ay1+arrow_offset-arrow_step,0.02,"<|");
   r1ar2->SetLineColor(8);
   r1ar2->SetFillColor(8);
 
 
   // Mfl
-  TArrow *r1ar3 = new TArrow(ax1,ay1+arrow_offset+3*arrow_step,ax1+10,ay1+arrow_offset+3*arrow_step,0.02,"|>");
+  TArrow *r1ar3 = new TArrow(ax1,ay1+arrow_offset-2*arrow_step,ax1+10,ay1+arrow_offset-2*arrow_step,0.02,"<|");
   r1ar3->SetLineColor(9);
   r1ar3->SetFillColor(9);
 
-
+  /*
   // J
   float axj=40;
   float ayj=0;
@@ -361,16 +313,16 @@ int main(int argc, char **argv)
   arj->SetFillColor(49);
   TPaveText *text_j = new TPaveText(axj,ayj+5,axj+10,ayj+5);
   text_j->SetLabel("J");
-
+  */
 
   // Ku
-  float axku=axj;
-  float ayku=ayj+10;
+  float axku=40;
+  float ayku=0.003;
   TArrow *arku = new TArrow(axku,ayku,axku+10,ayku,0.02,"<|>");
   arku->SetLineColor(49);
   arku->SetFillColor(49);
-  TPaveText *text_ku = new TPaveText(axku,ayku+5,axku+10,ayku+5);
-  text_ku->SetLabel("Ku");
+  TText *text_ku = new TText(axku+3, ayku+0.002, "Ku");
+  text_ku->SetTextSize(0.04);
 
 
   //Regiao 2///////
@@ -378,16 +330,18 @@ int main(int argc, char **argv)
   float ax2 = Hoff-10.;
   float ay2 = (R_half-Rp)/Rp;
 
-  TArrow *r2ar1 = new TArrow(ax2,ay2+arrow_offset+arrow_step,ax2+10,ay2+arrow_offset+arrow_step,0.02,"|>");
-  r2ar1->SetLineColor(1);
-  r2ar1->SetFillColor(1);
+  // H 
+  TText *text_H = new TText(ax2, ay2+arrow_offset+arrow_step/2, "H = 0");
+  text_H->SetTextSize(0.04);
 
-  TArrow *r2ar2 = new TArrow(ax2,ay2+arrow_offset+2*arrow_step,ax2+10,ay2+arrow_offset+2*arrow_step,0.02,"|>");
+
+  // M pl
+  TArrow *r2ar2 = new TArrow(ax2,ay2+arrow_offset+2*arrow_step,ax2+10,ay2+arrow_offset+2*arrow_step,0.02,"<|");
   r2ar2->SetLineColor(8);
   r2ar2->SetFillColor(8);
 
-
-  TArrow *r2ar3 = new TArrow(ax2,ay2+arrow_offset+3*arrow_step,ax2+10,ay2+arrow_offset+3*arrow_step,0.02,"|>");
+  // M fl
+  TArrow *r2ar3 = new TArrow(ax2-2,ay2+arrow_offset,ax2-2,ay2+arrow_offset+0.008,0.02,"|>");
   r2ar3->SetLineColor(9);
   r2ar3->SetFillColor(9);
 
@@ -398,14 +352,17 @@ int main(int argc, char **argv)
   float ax3 = -H[0]/2+10;
   float ay3 = MR[N-2];
 
-  TArrow *r3ar1 = new TArrow(ax3,ay3-arrow_offset-4*arrow_step,ax3+10,ay3-arrow_offset-4*arrow_step,0.02,"|>");
+  // H 
+  TArrow *r3ar1 = new TArrow(ax3,ay3-arrow_offset,ax3+10,ay3-arrow_offset,0.02,"|>");
   r3ar1->SetLineColor(1);
   r3ar1->SetFillColor(1);
 
-  TArrow *r3ar2 = new TArrow(ax3,ay3-arrow_offset-3*arrow_step,ax3+10,ay3-arrow_offset-3*arrow_step,0.02,"|>");
+  // M pl 
+  TArrow *r3ar2 = new TArrow(ax3,ay3-arrow_offset-arrow_step,ax3+10,ay3-arrow_offset-arrow_step,0.02,"<|");
   r3ar2->SetLineColor(8);
   r3ar2->SetFillColor(8);
 
+  // M fl
   TArrow *r3ar3 = new TArrow(ax3,ay3-arrow_offset-2*arrow_step,ax3+10,ay3-arrow_offset-2*arrow_step,0.02,"|>");
   r3ar3->SetLineColor(9);
   r3ar3->SetFillColor(9);
@@ -417,30 +374,24 @@ int main(int argc, char **argv)
 
   //Usa-se a condicao para nao por a legenda em cima dos dados
   if(S1<0){
-    leg = new TLegend(0.62,0.7,0.9,0.9);//(x1,y1,x2,y2)
+    leg = new TLegend(0.8,0.7,0.9,0.9);//(x1,y1,x2,y2)
   }else{
-    leg = new TLegend(0.1,0.7,0.38,0.9);//(x1,y1,x2,y2)
+    leg = new TLegend(0.1,0.7,0.2,0.9);//(x1,y1,x2,y2)
   }
   //leg->SetHeader("Orientac#tilde{o}es");
-  leg->AddEntry(MR_H,"Varrimento 1","p");
-  leg->AddEntry(MR_H2,"Varrimento 2","p");
+  leg->AddEntry(MR_H,"#rightarrow","p");
+  leg->AddEntry(MR_H2,"#leftarrow","p");
 
-
-  leg->AddEntry(r1ar1,"M","l");
-  leg->AddEntry(r1ar2,"J","l");
-  leg->AddEntry(r1ar3,"H","l");
-  leg->AddEntry(arj,"J","l");
-  leg->AddEntry(arku,"ku","l");
-
+  leg->AddEntry(r1ar1,"H","l");
+  leg->AddEntry(r1ar2,"M pl","l");
+  leg->AddEntry(r1ar3,"M fl","l");
+  //leg->AddEntry(arj,"J","l");
 
 
 
 
   file.close();
   file_2.close();
-  //delete  g;
-  //delete gr1; // A classe do prof deve fazer delete aos objectos, quando descomento da segmentation violation
-  //delete  cubic;
   delete [] R;
   delete [] H;
   delete [] MR;
@@ -458,11 +409,13 @@ int main(int argc, char **argv)
   mg->Draw("AP");
   mg->GetXaxis()->SetTitle("H (Oe)");
   mg->GetYaxis()->SetTitle("MR");
+  mg->GetYaxis()->SetTitleOffset(1.2);
 
   
   //arrows
   r1ar1->Draw();
-  r2ar1->Draw();
+  //r2ar1->Draw(); Basta por um texto a dizer que H=0
+  text_H->Draw();
   r3ar1->Draw();
 
   r1ar2->Draw();
@@ -473,10 +426,11 @@ int main(int argc, char **argv)
   r2ar3->Draw();
   r3ar3->Draw();
 
-  arj->Draw();
   arku->Draw();
-  text_j->Draw();
-  text_ku->Draw();
+  text_ku -> Draw();
+
+  //arj->Draw();
+  //text_j->Draw();
 
 
   
