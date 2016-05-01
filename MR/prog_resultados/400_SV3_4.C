@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 {
 
 
-  gROOT->SetBatch(kTRUE);
+  gROOT->SetBatch(kFALSE);
 
   //faz aparecer o canvas
   TApplication theApp("App",&argc, argv);
@@ -44,51 +44,16 @@ int main(int argc, char **argv)
   static int Ngraphs=8;
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  string plot_label[Ngraphs]; //Nome do ficheiro em que e feito o plot MR(H)
-  plot_label[0] = "SV4_A_50.pdf"; 
-  plot_label[1] = "SV4_A_400.pdf";
-  plot_label[2] = "SV4_C_50.pdf"; 
-  plot_label[3] = "SV4_C_400.pdf"; 
-
-  plot_label[4] = "SV3_1_50.pdf";
-  plot_label[5] = "SV3_1_400.pdf";
-  plot_label[6] = "SV3_3_50.pdf";
-  plot_label[7] = "SV3_3_400.pdf";
+  string plot_label="SV3_4_400.pdf"; //Nome do ficheiro em que e feito o plot MR(H)
 
 
-  string file1[Ngraphs]; //directorias dos dados do primeiro varrimento
-  file1[0]="../3s/data/SV4_A_50_3a.txt";  
-  file1[1]="../3s/data/SV4_A_400_2a.txt";
-  file1[2]="../3s/data/SV4_C_50_3a.txt";  
-  file1[3]="../3s/data/SV4_C_400_2a.txt";
-
-  file1[4]="../4s/data/SV3_1_50_2a.txt";
-  file1[5]="../4s/data/SV3_1_400_2a.txt";
-  file1[6]="../4s/data/SV3_3_50_2a.txt";
-  file1[7]="../4s/data/SV3_3_400_2a.txt";
+  string file1="../4s/data/SV3_4_400_2a.txt";  
 
 
-  string file2[Ngraphs]; //directoria dos dados do segundo varrimento
-  file2[0]="../3s/data/SV4_A_50_3b.txt"; 
-  file2[1]="../3s/data/SV4_A_400_2b.txt";
-  file2[2]="../3s/data/SV4_C_50_3b.txt"; 
-  file2[3]="../3s/data/SV4_C_400_2b.txt";
+  string file2="../4s/data/SV3_4_400_2b.txt"; 
 
-  file2[4]="../4s/data/SV3_1_50_2b.txt";
-  file2[5]="../4s/data/SV3_1_400_2b.txt";
-  file2[6]="../4s/data/SV3_3_50_2b.txt";
-  file2[7]="../4s/data/SV3_3_400_2b.txt"; 
+  double I=0.001004;
 
-  double I[Ngraphs];//corrente
-  I[0]=0.0010026;
-  I[1]=0.0010026;
-  I[2]=0.001004;
-  I[3]=0.001004;
-
-  I[4]=0.001003;
-  I[5]=0.0010029;
-  I[6]=0.0010072;
-  I[7]=0.0010072;
 
 
   double eI=0.0000001;//erro corrente
@@ -99,11 +64,9 @@ int main(int argc, char **argv)
   //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
 
 
-  for(int j=0;j<Ngraphs;j++){
-
   /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
   ifstream file;
-  file.open (file1[j].c_str());
+  file.open (file1.c_str());
 
   static int N=0;
 
@@ -128,7 +91,7 @@ int main(int argc, char **argv)
 
 
   file.close();
-  file.open (file1[j].c_str());
+  file.open (file1.c_str());
 
   int i=0;
   int test=0;
@@ -136,8 +99,8 @@ int main(int argc, char **argv)
     {
 
       file >> H[i] >> R[i]; // extracts 2 floating point values seperated by whitespace
-      R[i]=R[i]/I[j]; //PASSAR TENSOES PARA RESISTENCIAS
-      eR[i] = eV/I[j] + R[i]/I[j]*eI; //erro resistencia
+      R[i]=R[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
+      eR[i] = eV/I + R[i]/I*eI; //erro resistencia
       i++; 
 
 
@@ -151,7 +114,7 @@ int main(int argc, char **argv)
 
   ///////////////////Tirar os dados do file 2 - varrimento 2////////////////////////////
   ifstream file_2;
-  file_2.open(file2[j].c_str());
+  file_2.open(file2.c_str());
 
 
   double *H2 = new double[N];
@@ -159,15 +122,15 @@ int main(int argc, char **argv)
   double *eR2 = new double[N];
 
   file_2.close();
-  file_2.open (file2[j].c_str());
+  file_2.open (file2.c_str());
 
   i=0;
   test=0;
   while(!file_2.eof() && test==0)
     {
       file_2 >> H2[i] >> R2[i]; // extracts 2 floating point values seperated by whitespace
-      R2[i]=R2[i]/I[j]; //PASSAR TENSOES PARA RESISTENCIAS
-      eR2[i] = eV/I[j] + R2[i]/I[j]*eI; //erro resistencia
+      R2[i]=R2[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
+      eR2[i] = eV/I + R2[i]/I*eI; //erro resistencia
       i++;
 
       if(i>=N)
@@ -263,14 +226,99 @@ int main(int argc, char **argv)
 
 
 
+/////////////////// Arrows para as orientacoes /////////////////////////////////////////////////////////////////////////////
+  float arrow_step = 0.0020;//Distancia entre arrows
+  float arrow_offset = 0.0025;//Distancia do arrow mais proximo do grafico ao grafico
+  float l=50; //tamanho do arrow
+
+
+  //Regiao 1/////////////////////////
+
+  float ax1 = -390;
+  float ay1 = 0.004;
+
+  // H 
+  TArrow *r1ar1 = new TArrow(ax1,ay1,ax1+l,ay1,0.02,"<|");
+  r1ar1->SetLineColor(1);
+  r1ar1->SetFillColor(1);
+
+  // M pl 
+  TArrow *r1ar2 = new TArrow(ax1,ay1-arrow_step,ax1+l,ay1-arrow_step,0.02,"<|");
+  r1ar2->SetLineColor(8);
+  r1ar2->SetFillColor(8);
+
+  // M fl
+  TArrow *r1ar3 = new TArrow(ax1,ay1-2*arrow_step,ax1+l,ay1-2*arrow_step,0.02,"<|");
+  r1ar3->SetLineColor(9);
+  r1ar3->SetFillColor(9);
+
+
+  // Ku
+  float axku=385;
+  float ayku=0.042;
+  TArrow *arku = new TArrow(axku,ayku,axku+l,ayku,0.02,"<|>");
+  arku->SetLineColor(49);
+  arku->SetFillColor(49);
+  TText *text_ku = new TText(axku+8, ayku+0.001, "Ku");
+  text_ku->SetTextSize(0.03);
+
+
+  //Regiao 2///////
+
+  float ax2 = -120;
+  float ay2 = 0.037;
+
+  // H
+  TArrow *r2ar1 = new TArrow(ax2,ay2,ax2+l,ay2,0.02,"<|");
+  r2ar1->SetLineColor(1);
+  r2ar1->SetFillColor(1);
+
+
+  // M pl
+  TArrow *r2ar2 = new TArrow(ax2,ay2-arrow_step,ax2+l,ay2-arrow_step,0.02,"<|");
+  r2ar2->SetLineColor(8);
+  r2ar2->SetFillColor(8);
+
+  // M fl
+  TArrow *r2ar3 = new TArrow(ax2,ay2-2*arrow_step,ax2+l,ay2-2*arrow_step,0.02,"|>");
+  r2ar3->SetLineColor(9);
+  r2ar3->SetFillColor(9);
+
+
+
+  //Regiao 3///////
+
+  float ax3 = 375;
+  float ay3 = 0.007;
+
+  // H 
+  TArrow *r3ar1 = new TArrow(ax3,ay3,ax3+l,ay3,0.02,"|>");
+  r3ar1->SetLineColor(1);
+  r3ar1->SetFillColor(1);
+
+  // Mpl
+  TArrow *r3ar2 = new TArrow(ax3,ay3-arrow_step,ax3+l,ay3-arrow_step,0.02,"|>");
+  r3ar2->SetLineColor(8);
+  r3ar2->SetFillColor(8);
+
+
+  // Mfl
+  TArrow *r3ar3 = new TArrow(ax3,ay3-2*arrow_step,ax3+l,ay3-2*arrow_step,0.02,"|>");
+  r3ar3->SetLineColor(9);
+  r3ar3->SetFillColor(9);
+
+
   //Legenda///////////////////////////
 
-  TLegend* leg;
-  leg = new TLegend(0.1,0.8,0.2,0.9);//(x1,y1,x2,y2)
+  TLegend* leg = new TLegend(0.1,0.7,0.2,0.9);//(x1,y1,x2,y2)
   
   //leg->SetHeader("Orientac#tilde{o}es");
   leg->AddEntry(MR_H,"#rightarrow","p");
   leg->AddEntry(MR_H2,"#leftarrow","p");
+
+  leg->AddEntry(r1ar1,"H","l");
+  leg->AddEntry(r1ar2,"M pl","l");
+  leg->AddEntry(r1ar3,"M fl","l");
 
 
 
@@ -295,6 +343,22 @@ int main(int argc, char **argv)
   mg->GetYaxis()->SetTitle("MR");
   mg->GetYaxis()->SetTitleOffset(1.2);
 
+ //arrows
+  r1ar1->Draw();
+  r2ar1->Draw();
+  r3ar1->Draw();
+
+  r1ar2->Draw();
+  r2ar2->Draw();
+  r3ar2->Draw();
+
+  r1ar3->Draw();
+  r2ar3->Draw();
+  r3ar3->Draw();
+
+  arku->Draw();
+  text_ku -> Draw();
+
   
 
   //legenda
@@ -303,10 +367,9 @@ int main(int argc, char **argv)
 
   c1->Update();
   c1->Modified();
-  c1->Print(plot_label[j].c_str());
-  //getchar();
+  c1->Print(plot_label.c_str());
+  getchar();
 
-  }
 
   theApp.Terminate();
   return 0;  
