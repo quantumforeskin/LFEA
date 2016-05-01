@@ -352,7 +352,7 @@ int main(int argc, char **argv)
   //Regiao 3///////
 
   float ax3 = 35;
-  float ay3 = 0.005;
+  float ay3 = 0.009;
 
   // H 
   TArrow *r3ar1 = new TArrow(ax3,ay3,ax3+10,ay3,0.02,"<|");
@@ -360,13 +360,13 @@ int main(int argc, char **argv)
   r3ar1->SetFillColor(1);
 
   // Mpl
-  TArrow *r3ar2 = new TArrow(ax3,ay3+arrow_step,ax3+10,ay3+arrow_step,0.02,"<|");
+  TArrow *r3ar2 = new TArrow(ax3,ay3-arrow_step,ax3+10,ay3-arrow_step,0.02,"<|");
   r3ar2->SetLineColor(8);
   r3ar2->SetFillColor(8);
 
 
   // Mfl
-  TArrow *r3ar3 = new TArrow(ax3,ay3+2*arrow_step,ax3+10,ay3+2*arrow_step,0.02,"<|");
+  TArrow *r3ar3 = new TArrow(ax3,ay3-2*arrow_step,ax3+10,ay3-2*arrow_step,0.02,"<|");
   r3ar3->SetLineColor(9);
   r3ar3->SetFillColor(9);
 
