@@ -41,7 +41,7 @@ int main(int argc, char **argv)
   string file1="../3s/data/SV4_D_50_2a.txt"; //directoria dos dados do primeiro varrimento 
   string file2="../3s/data/SV4_D_50_2b.txt"; //directoria dos dados do segundo varrimento
 
-  double I=0.0010094;//corrente
+  double I=0.0010027;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
   double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
@@ -309,13 +309,9 @@ int main(int argc, char **argv)
   c1->GetFrame()->SetBorderSize(12);
 
 
-
-
   TMultiGraph *mg = new TMultiGraph("mg","");
   mg->Add(MR_H);
   mg->Add(MR_H2);
-
-
 
  /////////////////// ARROWS PARA AS ORIENTACOES /////////////////////////////////////////////////////////////////////////////
   float arrow_step = 0.0025;//Distancia entre arrows

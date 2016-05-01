@@ -41,7 +41,7 @@ int main(int argc, char **argv)
   string file1="../4s/data/SV3_2_50_3a.txt"; //directoria dos dados do primeiro varrimento 
   string file2="../4s/data/SV3_2_50_3b.txt"; //directoria dos dados do segundo varrimento
 
-  double I=0.0010094;//corrente
+  double I=0.0010038;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
   double eh = 0.01;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
