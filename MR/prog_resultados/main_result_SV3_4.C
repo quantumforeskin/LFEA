@@ -27,7 +27,206 @@
 #include <algorithm>    // std::min_element, std::max_element
 #include <cmath>
 
+#include "file_reader.h"
+
 using namespace std;
+
+
+   /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
+
+
+int getN(string file1){
+
+
+  ifstream file;
+  file.open (file1.c_str());
+
+  static int N=0;
+
+  
+  char cur = '\0';
+  char last = '\0';
+
+  while (file.get(cur)) {
+      if (cur == '\n' ||
+          (cur == '\f' && last == '\r'))
+         N++;
+  }
+
+  return N;
+
+}
+
+
+
+double* getH(string file1, double I){
+
+  double eI=0.0000001;//erro corrente
+  double eV = 0.000001; //erro tensao
+  double eh = 0.1;//erro campo
+
+  ifstream file;
+  file.open (file1.c_str());
+
+  static int N=0;
+
+  
+  char cur = '\0';
+  char last = '\0';
+
+  while (file.get(cur)) {
+      if (cur == '\n' ||
+          (cur == '\f' && last == '\r'))
+         N++;
+  }
+
+  //N--;
+  
+  cout << N << endl;
+
+  double *H = new double[N];
+  double *R = new double[N];
+  double *eR = new double[N];
+
+
+  file.close();
+  file.open (file1.c_str());
+
+  int i=0;
+  int test=0;
+  while(!file.eof() && test==0)
+    {
+
+      file >> H[i] >> R[i]; // extracts 2 floating point values seperated by whitespace
+      R[i]=R[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
+      eR[i] = eV/I + R[i]/I*eI; //erro resistencia
+      i++; 
+
+
+      if(i>=N)
+	test=1;
+
+    }
+
+  delete [] R;
+  delete [] eR;
+
+  return H;
+
+}
+
+double* getR(string file1, double I){
+
+  double eI=0.0000001;//erro corrente
+  double eV = 0.000001; //erro tensao
+  double eh = 0.1;//erro campo
+
+  ifstream file;
+  file.open (file1.c_str());
+
+  static int N=0;
+
+  
+  char cur = '\0';
+  char last = '\0';
+
+  while (file.get(cur)) {
+      if (cur == '\n' ||
+          (cur == '\f' && last == '\r'))
+         N++;
+  }
+
+  //N--;
+  
+  cout << N << endl;
+
+  double *H = new double[N];
+  double *R = new double[N];
+  double *eR = new double[N];
+
+
+  file.close();
+  file.open (file1.c_str());
+
+  int i=0;
+  int test=0;
+  while(!file.eof() && test==0)
+    {
+
+      file >> H[i] >> R[i]; // extracts 2 floating point values seperated by whitespace
+      R[i]=R[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
+      eR[i] = eV/I + R[i]/I*eI; //erro resistencia
+      i++; 
+
+
+      if(i>=N)
+	test=1;
+
+    }
+
+  delete [] H;
+  delete [] eR;
+
+  return R;
+
+}
+
+double* get_eR(string file1, double I){
+
+  double eI=0.0000001;//erro corrente
+  double eV = 0.000001; //erro tensao
+  double eh = 0.1;//erro campo
+
+  ifstream file;
+  file.open (file1.c_str());
+
+  static int N=0;
+
+  
+  char cur = '\0';
+  char last = '\0';
+
+  while (file.get(cur)) {
+      if (cur == '\n' ||
+          (cur == '\f' && last == '\r'))
+         N++;
+  }
+
+  //N--;
+  
+  cout << N << endl;
+
+  double *H = new double[N];
+  double *R = new double[N];
+  double *eR = new double[N];
+
+
+  file.close();
+  file.open (file1.c_str());
+
+  int i=0;
+  int test=0;
+  while(!file.eof() && test==0)
+    {
+
+      file >> H[i] >> R[i]; // extracts 2 floating point values seperated by whitespace
+      R[i]=R[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
+      eR[i] = eV/I + R[i]/I*eI; //erro resistencia
+      i++; 
+
+
+      if(i>=N)
+	test=1;
+
+    }
+
+  delete [] R;
+  delete [] H;
+
+  return eR;
+
+}
+
 
 
 int main(int argc, char **argv)
@@ -127,19 +326,52 @@ int main(int argc, char **argv)
 
   /////////////////////////Rp e Rap////////////////////////////////////////////////
 
+
+  //Tirar os dados dos ficheiros de -400 a 400 para obter os valores minimo e maximo de R que correspondem a Rp e Rap
+  string f1_400="../4s/data/SV3_4_400_2a.txt";  
+
+
+  string f2_400="../4s/data/SV3_4_400_2b.txt"; 
+
+  double I_400=0.001004;
+
+  fr rd; //objecto file reader
+
+  int N_400 = rd.getN(f1_400);
+  double* H_400=rd.getH(f1_400,I_400);
+  double* R_400=rd.getR(f1_400,I_400);
+  double* eR_400=rd.get_eR(f1_400,I_400);
+  double* H2_400=rd.getH(f2_400,I_400);
+  double* R2_400=rd.getR(f2_400,I_400);
+  double* eR2_400=rd.get_eR(f2_400,I_400);
+
+
+
   ///Varrimento 1
 
-  double Rp = *std::min_element(R,R+N);
-  double eRp = *std::min_element(eR,eR+N); //Quanto maior a resistencia maior o seu erro, ver formula de erro
-  double Rap = *std::max_element(R,R+N);
-  double eRap = *std::max_element(eR,eR+N);
+  double Rp = *std::min_element(R_400,R_400+N_400);
+  double eRp = *std::min_element(eR_400,eR_400+N_400); //Quanto maior a resistencia maior o seu erro, ver formula de erro
+  double Rap = *std::max_element(R_400,R_400+N_400);
+  double eRap = *std::max_element(eR_400,eR_400+N_400);
+
+
+  /// MR max /////////
+  double MRmax=(Rap-Rp)/Rp;
+  double eMRmax=(eRap+eRp)/Rp + (Rap-Rp)*eRp/(Rp*Rp);
+
+
 
   ///Varrimento 2
 
-  double Rp2 = *std::min_element(R2,R2+N);
-  double eRp2 = *std::min_element(eR2,eR2+N);
-  double Rap2 = *std::max_element(R2,R2+N);
-  double eRap2 = *std::max_element(eR2,eR2+N);
+  double Rp2 = *std::min_element(R2_400,R2_400+N_400);
+  double eRp2 = *std::min_element(eR2_400,eR2_400+N_400);
+  double Rap2 = *std::max_element(R2_400,R2_400+N_400);
+  double eRap2 = *std::max_element(eR2_400,eR2_400+N_400);
+
+  /// MR max /////////
+  double MRmax2=(Rap2-Rp2)/Rp2;
+  double eMRmax2=(eRap2+eRp2)/Rp2 + (Rap2-Rp2)*eRp2/(Rp2*Rp2);
+
 
 
   // Media do Rp e Rap
@@ -147,6 +379,11 @@ int main(int argc, char **argv)
   double eRp_med = (eRp+eRp2)/2;
   double Rap_med = (Rap+Rap2)/2;
   double eRap_med = (eRap+eRap2)/2;
+
+  /// MR max /////////
+  double MRmax_med=(Rap_med-Rp_med)/Rp_med;
+  double eMRmax_med=(eRap_med+eRp_med)/Rp_med + (Rap_med-Rp_med)*eRp_med/(Rp_med*Rp_med);
+
 
 
 
@@ -254,7 +491,7 @@ int main(int argc, char **argv)
   //Ficheiro com os resultados
   ofstream resultados;
   resultados.open (res_label.c_str());
-  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" <<  "---------------------" << "\n" << "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n";
+  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "MR max: " << MRmax << " +- " << eMRmax << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "MR max: " << MRmax2 << " +- " << eMRmax2 << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" << "MR max: " << MRmax_med << " +- " << eMRmax_med <<"\n" <<  "---------------------" << "\n"<< "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n";
   resultados.close();
 
 
@@ -410,6 +647,13 @@ int main(int argc, char **argv)
   delete [] eMR2;
   delete [] eR;
   delete [] eR2;
+
+  delete [] H_400;
+  delete [] R_400;
+  delete [] eR_400;
+  delete [] H2_400;
+  delete [] R2_400;
+  delete [] eR2_400;
 
   
   mg->Draw("AP");

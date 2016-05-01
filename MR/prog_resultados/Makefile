@@ -12,29 +12,29 @@ result:lib3Trab2.a main_result.o
 	@echo  "          (__) \n          (oo) \n    /------\/ \n   / |    || \n*    /\---/\ \n     ~~   ~~ "
 
 
-4:lib3Trab2.a main_result_SV3_4.o
-	g++ -o main_result_SV3_4.exe main_result_SV3_4.o $(mylib) $(rootlibs)
+4:lib3Trab2.a main_result_SV3_4.o file_reader.o
+	g++ -o main_result_SV3_4.exe main_result_SV3_4.o file_reader.o $(mylib) $(rootlibs)
 	@echo "\n\n" The executable file main_result_SV3_4.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./main_result_SV3_4.exe "\n\n" 
 4400:lib3Trab2.a 400_SV3_4.o
 	g++ -o 400_SV3_4.exe 400_SV3_4.o $(mylib) $(rootlibs)
 	@echo "\n\n" The executable file 400_SV3_4.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./400_SV3_4.exe "\n\n"
 
-2:lib3Trab2.a main_result_SV3_2.o
-	g++ -o main_result_SV3_2.exe main_result_SV3_2.o $(mylib) $(rootlibs)
+2:lib3Trab2.a main_result_SV3_2.o file_reader.o
+	g++ -o main_result_SV3_2.exe main_result_SV3_2.o file_reader.o $(mylib) $(rootlibs)
 	@echo "\n\n" The executable file main_result_SV3_2.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./main_result_SV3_2.exe "\n\n" 
-2400:lib3Trab2.a 400_SV3_2.o
+2400:lib3Trab2.a 400_SV3_2.o 
 	g++ -o 400_SV3_2.exe 400_SV3_2.o $(mylib) $(rootlibs)
 	@echo "\n\n" The executable file 400_SV3_2.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./400_SV3_2.exe "\n\n" 
 
-B:lib3Trab2.a main_result_SV4B.o
-	g++ -o main_result_SV4B.exe main_result_SV4B.o $(mylib) $(rootlibs)
+B:lib3Trab2.a main_result_SV4B.o file_reader.o
+	g++ -o main_result_SV4B.exe main_result_SV4B.o file_reader.o $(mylib) $(rootlibs)
 	@echo "\n\n" The executable file main_result_SV4B.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./main_result_SV4B.exe "\n\n" 
 B400:lib3Trab2.a 400_SV4_B.o
 	g++ -o 400_SV4_B.exe 400_SV4_B.o $(mylib) $(rootlibs)
 	@echo "\n\n" The executable file 400_SV4_B.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./400_SV4_B.exe "\n\n" 
 
-D:lib3Trab2.a main_result_SV4D.o
-	g++ -o main_result_SV4D.exe main_result_SV4D.o $(mylib) $(rootlibs)
+D:lib3Trab2.a main_result_SV4D.o file_reader.o
+	g++ -o main_result_SV4D.exe main_result_SV4D.o file_reader.o $(mylib) $(rootlibs)
 	@echo "\n\n" The executable file main_result_SV4D.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./main_result_SV4D.exe "\n\n" 
 D400:lib3Trab2.a 400_SV4_D.o
 	g++ -o 400_SV4_D.exe 400_SV4_D.o $(mylib) $(rootlibs)
@@ -66,6 +66,10 @@ main_result_SV4D.o: main_result_SV4D.C
 400_SV4_D.o: 400_SV4_D.C
 	g++ -c 400_SV4_D.C $(rootlibs)
 
+
+
+file_reader.o: file_reader.C
+	g++ -c file_reader.C
 
 main_result.o: main_result.C cFCgraphics.h
 	g++ -c main_result.C $(rootlibs)
