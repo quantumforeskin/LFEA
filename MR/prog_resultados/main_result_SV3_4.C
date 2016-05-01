@@ -328,7 +328,7 @@ int main(int argc, char **argv)
   //Regiao 1/////////////////////////
 
   float ax1 = -40;
-  float ay1 = 0.035;
+  float ay1 = 0.04;
 
   // H 
   TArrow *r1ar1 = new TArrow(ax1,ay1,ax1+10,ay1,0.02,"|>");
@@ -359,7 +359,7 @@ int main(int argc, char **argv)
 
   // Ku
   float axku=-50;
-  float ayku=0.0015;
+  float ayku=0.007;
   TArrow *arku = new TArrow(axku,ayku,axku+10,ayku,0.02,"<|>");
   arku->SetLineColor(49);
   arku->SetFillColor(49);
@@ -370,7 +370,7 @@ int main(int argc, char **argv)
   //Regiao 2///////
 
   float ax2 = -7;
-  float ay2 = 0.015;
+  float ay2 = 0.023;
 
   // H
   TText *text_H = new TText(ax2-arrow_step, ay2-arrow_step, "H = 0");
@@ -391,8 +391,8 @@ int main(int argc, char **argv)
 
   //Regiao 3///////
 
-  float ax3 = 35;
-  float ay3 = 0.009;
+  float ax3 = 40;
+  float ay3 = 0.014;
 
   // H 
   TArrow *r3ar1 = new TArrow(ax3,ay3,ax3+10,ay3,0.02,"<|");
