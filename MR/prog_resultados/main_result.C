@@ -214,6 +214,8 @@ int main(int argc, char **argv)
 
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
+  f1->SetParLimits(0,0,1000);
+  f1->SetParLimits(1,-1,1);
   TGraphErrors *R_H = new TGraphErrors(N,H,R,eH,eR);//Grafico R(H) para dazer o fit
   R_H->Fit("f1","","",low_lim,high_lim);
   double b=f1->GetParameter(0); //ordenada na origem 

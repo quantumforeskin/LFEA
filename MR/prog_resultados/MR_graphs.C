@@ -77,7 +77,7 @@ int main(int argc, char **argv)
   file2[4]="../4s/data/SV3_1_50_2b.txt";
   file1[5]="../4s/data/SV3_1_400_2b.txt";
   file2[6]="../4s/data/SV3_3_50_2b.txt";
-  file1[7]="../4s/data/SV3_3_400_2b.txt";
+  file1[7]="../4s/data/SV3_3_400_2b.txt"; 
 
   double I[Ngraphs];//corrente
   I[0]=0.0010026;
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
   //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
 
 
-  for(int j=0;j<Ngraphs;j++){
+  for(int j=0;j<1;j++){
 
   /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
   ifstream file;
@@ -300,8 +300,6 @@ int main(int argc, char **argv)
   //legenda
   leg->Draw();
   
-
-
 
   c1->Update();
   c1->Modified();

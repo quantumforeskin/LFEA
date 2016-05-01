@@ -16,7 +16,6 @@
 #include<TLatex.h>
 #include<TArrow.h>
 #include<TLegend.h>
-#include "TStyle.h"  //Caixa do fit
 #include<TText.h>
 #include<TPaveText.h>
 #include<fstream>
@@ -35,10 +34,10 @@ int main(int argc, char **argv)
 
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  string res_label = "resultados_SV3_4.txt";//Nome do ficheiro onde sao apresentados os resultados
-  string plot_label = "SV3_4.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
-  string file1="../4s/data/SV3_4_50_2a.txt"; //directoria dos dados do primeiro varrimento 
-  string file2="../4s/data/SV3_4_50_2b.txt"; //directoria dos dados do segundo varrimento
+  string res_label = "resultados_SV4_D.txt";//Nome do ficheiro onde sao apresentados os resultados
+  string plot_label = "SV4_D.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  string file1="../3s/data/SV4_D_50_2a.txt"; //directoria dos dados do primeiro varrimento 
+  string file2="../3s/data/SV4_D_50_2b.txt"; //directoria dos dados do segundo varrimento
 
   double I=0.0010094;//corrente
   double eI=0.0000001;//erro corrente
@@ -46,12 +45,15 @@ int main(int argc, char **argv)
   double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-15;
+  double low_lim=0;
   double high_lim=20;
-  double low_lim2=-15;
+  double low_lim2=0;
   double high_lim2=20;
 
-   /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
+  //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
+
+
+  /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
   ifstream file;
   file.open (file1.c_str());
 
@@ -211,7 +213,6 @@ int main(int argc, char **argv)
 
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
-  f1->SetParLimits(1,-1,0);
   TGraphErrors *R_H = new TGraphErrors(N,H,R,eH,eR);//Grafico R(H) para dazer o fit
   R_H->Fit("f1","","",low_lim,high_lim);
   double b=f1->GetParameter(0); //ordenada na origem 
@@ -224,7 +225,6 @@ int main(int argc, char **argv)
 
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
-  f2->SetParLimits(1,-1,0);
   TGraphErrors *R_H2 = new TGraphErrors(N,H2,R2,eH2,eR2);//grafico R(H) para fazer o fit
   R_H2->Fit("f2","","",low_lim2,high_lim2);
   double b2=f2->GetParameter(0); // ordenada na origem
@@ -263,8 +263,6 @@ int main(int argc, char **argv)
   TApplication theApp("App",&argc, argv);
   theApp.InitializeGraphics();
 
-
-
   TCanvas *c1 = new TCanvas("c1","Nome",200,10,700,500);
   c1->SetFillColor(0);
   //c1->SetGrid();
@@ -280,31 +278,31 @@ int main(int argc, char **argv)
 
 
 
- /////////////////// Arrows para as orientacoes /////////////////////////////////////////////////////////////////////////////
-  float arrow_step = 0.0020;//Distancia entre arrows
-  float arrow_offset = 0.0025;//Distancia do arrow mais proximo do grafico ao grafico
+ /////////////////// ARROWS PARA AS ORIENTACOES /////////////////////////////////////////////////////////////////////////////
+  float arrow_step = 0.0025;//Distancia entre arrows
+  float arrow_offset = 0.0035;//Distancia do arrow mais proximo do grafico ao grafico
 
 
   //Regiao 1/////////////////////////
 
-  float ax1 = -40;
-  float ay1 = 0.035;
+  float ax1 = H[0]/2-10;
+  float ay1 = MR[0]+0.005;
 
   // H 
-  TArrow *r1ar1 = new TArrow(ax1,ay1,ax1+10,ay1,0.02,"|>");
+  TArrow *r1ar1 = new TArrow(ax1,ay1+arrow_offset,ax1+10,ay1+arrow_offset,0.02,"<|");
   r1ar1->SetLineColor(1);
   r1ar1->SetFillColor(1);
 
-  // M pl 
-  TArrow *r1ar2 = new TArrow(ax1,ay1-arrow_step,ax1+10,ay1-arrow_step,0.02,"<|");
+  // Mpl
+  TArrow *r1ar2 = new TArrow(ax1,ay1+arrow_offset-arrow_step,ax1+10,ay1+arrow_offset-arrow_step,0.02,"<|");
   r1ar2->SetLineColor(8);
   r1ar2->SetFillColor(8);
 
-  // M fl
-  TArrow *r1ar3 = new TArrow(ax1,ay1-2*arrow_step,ax1+10,ay1-2*arrow_step,0.02,"|>");
+
+  // Mfl
+  TArrow *r1ar3 = new TArrow(ax1,ay1+arrow_offset-2*arrow_step,ax1+10,ay1+arrow_offset-2*arrow_step,0.02,"<|");
   r1ar3->SetLineColor(9);
   r1ar3->SetFillColor(9);
-
 
   /*
   // J
@@ -318,32 +316,32 @@ int main(int argc, char **argv)
   */
 
   // Ku
-  float axku=-50;
-  float ayku=0.0015;
+  float axku=40;
+  float ayku=0.003;
   TArrow *arku = new TArrow(axku,ayku,axku+10,ayku,0.02,"<|>");
   arku->SetLineColor(49);
   arku->SetFillColor(49);
-  TText *text_ku = new TText(axku+3, ayku+0.001, "Ku");
-  text_ku->SetTextSize(0.03);
+  TText *text_ku = new TText(axku+3, ayku+0.002, "Ku");
+  text_ku->SetTextSize(0.04);
 
 
   //Regiao 2///////
 
-  float ax2 = -7;
-  float ay2 = 0.015;
+  float ax2 = Hoff-10.;
+  float ay2 = (R_half-Rp)/Rp;
 
-  // H
-  TText *text_H = new TText(ax2-arrow_step, ay2-arrow_step, "H = 0");
+  // H 
+  TText *text_H = new TText(ax2, ay2+arrow_offset+arrow_step/2, "H = 0");
   text_H->SetTextSize(0.04);
 
 
   // M pl
-  TArrow *r2ar2 = new TArrow(ax2,ay2+arrow_step/2,ax2+10,ay2+arrow_step/2,0.02,"<|");
+  TArrow *r2ar2 = new TArrow(ax2,ay2+arrow_offset+2*arrow_step,ax2+10,ay2+arrow_offset+2*arrow_step,0.02,"<|");
   r2ar2->SetLineColor(8);
   r2ar2->SetFillColor(8);
 
   // M fl
-  TArrow *r2ar3 = new TArrow(ax2-2,ay2-arrow_step,ax2-2,ay2-arrow_step+0.004,0.02,"|>");
+  TArrow *r2ar3 = new TArrow(ax2-2,ay2+arrow_offset,ax2-2,ay2+arrow_offset+0.008,0.02,"|>");
   r2ar3->SetLineColor(9);
   r2ar3->SetFillColor(9);
 
@@ -351,22 +349,21 @@ int main(int argc, char **argv)
 
   //Regiao 3///////
 
-  float ax3 = 35;
-  float ay3 = 0.005;
+  float ax3 = -H[0]/2+10;
+  float ay3 = MR[N-2];
 
   // H 
-  TArrow *r3ar1 = new TArrow(ax3,ay3,ax3+10,ay3,0.02,"<|");
+  TArrow *r3ar1 = new TArrow(ax3,ay3-arrow_offset,ax3+10,ay3-arrow_offset,0.02,"|>");
   r3ar1->SetLineColor(1);
   r3ar1->SetFillColor(1);
 
-  // Mpl
-  TArrow *r3ar2 = new TArrow(ax3,ay3+arrow_step,ax3+10,ay3+arrow_step,0.02,"<|");
+  // M pl 
+  TArrow *r3ar2 = new TArrow(ax3,ay3-arrow_offset-arrow_step,ax3+10,ay3-arrow_offset-arrow_step,0.02,"<|");
   r3ar2->SetLineColor(8);
   r3ar2->SetFillColor(8);
 
-
-  // Mfl
-  TArrow *r3ar3 = new TArrow(ax3,ay3+2*arrow_step,ax3+10,ay3+2*arrow_step,0.02,"<|");
+  // M fl
+  TArrow *r3ar3 = new TArrow(ax3,ay3-arrow_offset-2*arrow_step,ax3+10,ay3-arrow_offset-2*arrow_step,0.02,"|>");
   r3ar3->SetLineColor(9);
   r3ar3->SetFillColor(9);
 
@@ -385,9 +382,9 @@ int main(int argc, char **argv)
   leg->AddEntry(MR_H,"#rightarrow","p");
   leg->AddEntry(MR_H2,"#leftarrow","p");
 
-  leg->AddEntry(r1ar3,"M fl","l");
-  leg->AddEntry(r1ar2,"M pl","l");
   leg->AddEntry(r1ar1,"H","l");
+  leg->AddEntry(r1ar2,"M pl","l");
+  leg->AddEntry(r1ar3,"M fl","l");
   //leg->AddEntry(arj,"J","l");
 
 
@@ -395,9 +392,6 @@ int main(int argc, char **argv)
 
   file.close();
   file_2.close();
-  //delete  g;
-  //delete gr1; // A classe do prof deve fazer delete aos objectos, quando descomento da segmentation violation
-  //delete  cubic;
   delete [] R;
   delete [] H;
   delete [] MR;
@@ -411,7 +405,7 @@ int main(int argc, char **argv)
   delete [] eR;
   delete [] eR2;
 
-  
+
   mg->Draw("AP");
   mg->GetXaxis()->SetTitle("H (Oe)");
   mg->GetYaxis()->SetTitle("MR");
@@ -443,10 +437,6 @@ int main(int argc, char **argv)
 
   //legenda
   leg->Draw();
- 
-
-    gStyle->SetOptFit();
-
   
 
 

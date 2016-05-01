@@ -213,6 +213,7 @@ int main(int argc, char **argv)
 
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
+  f1->SetParLimits(1,-1,0);
   TGraphErrors *R_H = new TGraphErrors(N,H,R,eH,eR);//Grafico R(H) para dazer o fit
   R_H->Fit("f1","","",low_lim,high_lim);
   double b=f1->GetParameter(0); //ordenada na origem 
@@ -225,6 +226,7 @@ int main(int argc, char **argv)
 
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
+  f2->SetParLimits(1,-1,0);
   TGraphErrors *R_H2 = new TGraphErrors(N,H2,R2,eH2,eR2);//grafico R(H) para fazer o fit
   R_H2->Fit("f2","","",low_lim2,high_lim2);
   double b2=f2->GetParameter(0); // ordenada na origem

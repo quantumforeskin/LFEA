@@ -47,9 +47,9 @@ int main(int argc, char **argv)
 
   //Limites da curva linear --> Para fazer o fit
   double low_lim=-15;
-  double high_lim=20;
+  double high_lim=6;
   double low_lim2=-15;
-  double high_lim2=20;
+  double high_lim2=6;
 
    /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
   ifstream file;
@@ -95,6 +95,8 @@ int main(int argc, char **argv)
 
     }
 
+  file.close();
+
 
 
 
@@ -123,6 +125,8 @@ int main(int argc, char **argv)
 	test=1;
       // do something with them
     }
+
+  file_2.close();
 
 
   /////////////////////////Rp e Rap////////////////////////////////////////////////
@@ -166,6 +170,10 @@ int main(int argc, char **argv)
     MR[i]=(R[i]-Rp)/Rp;
 
   }
+
+  
+
+  
   
 
   TGraphErrors *MR_H = new TGraphErrors(N,H,MR,eH,eMR);
@@ -211,7 +219,6 @@ int main(int argc, char **argv)
 
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
-  f1->SetParLimits(1,-1,0);
   TGraphErrors *R_H = new TGraphErrors(N,H,R,eH,eR);//Grafico R(H) para dazer o fit
   R_H->Fit("f1","","",low_lim,high_lim);
   double b=f1->GetParameter(0); //ordenada na origem 
@@ -222,41 +229,17 @@ int main(int argc, char **argv)
   double dH1=(R_half_med-b)/a; //H correspondente a R a meia altura
   double edH1=(eR_half_med+eb)/a + TMath::Abs(R_half_med-b)/(a*a)*ea;
 
+  for(i=0;i<N;i++)
+    cout << "H " << H[i] << " eH " << eH[i] << " R " << R[i] << " eR " << eR[i] << endl;
+
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
-  f2->SetParLimits(1,-1,0);
   TGraphErrors *R_H2 = new TGraphErrors(N,H2,R2,eH2,eR2);//grafico R(H) para fazer o fit
   R_H2->Fit("f2","","",low_lim2,high_lim2);
   double b2=f2->GetParameter(0); // ordenada na origem
   double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
   double a2=f2->GetParameter(1); //declive
   double ea2 =  f2->GetParError(0); //erro do declive 
-
-  double dH2=(R_half_med-b2)/a2; //H correspondente a R a meia altura
-  double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
-
-
-  // Campo coercivo
-  double Hc=TMath::Abs(dH2-dH1)/2;
-  double eHc = (edH1+edH2)/2; //erro
-  
-  // Campo de offset
-  double Hoff=(dH2+dH1)/2;
-  double eHoff = (edH1+edH2)/2; //erro
-
-  //// Sensibilidade e erros (em percentagem)
-  double S1 = a/Rp*100; //Varrimento 1
-  double eS1 = (ea/Rp + a/(Rp*Rp)*eRp)*100; 
-  double S2 = a2/Rp2*100; //Varrimento 2
-  double eS2 = (ea2/Rp2 + a2/(Rp2*Rp2)*eRp2)*100;
-
-
-  //Ficheiro com os resultados
-  ofstream resultados;
-  resultados.open (res_label.c_str());
-  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" <<  "---------------------" << "\n" << "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n";
-  resultados.close();
-
 
 
   //faz aparecer o canvas
@@ -272,129 +255,18 @@ int main(int argc, char **argv)
   c1->GetFrame()->SetBorderSize(12);
 
 
+  //TMultiGraph *mg = new TMultiGraph("mg","");
+  //mg->Add(R_H);
+  //mg->Add(R_H2);
 
-
-  TMultiGraph *mg = new TMultiGraph("mg","");
-  mg->Add(MR_H);
-  mg->Add(MR_H2);
-
-
-
- /////////////////// Arrows para as orientacoes /////////////////////////////////////////////////////////////////////////////
-  float arrow_step = 0.0020;//Distancia entre arrows
-  float arrow_offset = 0.0025;//Distancia do arrow mais proximo do grafico ao grafico
-
-
-  //Regiao 1/////////////////////////
-
-  float ax1 = -40;
-  float ay1 = 0.035;
-
-  // H 
-  TArrow *r1ar1 = new TArrow(ax1,ay1,ax1+10,ay1,0.02,"|>");
-  r1ar1->SetLineColor(1);
-  r1ar1->SetFillColor(1);
-
-  // M pl 
-  TArrow *r1ar2 = new TArrow(ax1,ay1-arrow_step,ax1+10,ay1-arrow_step,0.02,"<|");
-  r1ar2->SetLineColor(8);
-  r1ar2->SetFillColor(8);
-
-  // M fl
-  TArrow *r1ar3 = new TArrow(ax1,ay1-2*arrow_step,ax1+10,ay1-2*arrow_step,0.02,"|>");
-  r1ar3->SetLineColor(9);
-  r1ar3->SetFillColor(9);
-
-
-  /*
-  // J
-  float axj=40;
-  float ayj=0;
-  TArrow *arj = new TArrow(axj,ayj,axj+10,ayj,0.02,"|>");
-  arj->SetLineColor(49);
-  arj->SetFillColor(49);
-  TPaveText *text_j = new TPaveText(axj,ayj+5,axj+10,ayj+5);
-  text_j->SetLabel("J");
-  */
-
-  // Ku
-  float axku=-50;
-  float ayku=0.0015;
-  TArrow *arku = new TArrow(axku,ayku,axku+10,ayku,0.02,"<|>");
-  arku->SetLineColor(49);
-  arku->SetFillColor(49);
-  TText *text_ku = new TText(axku+3, ayku+0.001, "Ku");
-  text_ku->SetTextSize(0.03);
-
-
-  //Regiao 2///////
-
-  float ax2 = -7;
-  float ay2 = 0.015;
-
-  // H
-  TText *text_H = new TText(ax2-arrow_step, ay2-arrow_step, "H = 0");
-  text_H->SetTextSize(0.04);
-
-
-  // M pl
-  TArrow *r2ar2 = new TArrow(ax2,ay2+arrow_step/2,ax2+10,ay2+arrow_step/2,0.02,"<|");
-  r2ar2->SetLineColor(8);
-  r2ar2->SetFillColor(8);
-
-  // M fl
-  TArrow *r2ar3 = new TArrow(ax2-2,ay2-arrow_step,ax2-2,ay2-arrow_step+0.004,0.02,"|>");
-  r2ar3->SetLineColor(9);
-  r2ar3->SetFillColor(9);
+  R_H->Draw("AP");
 
 
 
-  //Regiao 3///////
-
-  float ax3 = 35;
-  float ay3 = 0.005;
-
-  // H 
-  TArrow *r3ar1 = new TArrow(ax3,ay3,ax3+10,ay3,0.02,"<|");
-  r3ar1->SetLineColor(1);
-  r3ar1->SetFillColor(1);
-
-  // Mpl
-  TArrow *r3ar2 = new TArrow(ax3,ay3+arrow_step,ax3+10,ay3+arrow_step,0.02,"<|");
-  r3ar2->SetLineColor(8);
-  r3ar2->SetFillColor(8);
+  //file.close();
+  //file_2.close();
 
 
-  // Mfl
-  TArrow *r3ar3 = new TArrow(ax3,ay3+2*arrow_step,ax3+10,ay3+2*arrow_step,0.02,"<|");
-  r3ar3->SetLineColor(9);
-  r3ar3->SetFillColor(9);
-
-
-  //Legenda///////////////////////////
-
-  TLegend* leg;
-
-  //Usa-se a condicao para nao por a legenda em cima dos dados
-  if(S1<0){
-    leg = new TLegend(0.8,0.7,0.9,0.9);//(x1,y1,x2,y2)
-  }else{
-    leg = new TLegend(0.1,0.7,0.2,0.9);//(x1,y1,x2,y2)
-  }
-  //leg->SetHeader("Orientac#tilde{o}es");
-  leg->AddEntry(MR_H,"#rightarrow","p");
-  leg->AddEntry(MR_H2,"#leftarrow","p");
-
-  leg->AddEntry(r1ar3,"M fl","l");
-  leg->AddEntry(r1ar2,"M pl","l");
-  leg->AddEntry(r1ar1,"H","l");
-  //leg->AddEntry(arj,"J","l");
-
-
-
-
-  file.close();
-  file_2.close();
   //delete  g;
   //delete gr1; // A classe do prof deve fazer delete aos objectos, quando descomento da segmentation violation
   //delete  cubic;
@@ -411,45 +283,8 @@ int main(int argc, char **argv)
   delete [] eR;
   delete [] eR2;
 
+  gStyle->SetOptFit();
   
-  mg->Draw("AP");
-  mg->GetXaxis()->SetTitle("H (Oe)");
-  mg->GetYaxis()->SetTitle("MR");
-  mg->GetYaxis()->SetTitleOffset(1.2);
-
-  
-  //arrows
-  r1ar1->Draw();
-  //r2ar1->Draw(); Basta por um texto a dizer que H=0
-  text_H->Draw();
-  r3ar1->Draw();
-
-  r1ar2->Draw();
-  r2ar2->Draw();
-  r3ar2->Draw();
-
-  r1ar3->Draw();
-  r2ar3->Draw();
-  r3ar3->Draw();
-
-  arku->Draw();
-  text_ku -> Draw();
-
-  //arj->Draw();
-  //text_j->Draw();
-
-
-  
-
-  //legenda
-  leg->Draw();
- 
-
-    gStyle->SetOptFit();
-
-  
-
-
 
   c1->Update();
   c1->Modified();
