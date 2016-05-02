@@ -1,0 +1,128 @@
+#include"DataInterpolator.h"
+#include"cFCgraphics.h"
+#include<TROOT.h>
+#include<TF1.h>
+#include<TGraph.h>
+#include<TCanvas.h>
+#include<TPad.h>
+#include<iostream>
+#include<iomanip>
+#include<TLine.h>
+#include<TLatex.h>
+
+
+using namespace std;
+
+
+int main()
+{
+
+  double *a,*b;
+  //cFCgraphics bdraw;
+ 
+  //cFCgraphics cdraw,ddraw,edraw;
+  a=new double[10];
+  b=new double[10];
+  TF1 *cubic, *poly,*difCP,*difCD,*difD;
+  TGraph *g;
+  double *K;
+
+
+  ofstream file;
+  file.open ("../data/SV4_B_50_2.txt");
+
+  int N=0;
+  while(!file.eof())
+    {
+      double test1;
+      file >> test1; // extracts 2 floating point values seperated by whitespace
+
+      N++;
+
+      // do something with them
+    }
+  cout << N << endl;
+
+  a=new double[9];
+  b=new double[9];
+  a[0]=0;a[1]=25;a[2]=50;a[3]=75;a[4]=100;a[5]=125;a[6]=150;a[7]=175;a[8]=200;
+  b[0]=10.6;b[1]=16.0;b[2]=45.;b[3]=83.5;b[4]=52.8;b[5]=19.9;b[6]=10.8;b[7]=8.25;b[8]=4.7;
+  //a[0]=1;a[1]=2;a[2]=3;a[3]=4;a[4]=5;//a[5]=5;a[6]=6;a[7]=7;a[8]=8;
+  //b[0]=0;b[1]=1;b[2]=0;b[3]=1;b[4]=0;//b[5]=1;b[6]=0;b[7]=1;b[8]=0;
+
+  DataInterpolator Test(9,a,b);
+  cout<<"Pontos de Data"<<endl;
+
+  for(int i=0;i<9;i++)
+    cout<<a[i]<<" "<<b[i]<<endl;
+
+  K=Test.DataInterpolator::CubicSplineCurvatures();
+  cout<<setprecision(16)<<"a)Qual o valor da interpolação por cubic spline e por polinómio no ponto de energia E = 57.3MeV"<<endl<<"CubicSpline(57.3)="<<Test.CubicSplineEvaluate(K,57.3)<<endl<<"Polynomial(57.3)="<<Test.PolynomialEvaluate(57.3)<<"\n\n\n";
+  
+   
+
+  cubic=Test.DataInterpolator::CubicSpline(K);
+  cubic->SetLineWidth(2);
+  cubic->SetLineColor(kRed);
+  cubic->SetTitle("Cubic Spline and Polynomial Interpolation");
+
+  poly=Test.DataInterpolator::Polynomial();
+  poly->SetLineWidth(2);
+  poly->SetLineColor(kBlue);
+
+  difCP=Test.DifCubicPolynomial(K);
+  difCP->SetTitle("Diference between Polynomial Interpolation and Cubic Splines");
+  difCP->SetLineColor(2);
+
+  difCD=Test.DifCubicDeriv(K);
+  difCD->SetTitle("Diference between exact and numerical derivative of Cubic Splines");
+  
+  difD=Test.DifCubicPolynomialDeriv(K);
+  difD->SetTitle("Diference between the numerical derivatives of both interpolations");
+
+  g=Test.Draw();
+  g->SetMarkerStyle(31);
+  g->SetTitle("Data Points");
+
+  cFCgraphics br;//criar um objecto cFCgraphics
+  TPad *pad=br.CreatePad("Pad1");//criar um novo pad para colocar ambas as funçoes
+  br.AddObject(g,"Pad1","ap");
+  br.AddObject(cubic, "Pad1");//adicionar ao pad o TF1* da funçao interpoladora polinomial
+  br.AddObject(poly, "Pad1", "same");//adicionar ao pad o TF1* da funçao interpoladora por splines cubicos
+  
+
+  //adicionar o pad em causa a listagem de objectos da class cFC
+  TPad *CPpad =br.CreatePad("CPpad");
+  br.AddObject(difCP,"CPpad");
+  
+  TPad *Dpad =br.CreatePad("Dpad");
+  br.AddObject(difD,"Dpad","");
+
+  TPad *CDpad =br.CreatePad("CDpad");
+  br.AddObject(difCD,"CDpad");
+
+
+  br.DumpPad("Pad1");
+  br.DumpPad("Dpad");
+  br.DumpPad("CDpad");
+  br.DumpPad("CPpad");
+
+  br.AddObject(CPpad);
+  br.AddObject(CDpad);
+  br.AddObject(Dpad);
+  br.AddObject(pad);
+  br.Draw("all"); //draw canvas
+  
+  delete difD;
+  delete difCD;
+  delete difCP;
+  delete  poly;
+  delete  g;
+  delete  cubic;
+  delete []a;
+  delete []b;
+
+  file.close();
+
+  return 0;  
+}
