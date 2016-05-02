@@ -35,21 +35,21 @@ int main(int argc, char **argv)
 
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  string res_label = "resultados_SV3_4.txt";//Nome do ficheiro onde sao apresentados os resultados
-  string plot_label = "SV3_4.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
-  string file1="../4s/data/SV3_4_50_2a.txt"; //directoria dos dados do primeiro varrimento 
-  string file2="../4s/data/SV3_4_50_2b.txt"; //directoria dos dados do segundo varrimento
+  string res_label = "pila.txt";//Nome do ficheiro onde sao apresentados os resultados
+  string plot_label = "fit.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  string file1="datar.txt"; //directoria dos dados do primeiro varrimento 
+  string file2="datal.txt"; //directoria dos dados do segundo varrimento
 
-  double I=0.0010094;//corrente
+  double I=0.0010002;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
-  double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
+  double eh = 0.1;//erro campo 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-15;
-  double high_lim=20;
-  double low_lim2=-15;
-  double high_lim2=20;
+  double low_lim=0.1;
+  double high_lim=9;
+  double low_lim2=444;
+  double high_lim2=-444;
 
    /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
   ifstream file;
@@ -72,8 +72,8 @@ int main(int argc, char **argv)
   cout << N << endl;
 
   double *H = new double[N];
-  double *R = new double[N];
-  double *eR = new double[N];
+  double *MR = new double[N];
+  double *eMR = new double[N];
 
 
   file.close();
@@ -84,9 +84,7 @@ int main(int argc, char **argv)
   while(!file.eof() && test==0)
     {
 
-      file >> H[i] >> R[i]; // extracts 2 floating point values seperated by whitespace
-      R[i]=R[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
-      eR[i] = eV/I + R[i]/I*eI; //erro resistencia
+      file >> H[i] >> MR[i] >> eMR[i]; // extracts 2 floating point values seperated by whitespace
       i++; 
 
 
@@ -104,8 +102,8 @@ int main(int argc, char **argv)
 
 
   double *H2 = new double[N];
-  double *R2 = new double[N];
-  double *eR2 = new double[N];
+  double *MR2 = new double[N];
+  double *eMR2 = new double[N];
 
   file_2.close();
   file_2.open (file2.c_str());
@@ -114,9 +112,7 @@ int main(int argc, char **argv)
   test=0;
   while(!file_2.eof() && test==0)
     {
-      file_2 >> H2[i] >> R2[i]; // extracts 2 floating point values seperated by whitespace
-      R2[i]=R2[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
-      eR2[i] = eV/I + R2[i]/I*eI; //erro resistencia
+      file_2 >> H2[i] >> MR2[i] >> eMR2[i]; // extracts 2 floating point values seperated by whitespace
       i++;
 
       if(i>=N)
@@ -125,28 +121,7 @@ int main(int argc, char **argv)
     }
 
 
-  /////////////////////////Rp e Rap////////////////////////////////////////////////
-
-  ///Varrimento 1
-
-  double Rp = *std::min_element(R,R+N);
-  double eRp = *std::min_element(eR,eR+N); //Quanto maior a resistencia maior o seu erro, ver formula de erro
-  double Rap = *std::max_element(R,R+N);
-  double eRap = *std::max_element(eR,eR+N);
-
-  ///Varrimento 2
-
-  double Rp2 = *std::min_element(R2,R2+N);
-  double eRp2 = *std::min_element(eR2,eR2+N);
-  double Rap2 = *std::max_element(R2,R2+N);
-  double eRap2 = *std::max_element(eR2,eR2+N);
-
-
-  // Media do Rp e Rap
-  double Rp_med = (Rp+Rp2)/2;
-  double eRp_med = (eRp+eRp2)/2;
-  double Rap_med = (Rap+Rap2)/2;
-  double eRap_med = (eRap+eRap2)/2;
+  
 
 
 
@@ -154,107 +129,58 @@ int main(int argc, char **argv)
 
   ///Varrimento 1
 
-  double *MR = new double[N];
   double *eH = new double[N];
-  double *eMR = new double[N];
   for(int i=0;i<N;i++){
 
-    double e_mr= eR[i]/Rp + R[i]/(Rp*Rp)*eRp; //erro magneto-resistencia
-
     eH[i]=eh; //dado no inicio do prog
-    eMR[i]=e_mr;
-    MR[i]=(R[i]-Rp)/Rp;
 
   }
   
 
   TGraphErrors *MR_H = new TGraphErrors(N,H,MR,eH,eMR);
-  MR_H->SetMarkerStyle(6);
-  MR_H->SetMarkerColor(kBlue);
-  MR_H->SetFillColor(kBlue);
+  MR_H->SetMarkerStyle(1);
+  MR_H->SetLineColor(kBlue);
+  //MR_H->SetFillColor(kBlue);
 
-
-  ///Varrimento 2
-
-  double *MR2 = new double[N];
-  double *eH2 = new double[N];
-  double *eMR2 = new double[N];
-  for(int i=0;i<N;i++){
-
-    //Os erros eV, eI e eH sao os mesmos para ambos os varrimentos
-    double e_mr2= eR2[i]/Rp2 + R2[i]/(Rp2*Rp2)*eRp2; //erro magneto-resistencia
-
-    eH2[i]=eh; //dado no inicio do prog
-    eMR2[i]=e_mr2;//em percentagem
-    MR2[i]=(R2[i]-Rp2)/Rp2;//em percentagem
-
-  }
   
 
-  TGraphErrors *MR_H2 = new TGraphErrors(N,H2,MR2,eH2,eMR2);
-  MR_H2->SetMarkerColor(kRed);
-  MR_H2->SetMarkerStyle(7);
+  TGraphErrors *MR_H2 = new TGraphErrors(N,H2,MR2,eH,eMR2);
+  MR_H2->SetLineColor(kRed);
+  MR_H2->SetMarkerStyle(1);
 
 
 
 
-  ////////////////////Encontrar Hc e Hoff////////////////////
-
-
-  double R_half = (Rap+Rp)/2; //Resistencia a meia altura para o varrimento 1
-  double eR_half = (eRap+eRp)/2; //Erro
-  double R_half2 = (Rap2+Rp2)/2; //Resistencia a meia altura para o varrimento 2
-  double eR_half2 = (eRap2+eRp2)/2; //Erro
-  double R_half_med=(R_half+R_half2)/2; //Faz-se a media para obter a resistencia a meia altura final
-  double eR_half_med=(eR_half+eR_half2)/2;//Erro
 
 
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
-  f1->SetParLimits(1,-1,0);
-  TGraphErrors *R_H = new TGraphErrors(N,H,R,eH,eR);//Grafico R(H) para dazer o fit
-  R_H->Fit("f1","","",low_lim,high_lim);
+  //f1->SetParLimits(0,-30,0);
+  //f1->SetParLimits(1,0,5);
+  f1->SetLineColor(kRed);
+  MR_H->Fit("f1","","",low_lim,high_lim);
   double b=f1->GetParameter(0); //ordenada na origem 
   double eb =  f1->GetParError(0); // erro da ordenada na origem 
   double a=f1->GetParameter(1); //declive
   double ea =  f1->GetParError(0); //erro do declive 
 
-  double dH1=(R_half_med-b)/a; //H correspondente a R a meia altura
-  double edH1=(eR_half_med+eb)/a + TMath::Abs(R_half_med-b)/(a*a)*ea;
 
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
-  f2->SetParLimits(1,-1,0);
-  TGraphErrors *R_H2 = new TGraphErrors(N,H2,R2,eH2,eR2);//grafico R(H) para fazer o fit
-  R_H2->Fit("f2","","",low_lim2,high_lim2);
+  f2->SetParLimits(0,2,10);
+  f2->SetParLimits(1,0,1);
+  f2->SetLineColor(kBlue);
+  MR_H2->Fit("f2","","",low_lim2,high_lim2);
   double b2=f2->GetParameter(0); // ordenada na origem
   double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
   double a2=f2->GetParameter(1); //declive
   double ea2 =  f2->GetParError(0); //erro do declive 
 
-  double dH2=(R_half_med-b2)/a2; //H correspondente a R a meia altura
-  double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
-
-
-  // Campo coercivo
-  double Hc=TMath::Abs(dH2-dH1)/2;
-  double eHc = (edH1+edH2)/2; //erro
-  
-  // Campo de offset
-  double Hoff=(dH2+dH1)/2;
-  double eHoff = (edH1+edH2)/2; //erro
-
-  //// Sensibilidade e erros (em percentagem)
-  double S1 = a/Rp*100; //Varrimento 1
-  double eS1 = (ea/Rp + a/(Rp*Rp)*eRp)*100; 
-  double S2 = a2/Rp2*100; //Varrimento 2
-  double eS2 = (ea2/Rp2 + a2/(Rp2*Rp2)*eRp2)*100;
-
 
   //Ficheiro com os resultados
   ofstream resultados;
   resultados.open (res_label.c_str());
-  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" <<  "---------------------" << "\n" << "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n";
+  resultados << "chupa";
   resultados.close();
 
 
@@ -276,7 +202,7 @@ int main(int argc, char **argv)
 
   TMultiGraph *mg = new TMultiGraph("mg","");
   mg->Add(MR_H);
-  mg->Add(MR_H2);
+  //mg->Add(MR_H2);
 
 
 
@@ -287,88 +213,70 @@ int main(int argc, char **argv)
 
   //Regiao 1/////////////////////////
 
-  float ax1 = -40;
-  float ay1 = 0.035;
-
   // H 
-  TArrow *r1ar1 = new TArrow(ax1,ay1,ax1+10,ay1,0.02,"|>");
+  TArrow *r1ar1 = new TArrow(-40,0.55,-30,0.55,0.02,"<|");
+  //TText *text_h = new TText(-40+5, 0.55+0.01, "H");
+  //text_h->SetTextSize(0.03);
   r1ar1->SetLineColor(1);
   r1ar1->SetFillColor(1);
-
-  // M pl 
-  TArrow *r1ar2 = new TArrow(ax1,ay1-arrow_step,ax1+10,ay1-arrow_step,0.02,"<|");
-  r1ar2->SetLineColor(8);
-  r1ar2->SetFillColor(8);
-
-  // M fl
-  TArrow *r1ar3 = new TArrow(ax1,ay1-2*arrow_step,ax1+10,ay1-2*arrow_step,0.02,"|>");
-  r1ar3->SetLineColor(9);
-  r1ar3->SetFillColor(9);
-
-
-  /*
-  // J
+ 
+  // M 
+  TArrow *r1ar2 = new TArrow(-40,0.45,-30,0.45,0.02,"<|");
+  //TText *text_m = new TText(-40+5, 0.45-0.1, "M");
+  //text_m->SetTextSize(0.03);
+  r1ar2->SetLineColor(kGreen);
+  r1ar2->SetFillColor(kGreen);
+ 
+  //J
   float axj=40;
   float ayj=0;
-  TArrow *arj = new TArrow(axj,ayj,axj+10,ayj,0.02,"|>");
-  arj->SetLineColor(49);
-  arj->SetFillColor(49);
-  TPaveText *text_j = new TPaveText(axj,ayj+5,axj+10,ayj+5);
-  text_j->SetLabel("J");
-  */
+  TArrow *arj = new TArrow(-45,1.05,-45,1.35,0.02,"|>");
+  arj->SetLineColor(kYellow);
+  arj->SetFillColor(kYellow);
+  TText *text_j = new TText(-45,1.05+0.01,"J");
+  text_j->SetTextSize(0.03);
 
-  // Ku
-  float axku=-50;
-  float ayku=0.0015;
-  TArrow *arku = new TArrow(axku,ayku,axku+10,ayku,0.02,"<|>");
+  // Ku 
+  TArrow *arku = new TArrow(-50,1.5,-40,1.5,0.02,"<|>");
   arku->SetLineColor(49);
   arku->SetFillColor(49);
-  TText *text_ku = new TText(axku+3, ayku+0.001, "Ku");
+  TText *text_ku = new TText(-50+3, 1.5+0.001, "Ku");
   text_ku->SetTextSize(0.03);
+ 
 
+  
+  // //Regiao 2///////
 
-  //Regiao 2///////
-
-  float ax2 = -7;
-  float ay2 = 0.015;
-
-  // H
-  TText *text_H = new TText(ax2-arrow_step, ay2-arrow_step, "H = 0");
-  text_H->SetTextSize(0.04);
-
-
-  // M pl
-  TArrow *r2ar2 = new TArrow(ax2,ay2+arrow_step/2,ax2+10,ay2+arrow_step/2,0.02,"<|");
-  r2ar2->SetLineColor(8);
-  r2ar2->SetFillColor(8);
-
-  // M fl
-  TArrow *r2ar3 = new TArrow(ax2-2,ay2-arrow_step,ax2-2,ay2-arrow_step+0.004,0.02,"|>");
-  r2ar3->SetLineColor(9);
-  r2ar3->SetFillColor(9);
+  // H 
+  TArrow *r2ar1 = new TArrow(0,0.55,0,0.55,0.02,"");
+  TText *text_h2 = new TText(-0.7, 0.25, "H=0");
+  text_h2->SetTextSize(0.03);
+ 
+ 
+  // M 
+  TArrow *r2ar2 = new TArrow(0,0.35,0,0.55,0.02,"|>");
+  r2ar2->SetLineColor(kGreen);
+  r2ar2->SetFillColor(kGreen);
 
 
 
   //Regiao 3///////
 
-  float ax3 = 35;
-  float ay3 = 0.005;
-
   // H 
-  TArrow *r3ar1 = new TArrow(ax3,ay3,ax3+10,ay3,0.02,"<|");
-  r3ar1->SetLineColor(1);
-  r3ar1->SetFillColor(1);
+  TArrow *r3ar1 = new TArrow(40,0.55,50,0.55,0.02,"|>");
+ 
+  r3ar1->SetLineColor(kBlack);
+  r3ar1->SetFillColor(kBlack);
+ 
+  // M 
+  TArrow *r3ar2 = new TArrow(40,0.45,50,0.45,0.02,"|>");
+ 
+  r3ar2->SetLineColor(kGreen);
+  r3ar2->SetFillColor(kGreen);
+ 
 
-  // Mpl
-  TArrow *r3ar2 = new TArrow(ax3,ay3+arrow_step,ax3+10,ay3+arrow_step,0.02,"<|");
-  r3ar2->SetLineColor(8);
-  r3ar2->SetFillColor(8);
 
-
-  // Mfl
-  TArrow *r3ar3 = new TArrow(ax3,ay3+2*arrow_step,ax3+10,ay3+2*arrow_step,0.02,"<|");
-  r3ar3->SetLineColor(9);
-  r3ar3->SetFillColor(9);
+  
 
 
   //Legenda///////////////////////////
@@ -376,19 +284,17 @@ int main(int argc, char **argv)
   TLegend* leg;
 
   //Usa-se a condicao para nao por a legenda em cima dos dados
-  if(S1<0){
+  if(1<0){
     leg = new TLegend(0.8,0.7,0.9,0.9);//(x1,y1,x2,y2)
   }else{
     leg = new TLegend(0.1,0.7,0.2,0.9);//(x1,y1,x2,y2)
   }
   //leg->SetHeader("Orientac#tilde{o}es");
-  leg->AddEntry(MR_H,"#rightarrow","p");
-  leg->AddEntry(MR_H2,"#leftarrow","p");
+  leg->AddEntry(MR_H,"#rightarrow","lep");
+  leg->AddEntry(MR_H2,"#leftarrow","lep");
 
-  leg->AddEntry(r1ar3,"M fl","l");
-  leg->AddEntry(r1ar2,"M pl","l");
+  leg->AddEntry(r1ar2,"M","l");
   leg->AddEntry(r1ar1,"H","l");
-  //leg->AddEntry(arj,"J","l");
 
 
 
@@ -398,46 +304,43 @@ int main(int argc, char **argv)
   //delete  g;
   //delete gr1; // A classe do prof deve fazer delete aos objectos, quando descomento da segmentation violation
   //delete  cubic;
-  delete [] R;
+
   delete [] H;
   delete [] MR;
   delete [] eH;
   delete [] eMR;
-  delete [] R2;
   delete [] H2;
   delete [] MR2;
-  delete [] eH2;
   delete [] eMR2;
-  delete [] eR;
-  delete [] eR2;
+ 
 
   
   mg->Draw("AP");
   mg->GetXaxis()->SetTitle("H (Oe)");
-  mg->GetYaxis()->SetTitle("MR");
+  mg->GetYaxis()->SetTitle("MR(%)");
   mg->GetYaxis()->SetTitleOffset(1.2);
 
   
-  //arrows
-  r1ar1->Draw();
-  //r2ar1->Draw(); Basta por um texto a dizer que H=0
-  text_H->Draw();
-  r3ar1->Draw();
-
-  r1ar2->Draw();
-  r2ar2->Draw();
-  r3ar2->Draw();
-
-  r1ar3->Draw();
-  r2ar3->Draw();
-  r3ar3->Draw();
+  //1 regiao
 
   arku->Draw();
   text_ku -> Draw();
+  arj->Draw();
+  text_j->Draw();
 
-  //arj->Draw();
-  //text_j->Draw();
 
+ r1ar1->Draw();
+ //text_h->Draw();
+ //text_m->Draw();
+ r1ar2->Draw();
+
+ r2ar1->Draw();
+ text_h2->Draw();
+ r2ar2->Draw();
+
+r3ar1->Draw();
+
+ r3ar2->Draw();
 
   
 
