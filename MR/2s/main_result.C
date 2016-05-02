@@ -19,6 +19,7 @@
 #include<TText.h>
 #include<TPaveText.h>
 #include<fstream>
+#include<TStyle.h>
 
 
 #include "TApplication.h"  //Janela
@@ -35,21 +36,21 @@ int main(int argc, char **argv)
 
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  string res_label = "resultados_SV1_200_2.txt";//Nome do ficheiro onde sao apresentados os resultados
-  string plot_label = "SV1_200.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
-  string file1="../2s/data_SV1_200.txt"; //directoria dos dados do primeiro varrimento 
-  string file2="../2s/data_SV1_200_2.txt"; //directoria dos dados do segundo varrimento
+  string res_label = "resultados_SV1_40_CLARA2.txt";//Nome do ficheiro onde sao apresentados os resultados
+  string plot_label = "SV1_100_43232.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  string file1="../2s/data_SV1_40.txt"; //directoria dos dados do primeiro varrimento 
+  string file2="../2s/data_SV1_40_2.txt"; //directoria dos dados do segundo varrimento
 
-  double I=0.0010092;//corrente
+  double I=0.0010004;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
   double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-5;
-  double high_lim=-15;
-  double low_lim2=-25;
-  double high_lim2=15;
+  double low_lim=-12.5;
+  double high_lim=-7;
+  double low_lim2=-22;
+  double high_lim2=-17;
 
   //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
 
@@ -252,11 +253,14 @@ int main(int argc, char **argv)
   double S2 = a2/Rp2*100; //Varrimento 2
   double eS2 = (ea2/Rp2 + a2/(Rp2*Rp2)*eRp2)*100;
 
-
+ double ab=low_lim;
+ double bc=high_lim;
+ double ba=high_lim2;
+ double cb=low_lim2;
   //Ficheiro com os resultados
   ofstream resultados;
   resultados.open (res_label.c_str());
-  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" <<  "---------------------" << "\n" << "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n";
+  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" <<  "---------------------" << "\n" << "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n" <<"Intervalo 1: ["  << bc << " ;  " << ab << "]  Intervalo 2:  [" << ba << " ;  " << cb << "] " << "\n";
   resultados.close();
 
 
@@ -418,11 +422,12 @@ int main(int argc, char **argv)
   //Legenda///////////////////////////
 
   TLegend* leg;
-
+ 
   //Usa-se a condicao para nao por a legenda em cima dos dados
   if(S1<0){
-    leg = new TLegend(0.75,0.65,0.9,0.9);//(x1,y1,x2,y2)
-  }else{
+    //leg = new TLegend(0.75,0.65,0.9,0.9);//(x1,y1,x2,y2
+    leg = new TLegend(0.1,0.7,0.2,0.9); //
+      }else{
     leg = new TLegend(0.1,0.7,0.2,0.9);//(x1,y1,x2,y2)
   }
   //leg->SetHeader("Orientac#tilde{o}es");
@@ -457,8 +462,10 @@ int main(int argc, char **argv)
   mg->GetXaxis()->SetTitle("H (Oe)");
   mg->GetYaxis()->SetTitle("MR");
   mg->GetYaxis()->SetTitleOffset(1.2);
-
-  
+  R_H->Draw("AP");
+ // R_H2->Draw("AP");
+  gStyle->SetOptFit(1);
+  /*
   //arrows
   r1ar1->Draw();
   //r2ar1->Draw(); Basta por um texto a dizer que H=0
@@ -480,7 +487,7 @@ int main(int argc, char **argv)
   r3ar3->Draw();
 
   arku->Draw();
-  text_ku -> Draw();
+  text_ku -> Draw(); */
 
   //arj->Draw();
   //text_j->Draw();
