@@ -37,8 +37,22 @@ int main(int argc, char **argv)
 
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  string res_label = "resultados_SV3_4.txt";//Nome do ficheiro onde sao apresentados os resultados
-  string plot_label = "SV3_4.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  bool fit=false;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
+
+  string res_label="";
+  string plot_label="";
+  string plot_label2="";
+
+  if(fit==false){
+    res_label = "resultados_SV3_4.txt";//Nome do ficheiro onde sao apresentados os resultados
+    plot_label = "SV3_4.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  }else{
+    res_label = "resultados_SV3_4.txt";//Nome do ficheiro onde sao apresentados os resultados
+    plot_label = "fits/fit_SV3_4a.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+    plot_label2 = "fits/fit_SV3_4b.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  }
+
+
   string file1="../4s/data/SV3_4_50_2a.txt"; //directoria dos dados do primeiro varrimento 
   string file2="../4s/data/SV3_4_50_2b.txt"; //directoria dos dados do segundo varrimento
 
@@ -48,8 +62,8 @@ int main(int argc, char **argv)
   double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-15;
-  double high_lim=20;
+  double low_lim=-12;
+  double high_lim=19;
   double low_lim2=-15;
   double high_lim2=20;
 
@@ -249,6 +263,7 @@ int main(int argc, char **argv)
   double eR_half_med=(eR_half+eR_half2)/2;//Erro
 
 
+
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
   f1->SetParLimits(1,-1,0);
@@ -258,6 +273,7 @@ int main(int argc, char **argv)
   double eb =  f1->GetParError(0); // erro da ordenada na origem 
   double a=f1->GetParameter(1); //declive
   double ea =  f1->GetParError(0); //erro do declive 
+  
 
   double dH1=(R_half_med-b)/a; //H correspondente a R a meia altura
   double edH1=(eR_half_med+eb)/a + TMath::Abs(R_half_med-b)/(a*a)*ea;
@@ -274,6 +290,8 @@ int main(int argc, char **argv)
 
   double dH2=(R_half_med-b2)/a2; //H correspondente a R a meia altura
   double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
+
+
 
 
   // Campo coercivo
@@ -315,8 +333,22 @@ int main(int argc, char **argv)
 
 
   TMultiGraph *mg = new TMultiGraph("mg","");
-  mg->Add(MR_H);
-  mg->Add(MR_H2);
+  if(fit==false){
+    mg->Add(MR_H);
+    mg->Add(MR_H2);
+    
+    mg->Draw("AP");
+    mg->GetXaxis()->SetTitle("H (Oe)");
+    mg->GetYaxis()->SetTitle("MR");
+    mg->GetYaxis()->SetTitleOffset(1.2);
+  }else{
+    mg->Add(R_H);
+    gStyle->SetOptFit();
+
+    mg->Draw("AP");
+    mg->GetXaxis()->SetTitle("H (Oe)");
+    mg->GetYaxis()->SetTitle("R (#Omega)");
+  }
 
 
 
@@ -345,17 +377,6 @@ int main(int argc, char **argv)
   r1ar3->SetLineColor(9);
   r1ar3->SetFillColor(9);
 
-
-  /*
-  // J
-  float axj=40;
-  float ayj=0;
-  TArrow *arj = new TArrow(axj,ayj,axj+10,ayj,0.02,"|>");
-  arj->SetLineColor(49);
-  arj->SetFillColor(49);
-  TPaveText *text_j = new TPaveText(axj,ayj+5,axj+10,ayj+5);
-  text_j->SetLabel("J");
-  */
 
   // Ku
   float axku=-50;
@@ -432,7 +453,7 @@ int main(int argc, char **argv)
 
 
 
-
+  
   file.close();
   file_2.close();
   //delete  g;
@@ -459,12 +480,6 @@ int main(int argc, char **argv)
   delete [] eR2_400;
 
   
-  mg->Draw("AP");
-  mg->GetXaxis()->SetTitle("H (Oe)");
-  mg->GetYaxis()->SetTitle("MR");
-  mg->GetYaxis()->SetTitleOffset(1.2);
-
-  
   //arrows
   r1ar1->Draw();
   //r2ar1->Draw(); Basta por um texto a dizer que H=0
@@ -486,24 +501,44 @@ int main(int argc, char **argv)
   //text_j->Draw();
 
 
-  
-
-  //legenda
-  leg->Draw();
  
 
+  
+  if(fit==false){
+
+    //legenda
+    leg->Draw();
+
+    c1->Update();
+    c1->Modified();
+    c1->Print(plot_label.c_str());
+    getchar();
+
+
+  }else{
+
+    //Desenhar fit varrimento 1
+    c1->Update();
+    c1->Modified();
+    c1->Print(plot_label.c_str());
+
+
+    //Desenhar fit varrimento 2
+    TMultiGraph *mg2 = new TMultiGraph("mg2","");
+    mg2->Add(R_H2);
     gStyle->SetOptFit();
 
-  
+    c1->Clear();
+    mg2->Draw("AP");
+    mg2->GetXaxis()->SetTitle("H (Oe)");
+    mg2->GetYaxis()->SetTitle("R (#Omega)");
 
+    c1->Update();
+    c1->Modified();
+    c1->Print(plot_label2.c_str());
+  }
 
-
-  c1->Update();
-  c1->Modified();
-  c1->Print(plot_label.c_str());
-  getchar();
   theApp.Terminate();
-
-
+  
   return 0;  
 }

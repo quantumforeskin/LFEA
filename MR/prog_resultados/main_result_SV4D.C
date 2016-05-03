@@ -154,8 +154,8 @@ int main(int argc, char **argv)
 
   double Rp = *std::min_element(R_400,R_400+N_400);
   double eRp = *std::min_element(eR_400,eR_400+N_400); //Quanto maior a resistencia maior o seu erro, ver formula de erro
-  double Rap = *std::max_element(R_400,R_400+N_400);
-  double eRap = *std::max_element(eR_400,eR_400+N_400);
+  double Rap = *std::max_element(R,R+N);
+  double eRap = *std::max_element(eR,eR+N);
 
 
   /// MR max /////////
@@ -168,8 +168,8 @@ int main(int argc, char **argv)
 
   double Rp2 = *std::min_element(R2_400,R2_400+N_400);
   double eRp2 = *std::min_element(eR2_400,eR2_400+N_400);
-  double Rap2 = *std::max_element(R2_400,R2_400+N_400);
-  double eRap2 = *std::max_element(eR2_400,eR2_400+N_400);
+  double Rap2 = *std::max_element(R2,R2+N);
+  double eRap2 = *std::max_element(eR2,eR2+N);
 
   /// MR max /////////
   double MRmax2=(Rap2-Rp2)/Rp2;
