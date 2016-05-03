@@ -1,0 +1,14 @@
+------ Varrimento 1 ------ 
+Rp: 6.8962e-307 +- 0.0009996 Ohm
+Rap: 6.8962e-307 +- 0.0009996 Ohm
+------ Varrimento 2 ------ 
+Rp: 0 +- 0.0009996 Ohm
+Rap: 0 +- 0.0009996 Ohm
+------ Media ------ 
+Rp: 3.4481e-307 +- 0.0009996 Ohm
+Rap: 3.4481e-307 +- 0.0009996 Ohm
+---------------------
+Hc: nan +- -nan Oe
+Hoff: inf +- -nan Oe
+S (varrimento 1) (%) 0 +- -nan
+S (varrimento 2) (%)-nan +- -nan

@@ -46,10 +46,10 @@ int main(int argc, char **argv)
   double eh = 0.1;//erro campo 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=543254354;
-  double high_lim=5354532;
-  double low_lim2=0.1;
-  double high_lim2=9;
+  double low_lim=-4;
+  double high_lim=4;
+  double low_lim2=-5525543;
+  double high_lim2=55432534543;
 
    /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
   ifstream file;
@@ -72,8 +72,8 @@ int main(int argc, char **argv)
   cout << N << endl;
 
   double *H = new double[N];
-  double *MR = new double[N];
-  double *eMR = new double[N];
+  double *R = new double[N];
+  double *eR = new double[N];
 
 
   file.close();
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
   while(!file.eof() && test==0)
     {
 
-      file >> H[i] >> MR[i] >> eMR[i]; // extracts 2 floating point values seperated by whitespace
+      file >> H[i] >> R[i] >> eR[i]; // extracts 2 floating point values seperated by whitespace
       i++; 
 
 
@@ -102,8 +102,8 @@ int main(int argc, char **argv)
 
 
   double *H2 = new double[N];
-  double *MR2 = new double[N];
-  double *eMR2 = new double[N];
+  double *R2 = new double[N];
+  double *eR2 = new double[N];
 
   file_2.close();
   file_2.open (file2.c_str());
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
   test=0;
   while(!file_2.eof() && test==0)
     {
-      file_2 >> H2[i] >> MR2[i] >> eMR2[i]; // extracts 2 floating point values seperated by whitespace
+      file_2 >> H2[i] >> R2[i] >> eR2[i]; // extracts 2 floating point values seperated by whitespace
       i++;
 
       if(i>=N)
@@ -137,16 +137,16 @@ int main(int argc, char **argv)
   }
   
 
-  TGraphErrors *MR_H = new TGraphErrors(N,H,MR,eH,eMR);
-  MR_H->SetMarkerStyle(1);
-  MR_H->SetLineColor(kBlue);
+  TGraphErrors *R_H = new TGraphErrors(N,H,R,eH,eR);
+  R_H->SetMarkerStyle(1);
+  R_H->SetLineColor(kBlue);
   //MR_H->SetFillColor(kBlue);
 
   
 
-  TGraphErrors *MR_H2 = new TGraphErrors(N,H2,MR2,eH,eMR2);
-  MR_H2->SetLineColor(kRed);
-  MR_H2->SetMarkerStyle(1);
+  TGraphErrors *R_H2 = new TGraphErrors(N,H2,R2,eH,eR2);
+  R_H2->SetLineColor(kRed);
+  R_H2->SetMarkerStyle(1);
 
 
 
@@ -154,11 +154,12 @@ int main(int argc, char **argv)
 
 
   //Varrimento 1
-  TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
-  f1->SetParLimits(0,2,10);
-  f1->SetParLimits(1,0,1);
+  TF1 *f1= new TF1("f1","[0]-193600*[1]*(x)*(x)");//Funcao a fitar
+  f1->SetParLimits(0,3.9,4);
+  f1->SetParLimits(1,0,0.00000001);
+  //f1->SetParLimits(2,0,3);
   f1->SetLineColor(kRed);
-  MR_H->Fit("f1","","",low_lim,high_lim);
+  R_H->Fit("f1","","",low_lim,high_lim);
   double b=f1->GetParameter(0); //ordenada na origem 
   double eb =  f1->GetParError(0); // erro da ordenada na origem 
   double a=f1->GetParameter(1); //declive
@@ -166,11 +167,11 @@ int main(int argc, char **argv)
 
 
   //Varrimento 2
-  TF1 *f2= new TF1("f2","[0]+[1]*x");
-  //f2->SetParLimits(0,2,10);
-  //f2->SetParLimits(1,0,1);
+  TF1 *f2= new TF1("f2","[0]-193600*[1]*x*x");
+  f2->SetParLimits(0,3.9,4);
+  f2->SetParLimits(1,0,1);
   f2->SetLineColor(kBlue);
-  MR_H2->Fit("f2","","",low_lim2,high_lim2);
+  R_H2->Fit("f2","","",low_lim2,high_lim2);
   double b2=f2->GetParameter(0); // ordenada na origem
   double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
   double a2=f2->GetParameter(1); //declive
@@ -201,8 +202,8 @@ int main(int argc, char **argv)
 
 
   TMultiGraph *mg = new TMultiGraph("mg","");
-  //mg->Add(MR_H);
-  mg->Add(MR_H2);
+  mg->Add(R_H);
+  //mg->Add(R_H2);
 
 
 
@@ -214,14 +215,14 @@ int main(int argc, char **argv)
   //Regiao 1/////////////////////////
 
   // H 
-  TArrow *r1ar1 = new TArrow(-40,0.55,-30,0.55,0.02,"<|");
+  TArrow *r1ar1 = new TArrow(-40,3.85,-30,3.85,0.02,"<|");
   //TText *text_h = new TText(-40+5, 0.55+0.01, "H");
   //text_h->SetTextSize(0.03);
   r1ar1->SetLineColor(1);
   r1ar1->SetFillColor(1);
  
   // M 
-  TArrow *r1ar2 = new TArrow(-40,0.45,-30,0.45,0.02,"<|");
+  TArrow *r1ar2 = new TArrow(-40,3.84,-30,3.84,0.02,"<|");
   //TText *text_m = new TText(-40+5, 0.45-0.1, "M");
   //text_m->SetTextSize(0.03);
   r1ar2->SetLineColor(kGreen);
@@ -230,17 +231,17 @@ int main(int argc, char **argv)
   //J
   float axj=40;
   float ayj=0;
-  TArrow *arj = new TArrow(-45,1.05,-45,1.35,0.02,"|>");
+  TArrow *arj = new TArrow(-45,3.82,-45,3.84,0.02,"|>");
   arj->SetLineColor(kYellow);
   arj->SetFillColor(kYellow);
-  TText *text_j = new TText(-45,1.05+0.01,"J");
+  TText *text_j = new TText(-45,3.82+0.01,"J");
   text_j->SetTextSize(0.03);
 
   // Ku 
-  TArrow *arku = new TArrow(-50,1.5,-40,1.5,0.02,"<|>");
+  TArrow *arku = new TArrow(-50,3.81,-40,3.81,0.02,"<|>");
   arku->SetLineColor(49);
   arku->SetFillColor(49);
-  TText *text_ku = new TText(-50+3, 1.5+0.001, "Ku");
+  TText *text_ku = new TText(-50+3, 3.81+0.001, "Ku");
   text_ku->SetTextSize(0.03);
  
 
@@ -248,13 +249,13 @@ int main(int argc, char **argv)
   // //Regiao 2///////
 
   // H 
-  TArrow *r2ar1 = new TArrow(0,0.55,0,0.55,0.02,"");
-  TText *text_h2 = new TText(-0.7, 0.25, "H=0");
+  TArrow *r2ar1 = new TArrow(0,3.85,0,3.85,0.02,"");
+  TText *text_h2 = new TText(-0.7, 3.85, "H=0");
   text_h2->SetTextSize(0.03);
  
  
   // M 
-  TArrow *r2ar2 = new TArrow(0,0.35,0,0.55,0.02,"|>");
+  TArrow *r2ar2 = new TArrow(-5,3.84,5,3.84,0.02,"|>");
   r2ar2->SetLineColor(kGreen);
   r2ar2->SetFillColor(kGreen);
 
@@ -263,13 +264,13 @@ int main(int argc, char **argv)
   //Regiao 3///////
 
   // H 
-  TArrow *r3ar1 = new TArrow(40,0.55,50,0.55,0.02,"|>");
+  TArrow *r3ar1 = new TArrow(40,3.85,50,3.85,0.02,"|>");
  
   r3ar1->SetLineColor(kBlack);
   r3ar1->SetFillColor(kBlack);
  
   // M 
-  TArrow *r3ar2 = new TArrow(40,0.45,50,0.45,0.02,"|>");
+  TArrow *r3ar2 = new TArrow(40,3.84,50,3.84,0.02,"|>");
  
   r3ar2->SetLineColor(kGreen);
   r3ar2->SetFillColor(kGreen);
@@ -290,8 +291,8 @@ int main(int argc, char **argv)
     leg = new TLegend(0.1,0.7,0.2,0.9);//(x1,y1,x2,y2)
   }
   //leg->SetHeader("Orientac#tilde{o}es");
-  leg->AddEntry(MR_H,"#rightarrow","lep");
-  leg->AddEntry(MR_H2,"#leftarrow","lep");
+  leg->AddEntry(R_H,"#rightarrow","lep");
+  leg->AddEntry(R_H2,"#leftarrow","lep");
 
   leg->AddEntry(r1ar2,"M","l");
   leg->AddEntry(r1ar1,"H","l");
@@ -306,18 +307,20 @@ int main(int argc, char **argv)
   //delete  cubic;
 
   delete [] H;
-  delete [] MR;
+  delete [] R;
   delete [] eH;
-  delete [] eMR;
+  delete [] eR;
   delete [] H2;
-  delete [] MR2;
-  delete [] eMR2;
+  delete [] R2;
+  delete [] eR2;
  
 
   
   mg->Draw("AP");
+  mg->SetMinimum(3.8);
+  mg->SetMaximum(4);
   mg->GetXaxis()->SetTitle("H (Oe)");
-  mg->GetYaxis()->SetTitle("MR(%)");
+  mg->GetYaxis()->SetTitle("R(#Omega)");
   mg->GetYaxis()->SetTitleOffset(1.2);
 
   
