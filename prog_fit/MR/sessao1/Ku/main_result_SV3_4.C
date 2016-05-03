@@ -46,10 +46,10 @@ int main(int argc, char **argv)
   double eh = 0.1;//erro campo 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-4;
-  double high_lim=4;
-  double low_lim2=-5525543;
-  double high_lim2=55432534543;
+  double low_lim=-55235235;
+  double high_lim=55235235;
+  double low_lim2=-4;
+  double high_lim2=4;
 
    /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
   ifstream file;
@@ -202,8 +202,8 @@ int main(int argc, char **argv)
 
 
   TMultiGraph *mg = new TMultiGraph("mg","");
-  mg->Add(R_H);
-  //mg->Add(R_H2);
+  //mg->Add(R_H);
+  mg->Add(R_H2);
 
 
 
@@ -238,7 +238,7 @@ int main(int argc, char **argv)
   text_j->SetTextSize(0.03);
 
   // Ku 
-  TArrow *arku = new TArrow(-50,3.81,-40,3.81,0.02,"<|>");
+  TArrow *arku = new TArrow(-48,3.81,-48,3.84,0.02,"<|>");
   arku->SetLineColor(49);
   arku->SetFillColor(49);
   TText *text_ku = new TText(-50+3, 3.81+0.001, "Ku");
@@ -255,7 +255,7 @@ int main(int argc, char **argv)
  
  
   // M 
-  TArrow *r2ar2 = new TArrow(-5,3.84,5,3.84,0.02,"|>");
+  TArrow *r2ar2 = new TArrow(0,3.86,0,3.88,0.02,"|>");
   r2ar2->SetLineColor(kGreen);
   r2ar2->SetFillColor(kGreen);
 

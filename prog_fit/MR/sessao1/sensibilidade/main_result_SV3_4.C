@@ -46,8 +46,8 @@ int main(int argc, char **argv)
   double eh = 0.1;//erro campo 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=543254354;
-  double high_lim=5354532;
+  double low_lim=0.1;
+  double high_lim=9;
   double low_lim2=0.1;
   double high_lim2=9;
 
@@ -155,10 +155,10 @@ int main(int argc, char **argv)
 
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
-  f1->SetParLimits(0,2,10);
-  f1->SetParLimits(1,0,1);
+  //f1->SetParLimits(0,2,10);
+  //f1->SetParLimits(1,0,1);
   f1->SetLineColor(kRed);
-  MR_H->Fit("f1","","",low_lim,high_lim);
+  //MR_H->Fit("f1","","",low_lim,high_lim);
   double b=f1->GetParameter(0); //ordenada na origem 
   double eb =  f1->GetParError(0); // erro da ordenada na origem 
   double a=f1->GetParameter(1); //declive
@@ -170,7 +170,7 @@ int main(int argc, char **argv)
   //f2->SetParLimits(0,2,10);
   //f2->SetParLimits(1,0,1);
   f2->SetLineColor(kBlue);
-  MR_H2->Fit("f2","","",low_lim2,high_lim2);
+  //MR_H2->Fit("f2","","",low_lim2,high_lim2);
   double b2=f2->GetParameter(0); // ordenada na origem
   double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
   double a2=f2->GetParameter(1); //declive
@@ -201,7 +201,7 @@ int main(int argc, char **argv)
 
 
   TMultiGraph *mg = new TMultiGraph("mg","");
-  //mg->Add(MR_H);
+  mg->Add(MR_H);
   mg->Add(MR_H2);
 
 
@@ -236,11 +236,13 @@ int main(int argc, char **argv)
   TText *text_j = new TText(-45,1.05+0.01,"J");
   text_j->SetTextSize(0.03);
 
-  // Ku 
-  TArrow *arku = new TArrow(-50,1.5,-40,1.5,0.02,"<|>");
+   // Ku 
+ 
+   // Ku 
+  TArrow *arku = new TArrow(-48,1.06,-48,1.35,0.02,"<|>");
   arku->SetLineColor(49);
   arku->SetFillColor(49);
-  TText *text_ku = new TText(-50+3, 1.5+0.001, "Ku");
+  TText *text_ku = new TText(-48-0.6, 1.06-0.1, "Ku");
   text_ku->SetTextSize(0.03);
  
 
