@@ -194,11 +194,11 @@ int main(int argc, char **argv)
   for(int i=0;i<N;i++){
 
     //Os erros eV, eI e eH sao os mesmos para ambos os varrimentos
-    double e_mr2= eR2[i]/Rp2 + R2[i]/(Rp2*Rp2)*eRp2; //erro magneto-resistencia
+    double e_mr2= eR2[i]/Rp + R2[i]/(Rp*Rp)*eRp; //erro magneto-resistencia
 
     eH2[i]=eh; //dado no inicio do prog
     eMR2[i]=e_mr2;//em percentagem
-    MR2[i]=(R2[i]-Rp2)/Rp2;//em percentagem
+    MR2[i]=(R2[i]-Rp)/Rp;//em percentagem
 
   }
   
