@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
 
-  bool fit=true;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
+  bool fit=false;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
 
   string res_label="";
   string plot_label="";
@@ -65,10 +65,10 @@ int main(int argc, char **argv)
   double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=0;
-  double high_lim=20;
-  double low_lim2=0;
-  double high_lim2=20;
+  double low_lim=-3;
+  double high_lim=17;
+  double low_lim2=-3;
+  double high_lim2=17;
 
   //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
 
@@ -281,24 +281,6 @@ int main(int argc, char **argv)
   double dH1=(R_half_med-b)/a; //H correspondente a R a meia altura
   double edH1=(eR_half_med+eb)/a + TMath::Abs(R_half_med-b)/(a*a)*ea;
 
-  
-  //////////////////////////DFJOFGOSEVBJOTGJTROBGFFGGGGGGGGGGGGGGGGGGGGG/////////////////////
-
-  ofstream chi_res;
-  chi_res.open ("chi_res_2.txt");
-
-
-  for(int l=-8;l<1;l++){
-    for(int j=12;j<13;j++){
-  //Limites da curva linear --> Para fazer o fit
-  double low_lim=(double)l;
-  double high_lim=(double)j;
-  double low_lim2=(double)l;
-  double high_lim2=(double)j;
-
-
-  //////////////////////////////jJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ///////////
-
 
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
@@ -313,16 +295,6 @@ int main(int argc, char **argv)
   double dH2=(R_half_med-b2)/a2; //H correspondente a R a meia altura
   double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
 
-
-  double chi=f2->GetChisquare();
-
-
-   chi_res << l << " " << j  << " " << chi << "\n";
-    }}
-
-  chi_res.close();
-
-  /*
 
 
   // Campo coercivo
@@ -483,7 +455,7 @@ int main(int argc, char **argv)
   //leg->AddEntry(arj,"J","l");
 
 
-  */
+  
 
   file.close();
   file_2.close();
@@ -500,7 +472,7 @@ int main(int argc, char **argv)
   delete [] eR;
   delete [] eR2;
 
-  /*
+  
   //arrows
   r1ar1->Draw();
   //r2ar1->Draw(); Basta por um texto a dizer que H=0
@@ -561,7 +533,7 @@ int main(int argc, char **argv)
 
 
   theApp.Terminate();
-  */
+  
 
   return 0;  
 }
