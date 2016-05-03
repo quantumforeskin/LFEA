@@ -18,6 +18,7 @@
 #include<TLegend.h>
 #include<TText.h>
 #include<TPaveText.h>
+#include<TStyle.h>
 #include<fstream>
 
 
@@ -34,10 +35,23 @@ using namespace std;
 int main(int argc, char **argv)
 {
 
+  bool fit=false;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
 
-  //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  string res_label = "resultados_SV4_D.txt";//Nome do ficheiro onde sao apresentados os resultados
-  string plot_label = "SV4_D.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  string res_label="";
+  string plot_label="";
+  string plot_label2="";
+
+  if(fit==false){
+    res_label = "resultados_SV4_D.txt";//Nome do ficheiro onde sao apresentados os resultados
+    plot_label = "SV4_D.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  }else{
+    res_label = "resultados_SV4_D.txt";//Nome do ficheiro onde sao apresentados os resultados
+    plot_label = "fits/fit_SV4_Da.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+    plot_label2 = "fits/fit_SV4_Db.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  }
+
+
+
   string file1="../3s/data/SV4_D_50_2a.txt"; //directoria dos dados do primeiro varrimento 
   string file2="../3s/data/SV4_D_50_2b.txt"; //directoria dos dados do segundo varrimento
 
@@ -47,10 +61,10 @@ int main(int argc, char **argv)
   double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=0;
-  double high_lim=20;
-  double low_lim2=0;
-  double high_lim2=20;
+  double low_lim=1;
+  double high_lim=17;
+  double low_lim2=-1;
+  double high_lim2=17;
 
   //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
 
@@ -154,8 +168,8 @@ int main(int argc, char **argv)
 
   double Rp = *std::min_element(R_400,R_400+N_400);
   double eRp = *std::min_element(eR_400,eR_400+N_400); //Quanto maior a resistencia maior o seu erro, ver formula de erro
-  double Rap = *std::max_element(R_400,R_400+N_400);
-  double eRap = *std::max_element(eR_400,eR_400+N_400);
+  double Rap = *std::max_element(R,R+N);
+  double eRap = *std::max_element(eR,eR+N);
 
 
   /// MR max /////////
@@ -168,8 +182,8 @@ int main(int argc, char **argv)
 
   double Rp2 = *std::min_element(R2_400,R2_400+N_400);
   double eRp2 = *std::min_element(eR2_400,eR2_400+N_400);
-  double Rap2 = *std::max_element(R2_400,R2_400+N_400);
-  double eRap2 = *std::max_element(eR2_400,eR2_400+N_400);
+  double Rap2 = *std::max_element(R2,R2+N);
+  double eRap2 = *std::max_element(eR2,eR2+N);
 
   /// MR max /////////
   double MRmax2=(Rap2-Rp2)/Rp2;
@@ -248,6 +262,7 @@ int main(int argc, char **argv)
   double eR_half_med=(eR_half+eR_half2)/2;//Erro
 
 
+
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
   f1->SetParLimits(1,0,1);
@@ -260,6 +275,8 @@ int main(int argc, char **argv)
 
   double dH1=(R_half_med-b)/a; //H correspondente a R a meia altura
   double edH1=(eR_half_med+eb)/a + TMath::Abs(R_half_med-b)/(a*a)*ea;
+
+
 
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
@@ -274,6 +291,10 @@ int main(int argc, char **argv)
   double dH2=(R_half_med-b2)/a2; //H correspondente a R a meia altura
   double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
 
+  double chi=f2->GetChisquare();
+
+
+  
 
   // Campo coercivo
   double Hc=TMath::Abs(dH2-dH1)/2;
@@ -310,8 +331,26 @@ int main(int argc, char **argv)
 
 
   TMultiGraph *mg = new TMultiGraph("mg","");
-  mg->Add(MR_H);
-  mg->Add(MR_H2);
+  if(fit==false){
+    mg->Add(MR_H);
+    mg->Add(MR_H2);
+    
+    mg->Draw("AP");
+    mg->GetXaxis()->SetTitle("H (Oe)");
+    mg->GetYaxis()->SetTitle("MR");
+    mg->GetYaxis()->SetTitleOffset(1.2);
+  }else{
+    mg->Add(R_H);
+    gStyle->SetOptFit();
+    gStyle->SetStatX(0.6);
+
+
+    mg->Draw("AP");
+    mg->GetXaxis()->SetTitle("H (Oe)");
+    mg->GetYaxis()->SetTitle("R (#Omega)");
+  }
+
+
 
  /////////////////// ARROWS PARA AS ORIENTACOES /////////////////////////////////////////////////////////////////////////////
   float arrow_step = 0.0025;//Distancia entre arrows
@@ -339,16 +378,6 @@ int main(int argc, char **argv)
   r1ar3->SetLineColor(9);
   r1ar3->SetFillColor(9);
 
-  /*
-  // J
-  float axj=40;
-  float ayj=0;
-  TArrow *arj = new TArrow(axj,ayj,axj+10,ayj,0.02,"|>");
-  arj->SetLineColor(49);
-  arj->SetFillColor(49);
-  TPaveText *text_j = new TPaveText(axj,ayj+5,axj+10,ayj+5);
-  text_j->SetLabel("J");
-  */
 
   // Ku
   float axku=40;
@@ -423,7 +452,7 @@ int main(int argc, char **argv)
   //leg->AddEntry(arj,"J","l");
 
 
-
+  
 
   file.close();
   file_2.close();
@@ -439,12 +468,6 @@ int main(int argc, char **argv)
   delete [] eMR2;
   delete [] eR;
   delete [] eR2;
-
-
-  mg->Draw("AP");
-  mg->GetXaxis()->SetTitle("H (Oe)");
-  mg->GetYaxis()->SetTitle("MR");
-  mg->GetYaxis()->SetTitleOffset(1.2);
 
   
   //arrows
@@ -470,18 +493,45 @@ int main(int argc, char **argv)
 
   
 
-  //legenda
-  leg->Draw();
+  if(fit==false){
+
+    //legenda
+    leg->Draw();
+
+    c1->Update();
+    c1->Modified();
+    c1->Print(plot_label.c_str());
+    getchar();
+
+
+  }else{
+
+    //Desenhar fit varrimento 1
+    c1->Update();
+    c1->Modified();
+    c1->Print(plot_label.c_str());
+
+
+    //Desenhar fit varrimento 2
+    TMultiGraph *mg2 = new TMultiGraph("mg2","");
+    mg2->Add(R_H2);
+    gStyle->SetOptFit();
+
+
+    c1->Clear();
+    mg2->Draw("AP");
+    mg2->GetXaxis()->SetTitle("H (Oe)");
+    mg2->GetYaxis()->SetTitle("R (#Omega)");
+
+    c1->Update();
+    c1->Modified();
+    c1->Print(plot_label2.c_str());
+  }
+
   
 
-
-
-  c1->Update();
-  c1->Modified();
-  c1->Print(plot_label.c_str());
-  getchar();
   theApp.Terminate();
 
-
+  
   return 0;  
 }

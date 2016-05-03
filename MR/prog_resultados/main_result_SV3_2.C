@@ -19,6 +19,7 @@
 #include<TText.h>
 #include<TPaveText.h>
 #include<fstream>
+#include<TStyle.h>
 
 
 #include "TApplication.h"  //Janela
@@ -34,10 +35,25 @@ using namespace std;
 int main(int argc, char **argv)
 {
 
-
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  string res_label = "resultados_SV3_2.txt";//Nome do ficheiro onde sao apresentados os resultados
-  string plot_label = "SV3_2.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+
+  bool fit=false;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
+
+  string res_label="";
+  string plot_label="";
+  string plot_label2="";
+
+  if(fit==false){
+    res_label = "resultados_SV3_2.txt";//Nome do ficheiro onde sao apresentados os resultados
+    plot_label = "SV3_2.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  }else{
+    res_label = "resultados_SV3_2.txt";//Nome do ficheiro onde sao apresentados os resultados
+    plot_label = "fits/fit_SV3_2a.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+    plot_label2 = "fits/fit_SV3_2b.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  }
+
+
+
   string file1="../4s/data/SV3_2_50_3a.txt"; //directoria dos dados do primeiro varrimento 
   string file2="../4s/data/SV3_2_50_3b.txt"; //directoria dos dados do segundo varrimento
 
@@ -46,11 +62,12 @@ int main(int argc, char **argv)
   double eV = 0.000001; //erro tensao
   double eh = 0.01;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
+
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=0;
-  double high_lim=20;
-  double low_lim2=0;
-  double high_lim2=20;
+  double low_lim=-8;
+  double high_lim=40;
+  double low_lim2=-10;
+  double high_lim2=40;
 
   //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
 
@@ -150,12 +167,13 @@ int main(int argc, char **argv)
   double* eR2_400=rd.get_eR(f2_400,I_400);
 
 
+
   ///Varrimento 1
 
   double Rp = *std::min_element(R_400,R_400+N_400);
   double eRp = *std::min_element(eR_400,eR_400+N_400); //Quanto maior a resistencia maior o seu erro, ver formula de erro
-  double Rap = *std::max_element(R_400,R_400+N_400);
-  double eRap = *std::max_element(eR_400,eR_400+N_400);
+  double Rap = *std::max_element(R,R+N);
+  double eRap = *std::max_element(eR,eR+N);
 
 
   /// MR max /////////
@@ -168,8 +186,8 @@ int main(int argc, char **argv)
 
   double Rp2 = *std::min_element(R2_400,R2_400+N_400);
   double eRp2 = *std::min_element(eR2_400,eR2_400+N_400);
-  double Rap2 = *std::max_element(R2_400,R2_400+N_400);
-  double eRap2 = *std::max_element(eR2_400,eR2_400+N_400);
+  double Rap2 = *std::max_element(R2,R2+N);
+  double eRap2 = *std::max_element(eR2,eR2+N);
 
   /// MR max /////////
   double MRmax2=(Rap2-Rp2)/Rp2;
@@ -249,6 +267,7 @@ int main(int argc, char **argv)
   double eR_half_med=(eR_half+eR_half2)/2;//Erro
 
 
+
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
   f1->SetParLimits(1,-1,0);
@@ -258,9 +277,11 @@ int main(int argc, char **argv)
   double eb =  f1->GetParError(0); // erro da ordenada na origem 
   double a=f1->GetParameter(1); //declive
   double ea =  f1->GetParError(0); //erro do declive 
-
+  
+  
   double dH1=(R_half_med-b)/a; //H correspondente a R a meia altura
   double edH1=(eR_half_med+eb)/a + TMath::Abs(R_half_med-b)/(a*a)*ea;
+
 
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
@@ -271,11 +292,12 @@ int main(int argc, char **argv)
   double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
   double a2=f2->GetParameter(1); //declive
   double ea2 =  f2->GetParError(0); //erro do declive 
+  double chi=f2->GetChisquare();
 
   double dH2=(R_half_med-b2)/a2; //H correspondente a R a meia altura
   double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
 
-
+  
   // Campo coercivo
   double Hc=TMath::Abs(dH2-dH1)/2;
   double eHc = (edH1+edH2)/2; //erro
@@ -291,13 +313,14 @@ int main(int argc, char **argv)
   double eS2 = (ea2/Rp2 + a2/(Rp2*Rp2)*eRp2)*100;
 
 
+
+  
   //Ficheiro com os resultados
   ofstream resultados;
   resultados.open (res_label.c_str());
   resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "MR max: " << MRmax << " +- " << eMRmax << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "MR max: " << MRmax2 << " +- " << eMRmax2 << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" << "MR max: " << MRmax_med << " +- " << eMRmax_med <<"\n" <<  "---------------------" << "\n"<< "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n";
   resultados.close();
-
-
+ 
   //faz aparecer o canvas
   TApplication theApp("App",&argc, argv);
   theApp.InitializeGraphics();
@@ -310,12 +333,26 @@ int main(int argc, char **argv)
 
 
 
+  //TGraphErrors *R_H400 = new TGraphErrors(N_400,H_400,R_400,eH,eR_400);
+  //R_H400->SetMarkerColor(kBlue);
 
   TMultiGraph *mg = new TMultiGraph("mg","");
-  mg->Add(MR_H);
-  mg->Add(MR_H2);
+  if(fit==false){
+    mg->Add(MR_H);
+    mg->Add(MR_H2);
+    
+    mg->Draw("AP");
+    mg->GetXaxis()->SetTitle("H (Oe)");
+    mg->GetYaxis()->SetTitle("MR");
+    mg->GetYaxis()->SetTitleOffset(1.2);
+  }else{
+    mg->Add(R_H);
+    gStyle->SetOptFit();
 
-
+    mg->Draw("AP");
+    mg->GetXaxis()->SetTitle("H (Oe)");
+    mg->GetYaxis()->SetTitle("R (#Omega)");
+  }
 
  /////////////////// Arrows para as orientacoes /////////////////////////////////////////////////////////////////////////////
   float arrow_step = 0.0020;//Distancia entre arrows
@@ -341,18 +378,6 @@ int main(int argc, char **argv)
   TArrow *r1ar3 = new TArrow(ax1,ay1-2*arrow_step,ax1+10,ay1-2*arrow_step,0.02,"|>");
   r1ar3->SetLineColor(9);
   r1ar3->SetFillColor(9);
-
-
-  /*
-  // J
-  float axj=40;
-  float ayj=0;
-  TArrow *arj = new TArrow(axj,ayj,axj+10,ayj,0.02,"|>");
-  arj->SetLineColor(49);
-  arj->SetFillColor(49);
-  TPaveText *text_j = new TPaveText(axj,ayj+5,axj+10,ayj+5);
-  text_j->SetLabel("J");
-  */
 
   // Ku
   float axku=-50;
@@ -430,30 +455,7 @@ int main(int argc, char **argv)
 
 
 
-  file.close();
-  file_2.close();
-  //delete  g;
-  //delete gr1; // A classe do prof deve fazer delete aos objectos, quando descomento da segmentation violation
-  //delete  cubic;
-  delete [] R;
-  delete [] H;
-  delete [] MR;
-  delete [] eH;
-  delete [] eMR;
-  delete [] R2;
-  delete [] H2;
-  delete [] MR2;
-  delete [] eH2;
-  delete [] eMR2;
-  delete [] eR;
-  delete [] eR2;
-
-
-  mg->Draw("AP");
-  mg->GetXaxis()->SetTitle("H (Oe)");
-  mg->GetYaxis()->SetTitle("MR");
-  mg->GetYaxis()->SetTitleOffset(1.2);
-
+  //////DRAWs
   
   //arrows
   r1ar1->Draw();
@@ -478,17 +480,66 @@ int main(int argc, char **argv)
 
   
 
-  //legenda
-  leg->Draw();
+
+  if(fit==false){
+
+    //legenda
+    leg->Draw();
+
+    c1->Update();
+    c1->Modified();
+    c1->Print(plot_label.c_str());
+    getchar();
+
+
+  }else{
+
+    //Desenhar fit varrimento 1
+    c1->Update();
+    c1->Modified();
+    c1->Print(plot_label.c_str());
+
+
+    //Desenhar fit varrimento 2
+    TMultiGraph *mg2 = new TMultiGraph("mg2","");
+    mg2->Add(R_H2);
+    gStyle->SetOptFit();
+
+
+    c1->Clear();
+    mg2->Draw("AP");
+    mg2->GetXaxis()->SetTitle("H (Oe)");
+    mg2->GetYaxis()->SetTitle("R (#Omega)");
+
+    c1->Update();
+    c1->Modified();
+    c1->Print(plot_label2.c_str());
+  }
+
+
+  
+  file.close();
+  file_2.close();
+  //delete  g;
+  //delete gr1; // A classe do prof deve fazer delete aos objectos, quando descomento da segmentation violation
+  //delete  cubic;
+  delete [] R;
+  delete [] H;
+  delete [] MR;
+  delete [] eH;
+  delete [] eMR;
+  delete [] R2;
+  delete [] H2;
+  delete [] MR2;
+  delete [] eH2;
+  delete [] eMR2;
+  delete [] eR;
+  delete [] eR2;
+
+  
+  theApp.Terminate();
   
 
-
-
-  c1->Update();
-  c1->Modified();
-  c1->Print(plot_label.c_str());
-  getchar();
-  theApp.Terminate();
 
 
   return 0;  
