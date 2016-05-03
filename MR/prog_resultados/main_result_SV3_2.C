@@ -258,6 +258,25 @@ int main(int argc, char **argv)
 
   ////////////////////Encontrar Hc e Hoff////////////////////
 
+  //////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  //////////////////////! Excepcionalmente para este caso, calcula-se Hc e Hoff          ! 
+  //////////////////////! de uma forma diferente, pois R vai sempre diminuindo           !
+  //////////////////////! mesmo ate 400 Oe. Assim, para se estimar a resistencia         !
+  //////////////////////! a meia altura, considera-se o valor de saturacao como sendo    !
+  //////////////////////! o valor minimo de R no intervalo [-50,50]Oe                    !
+  //////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  ///Varrimento 1 - Redefine-se Rp para o calculo de Hc e Hoff
+
+  Rp = *std::min_element(R,R+N);
+  eRp = *std::min_element(eR,eR+N); //Quanto maior a resistencia maior o seu erro, ver formula de erro
+
+
+  ///Varrimento 2
+
+  Rp2 = *std::min_element(R2,R2+N);
+  eRp2 = *std::min_element(eR2,eR2+N);
+
 
   double R_half = (Rap+Rp)/2; //Resistencia a meia altura para o varrimento 1
   double eR_half = (eRap+eRp)/2; //Erro
@@ -265,7 +284,6 @@ int main(int argc, char **argv)
   double eR_half2 = (eRap2+eRp2)/2; //Erro
   double R_half_med=(R_half+R_half2)/2; //Faz-se a media para obter a resistencia a meia altura final
   double eR_half_med=(eR_half+eR_half2)/2;//Erro
-
 
 
   //Varrimento 1
@@ -292,7 +310,6 @@ int main(int argc, char **argv)
   double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
   double a2=f2->GetParameter(1); //declive
   double ea2 =  f2->GetParError(0); //erro do declive 
-  double chi=f2->GetChisquare();
 
   double dH2=(R_half_med-b2)/a2; //H correspondente a R a meia altura
   double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;

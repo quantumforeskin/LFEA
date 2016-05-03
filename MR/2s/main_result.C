@@ -36,18 +36,18 @@ int main(int argc, char **argv)
 
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  string res_label = "resultados_SV1_40_CLARA2.txt";//Nome do ficheiro onde sao apresentados os resultados
-  string plot_label = "SV1_100_43232.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
-  string file1="../2s/data_SV1_40.txt"; //directoria dos dados do primeiro varrimento 
-  string file2="../2s/data_SV1_40_2.txt"; //directoria dos dados do segundo varrimento
+  string res_label = "resultados1.txt";//Nome do ficheiro onde sao apresentados os resultados
+  string plot_label = "SV1_200_43232.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  string file1="../2s/data_SV1_200.txt"; //directoria dos dados do primeiro varrimento 
+  string file2="../2s/data_SV1_200_2.txt"; //directoria dos dados do segundo varrimento
 
-  double I=0.0010004;//corrente
+  double I=0.0010092;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
   double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-12.5;
+  double low_lim=-12;
   double high_lim=-7;
   double low_lim2=-22;
   double high_lim2=-17;
