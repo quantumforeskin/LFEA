@@ -46,10 +46,10 @@ int main(int argc, char **argv)
   double eh = 0.1;//erro campo 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=0.1;
-  double high_lim=9;
-  double low_lim2=444;
-  double high_lim2=-444;
+  double low_lim=543254354;
+  double high_lim=5354532;
+  double low_lim2=0.1;
+  double high_lim2=9;
 
    /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
   ifstream file;
@@ -155,8 +155,8 @@ int main(int argc, char **argv)
 
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
-  //f1->SetParLimits(0,-30,0);
-  //f1->SetParLimits(1,0,5);
+  f1->SetParLimits(0,2,10);
+  f1->SetParLimits(1,0,1);
   f1->SetLineColor(kRed);
   MR_H->Fit("f1","","",low_lim,high_lim);
   double b=f1->GetParameter(0); //ordenada na origem 
@@ -167,8 +167,8 @@ int main(int argc, char **argv)
 
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
-  f2->SetParLimits(0,2,10);
-  f2->SetParLimits(1,0,1);
+  //f2->SetParLimits(0,2,10);
+  //f2->SetParLimits(1,0,1);
   f2->SetLineColor(kBlue);
   MR_H2->Fit("f2","","",low_lim2,high_lim2);
   double b2=f2->GetParameter(0); // ordenada na origem
@@ -201,8 +201,8 @@ int main(int argc, char **argv)
 
 
   TMultiGraph *mg = new TMultiGraph("mg","");
-  mg->Add(MR_H);
-  //mg->Add(MR_H2);
+  //mg->Add(MR_H);
+  mg->Add(MR_H2);
 
 
 
