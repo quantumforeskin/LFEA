@@ -36,12 +36,12 @@ int main(int argc, char **argv)
 
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  string res_label = "resultados1.txt";//Nome do ficheiro onde sao apresentados os resultados
-  string plot_label = "SV1_200_43232.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
-  string file1="../2s/data_SV1_200.txt"; //directoria dos dados do primeiro varrimento 
-  string file2="../2s/data_SV1_200_2.txt"; //directoria dos dados do segundo varrimento
+  string res_label = "res1.txt";//Nome do ficheiro onde sao apresentados os resultados
+  string plot_label = "cococo.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  string file1="../2s/datar.txt"; //directoria dos dados do primeiro varrimento 
+  string file2="../2s/datal.txt"; //directoria dos dados do segundo varrimento
 
-  double I=0.0010092;//corrente
+  double I=0.0010004;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
   double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
@@ -173,9 +173,9 @@ int main(int argc, char **argv)
   
 
   TGraphErrors *MR_H = new TGraphErrors(N,H,MR,eH,eMR);
-  MR_H->SetMarkerStyle(6);
-  MR_H->SetMarkerColor(kBlue);
-  MR_H->SetFillColor(kBlue);
+  MR_H->SetMarkerStyle(1);
+  MR_H->SetLineColor(kBlue);
+  //MR_H->SetFillColor(kBlue);
 
 
   ///Varrimento 2
@@ -196,8 +196,8 @@ int main(int argc, char **argv)
   
 
   TGraphErrors *MR_H2 = new TGraphErrors(N,H2,MR2,eH2,eMR2);
-  MR_H2->SetMarkerColor(kRed);
-  MR_H2->SetMarkerStyle(7);
+  MR_H2->SetLineColor(kRed);
+  MR_H2->SetMarkerStyle(1);
 
 
 
@@ -291,22 +291,22 @@ int main(int argc, char **argv)
 
   //Regiao 1/////////////////////////
 
-  float ax1 = -200;
-  float ay1 = 0.005;
+  float ax1 = -98;
+  float ay1 = 0.035;
 
   // H 
-  TArrow *r1ar1 = new TArrow(ax1,ay1+arrow_offset,ax1+35,ay1+arrow_offset,0.02,"<|");
+  TArrow *r1ar1 = new TArrow(ax1,ay1+arrow_offset,ax1+15,ay1+arrow_offset,0.02,"<|");
   r1ar1->SetLineColor(1);
   r1ar1->SetFillColor(1);
 
   // Mpl
-  TArrow *r1ar2 = new TArrow(ax1,ay1+arrow_offset-arrow_step,ax1+35,ay1+arrow_offset-arrow_step,0.02,"|>");
+  TArrow *r1ar2 = new TArrow(ax1,ay1+arrow_offset-arrow_step,ax1+15,ay1+arrow_offset-arrow_step,0.02,"|>");
   r1ar2->SetLineColor(8);
   r1ar2->SetFillColor(8);
 
 
   // Mfl
-  TArrow *r1ar3 = new TArrow(ax1,ay1+arrow_offset-2*arrow_step,ax1+35,ay1+arrow_offset-2*arrow_step,0.02,"|>");
+  TArrow *r1ar3 = new TArrow(ax1,ay1+arrow_offset-2*arrow_step,ax1+15,ay1+arrow_offset-2*arrow_step,0.02,"<|");
   r1ar3->SetLineColor(9);
   r1ar3->SetFillColor(9);
 
@@ -322,12 +322,12 @@ int main(int argc, char **argv)
   */
 
   // Ku
-  float axku=-80;
-  float ayku=0.005;
-  TArrow *arku = new TArrow(axku,ayku,axku+40,ayku,0.02,"<|>");
+  float axku=-60;
+  float ayku=0.002;
+  TArrow *arku = new TArrow(axku,ayku,axku+30,ayku,0.02,"<|>");
   arku->SetLineColor(49);
   arku->SetFillColor(49);
-  TText *text_ku = new TText(axku+2, ayku+0.002, "Ku");
+  TText *text_ku = new TText(axku+10, ayku+0.002, "Ku");
   text_ku->SetTextSize(0.04);
 
 
@@ -354,29 +354,29 @@ int main(int argc, char **argv)
 
  //   REGIAO 2.3 ////////////////////////////////
 
-
-  float ax23 = -65;
-  float ay23 = 0.065;
+/*
+  float ax23 = -130;
+  float ay23 = 0.035;
 
   // H 
-  TArrow *r23ar1 = new TArrow(ax23,ay23+arrow_offset,ax23+25,ay23+arrow_offset,0.02,"<|");
+  TArrow *r23ar1 = new TArrow(ax23,ay23+arrow_offset,ax23+45,ay23+arrow_offset,0.02,"<|");
   r23ar1->SetLineColor(1);
   r23ar1->SetFillColor(1);
 
   // Mpl
-  TArrow *r23ar2 = new TArrow(ax23,ay23+arrow_offset-arrow_step,ax23+25,ay23+arrow_offset-arrow_step,0.02,"|>");
+  TArrow *r23ar2 = new TArrow(ax23,ay23+arrow_offset-arrow_step,ax23+45,ay23+arrow_offset-arrow_step,0.02,"|>");
   r23ar2->SetLineColor(8);
   r23ar2->SetFillColor(8);
 
 
   // Mfl
-  TArrow *r23ar3 = new TArrow(ax23,ay23+arrow_offset-2*arrow_step,ax23+25,ay23+arrow_offset-2*arrow_step,0.02,"<|");
+  TArrow *r23ar3 = new TArrow(ax23,ay23+arrow_offset-2*arrow_step,ax23+45,ay23+arrow_offset-2*arrow_step,0.02,"<|");
   r23ar3->SetLineColor(9);
   r23ar3->SetFillColor(9); 
-
+*/
 
  //REGIAO 2.5 ////////////////////////////
-
+/*
 
   float ax25 = 60;
   float ay25 = 0.065;
@@ -396,25 +396,25 @@ int main(int argc, char **argv)
   TArrow *r25ar3 = new TArrow(ax25,ay25+arrow_offset-2*arrow_step,ax25+25,ay25+arrow_offset-2*arrow_step,0.02,"|>");
   r25ar3->SetLineColor(9);
   r25ar3->SetFillColor(9);
-
+*/
 
   //Regiao 3///////
 
-  float ax3 = 180;
-  float ay3 = 0.012;
+  float ax3 = 82;
+  float ay3 = 0.011;
 
   // H 
-  TArrow *r3ar1 = new TArrow(ax3,ay3-arrow_offset,ax3+35,ay3-arrow_offset,0.02,"|>");
+  TArrow *r3ar1 = new TArrow(ax3,ay3-arrow_offset,ax3+15,ay3-arrow_offset,0.02,"|>");
   r3ar1->SetLineColor(1);
   r3ar1->SetFillColor(1);
 
   // M pl 
-  TArrow *r3ar2 = new TArrow(ax3,ay3-arrow_offset-arrow_step,ax3+35,ay3-arrow_offset-arrow_step,0.02,"|>");
+  TArrow *r3ar2 = new TArrow(ax3,ay3-arrow_offset-arrow_step,ax3+15,ay3-arrow_offset-arrow_step,0.02,"|>");
   r3ar2->SetLineColor(8);
   r3ar2->SetFillColor(8);
 
   // M fl
-  TArrow *r3ar3 = new TArrow(ax3,ay3-arrow_offset-2*arrow_step,ax3+35,ay3-arrow_offset-2*arrow_step,0.02,"|>");
+  TArrow *r3ar3 = new TArrow(ax3,ay3-arrow_offset-2*arrow_step,ax3+15,ay3-arrow_offset-2*arrow_step,0.02,"|>");
   r3ar3->SetLineColor(9);
   r3ar3->SetFillColor(9);
 
@@ -425,18 +425,18 @@ int main(int argc, char **argv)
  
   //Usa-se a condicao para nao por a legenda em cima dos dados
   if(S1<0){
-    //leg = new TLegend(0.75,0.65,0.9,0.9);//(x1,y1,x2,y2
-    leg = new TLegend(0.1,0.7,0.2,0.9); //
+    leg = new TLegend(0.65,0.55,0.9,0.9);//(x1,y1,x2,y2
+   
       }else{
-    leg = new TLegend(0.1,0.7,0.2,0.9);//(x1,y1,x2,y2)
+    leg = new TLegend(0.1,0.6,0.27,0.9);//(x1,y1,x2,y2)
   }
   //leg->SetHeader("Orientac#tilde{o}es");
-  leg->AddEntry(MR_H,"#rightarrow","p");
-  leg->AddEntry(MR_H2,"#leftarrow","p");
+  leg->AddEntry(MR_H,"#rightarrow","lep");
+  leg->AddEntry(MR_H2,"#leftarrow","lep");
 
   leg->AddEntry(r1ar1,"H","l");
-  leg->AddEntry(r1ar2,"M + coercivo","l");
-  leg->AddEntry(r1ar3,"M - coercivo","l");
+  leg->AddEntry(r1ar2,"M Pl","l");
+  leg->AddEntry(r1ar3,"M Fl","l");
   //leg->AddEntry(arj,"J","l");
 
 
@@ -462,32 +462,32 @@ int main(int argc, char **argv)
   mg->GetXaxis()->SetTitle("H (Oe)");
   mg->GetYaxis()->SetTitle("MR");
   mg->GetYaxis()->SetTitleOffset(1.2);
-  R_H->Draw("AP");
+  //R_H->Draw("AP");
  // R_H2->Draw("AP");
-  gStyle->SetOptFit(1);
-  /*
+  //gStyle->SetOptFit(1);
+  
   //arrows
   r1ar1->Draw();
   //r2ar1->Draw(); Basta por um texto a dizer que H=0
   //text_H->Draw();
-   r23ar1->Draw(); //
-  r25ar1->Draw(); //
+ //  r23ar1->Draw(); //
+ // r25ar1->Draw(); //
   r3ar1->Draw();
 
   r1ar2->Draw();
  // r2ar2->Draw();
-  r23ar2->Draw(); //
-  r25ar2->Draw(); //
+ // r23ar2->Draw(); //
+ // r25ar2->Draw(); //
   r3ar2->Draw();
 
   r1ar3->Draw();
  // r2ar3->Draw();
-   r23ar3->Draw(); //
-  r25ar3->Draw(); //
+ //  r23ar3->Draw(); //
+ // r25ar3->Draw(); //
   r3ar3->Draw();
 
   arku->Draw();
-  text_ku -> Draw(); */
+  text_ku -> Draw(); 
 
   //arj->Draw();
   //text_j->Draw();
