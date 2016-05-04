@@ -19,7 +19,6 @@
 #include<TText.h>
 #include<TPaveText.h>
 #include<fstream>
-#include<TStyle.h>
 
 
 #include "TApplication.h"  //Janela
@@ -30,27 +29,26 @@
 using namespace std;
 
 
-
 int main(int argc, char **argv)
 {
 
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  string res_label = "resultados1.txt";//Nome do ficheiro onde sao apresentados os resultados
-  string plot_label = "SV1_200_43232.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
-  string file1="../2s/data_SV1_200.txt"; //directoria dos dados do primeiro varrimento 
-  string file2="../2s/data_SV1_200_2.txt"; //directoria dos dados do segundo varrimento
+  string res_label = "resultados_SV3_2.txt";//Nome do ficheiro onde sao apresentados os resultados
+  string plot_label = "SV3_2.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  string file1="../4s/data/SV3_2_50_3a.txt"; //directoria dos dados do primeiro varrimento 
+  string file2="../4s/data/SV3_2_50_3b.txt"; //directoria dos dados do segundo varrimento
 
-  double I=0.0010092;//corrente
+  double I=0.0010094;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
-  double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
+  double eh = 0.01;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-12;
-  double high_lim=-7;
-  double low_lim2=-22;
-  double high_lim2=-17;
+  double low_lim=0;
+  double high_lim=20;
+  double low_lim2=0;
+  double high_lim2=20;
 
   //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
 
@@ -215,8 +213,8 @@ int main(int argc, char **argv)
 
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
+  f1->SetParLimits(1,-1,0);
   TGraphErrors *R_H = new TGraphErrors(N,H,R,eH,eR);//Grafico R(H) para dazer o fit
-  //f1->FitParLimits(0,vmáx,vmin);
   R_H->Fit("f1","","",low_lim,high_lim);
   double b=f1->GetParameter(0); //ordenada na origem 
   double eb =  f1->GetParError(0); // erro da ordenada na origem 
@@ -228,6 +226,7 @@ int main(int argc, char **argv)
 
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
+  f2->SetParLimits(1,-1,0);
   TGraphErrors *R_H2 = new TGraphErrors(N,H2,R2,eH2,eR2);//grafico R(H) para fazer o fit
   R_H2->Fit("f2","","",low_lim2,high_lim2);
   double b2=f2->GetParameter(0); // ordenada na origem
@@ -253,16 +252,12 @@ int main(int argc, char **argv)
   double S2 = a2/Rp2*100; //Varrimento 2
   double eS2 = (ea2/Rp2 + a2/(Rp2*Rp2)*eRp2)*100;
 
- double ab=low_lim;
- double bc=high_lim;
- double ba=high_lim2;
- double cb=low_lim2;
+
   //Ficheiro com os resultados
   ofstream resultados;
   resultados.open (res_label.c_str());
-  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" <<  "---------------------" << "\n" << "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n" <<"Intervalo 1: ["  << bc << " ;  " << ab << "]  Intervalo 2:  [" << ba << " ;  " << cb << "] " << "\n";
+  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" <<  "---------------------" << "\n" << "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n";
   resultados.close();
-
 
 
   //faz aparecer o canvas
@@ -284,31 +279,31 @@ int main(int argc, char **argv)
 
 
 
- /////////////////// ARROWS PARA AS ORIENTACOES /////////////////////////////////////////////////////////////////////////////
-  float arrow_step = 0.0025;//Distancia entre arrows
-  float arrow_offset = 0.0035;//Distancia do arrow mais proximo do grafico ao grafico
+ /////////////////// Arrows para as orientacoes /////////////////////////////////////////////////////////////////////////////
+  float arrow_step = 0.0020;//Distancia entre arrows
+  float arrow_offset = 0.0025;//Distancia do arrow mais proximo do grafico ao grafico
 
 
   //Regiao 1/////////////////////////
 
-  float ax1 = -200;
-  float ay1 = 0.005;
+  float ax1 = -40;
+  float ay1 = 0.025;
 
   // H 
-  TArrow *r1ar1 = new TArrow(ax1,ay1+arrow_offset,ax1+35,ay1+arrow_offset,0.02,"<|");
+  TArrow *r1ar1 = new TArrow(ax1,ay1,ax1+10,ay1,0.02,"|>");
   r1ar1->SetLineColor(1);
   r1ar1->SetFillColor(1);
 
-  // Mpl
-  TArrow *r1ar2 = new TArrow(ax1,ay1+arrow_offset-arrow_step,ax1+35,ay1+arrow_offset-arrow_step,0.02,"|>");
+  // M pl 
+  TArrow *r1ar2 = new TArrow(ax1,ay1-arrow_step,ax1+10,ay1-arrow_step,0.02,"<|");
   r1ar2->SetLineColor(8);
   r1ar2->SetFillColor(8);
 
-
-  // Mfl
-  TArrow *r1ar3 = new TArrow(ax1,ay1+arrow_offset-2*arrow_step,ax1+35,ay1+arrow_offset-2*arrow_step,0.02,"|>");
+  // M fl
+  TArrow *r1ar3 = new TArrow(ax1,ay1-2*arrow_step,ax1+10,ay1-2*arrow_step,0.02,"|>");
   r1ar3->SetLineColor(9);
   r1ar3->SetFillColor(9);
+
 
   /*
   // J
@@ -322,99 +317,55 @@ int main(int argc, char **argv)
   */
 
   // Ku
-  float axku=-80;
-  float ayku=0.005;
-  TArrow *arku = new TArrow(axku,ayku,axku+40,ayku,0.02,"<|>");
+  float axku=-50;
+  float ayku=0.0015;
+  TArrow *arku = new TArrow(axku,ayku,axku+10,ayku,0.02,"<|>");
   arku->SetLineColor(49);
   arku->SetFillColor(49);
-  TText *text_ku = new TText(axku+2, ayku+0.002, "Ku");
-  text_ku->SetTextSize(0.04);
+  TText *text_ku = new TText(axku+3, ayku+0.001, "Ku");
+  text_ku->SetTextSize(0.03);
 
 
   //Regiao 2///////
-/*
-  float ax2 = -5;
-  float ay2 = 0.021;
 
-  // H 
-  TText *text_H = new TText(ax2, ay2+arrow_offset+arrow_step/2-0.0045, "H = 0");
+  float ax2 = 5;
+  float ay2 = 0.011;
+
+  // H
+  TText *text_H = new TText(ax2-arrow_step, ay2-arrow_step, "H = 0");
   text_H->SetTextSize(0.04);
 
 
   // M pl
-  TArrow *r2ar2 = new TArrow(ax2+1,ay2+arrow_offset+2*arrow_step-0.005,ax2+15,ay2+arrow_offset+2*arrow_step-0.005,0.02,"|>");
+  TArrow *r2ar2 = new TArrow(ax2,ay2,ax2+10,ay2,0.02,"<|");
   r2ar2->SetLineColor(8);
   r2ar2->SetFillColor(8);
 
   // M fl
-  TArrow *r2ar3 = new TArrow(ax2-1,ay2+arrow_offset,ax2-1,ay2+arrow_offset+0.004,0.02,"|>");
+  TArrow *r2ar3 = new TArrow(ax2-2,ay2-arrow_step,ax2-2,ay2-arrow_step+0.004,0.02,"|>");
   r2ar3->SetLineColor(9);
   r2ar3->SetFillColor(9);
- */
 
- //   REGIAO 2.3 ////////////////////////////////
-
-
-  float ax23 = -65;
-  float ay23 = 0.065;
-
-  // H 
-  TArrow *r23ar1 = new TArrow(ax23,ay23+arrow_offset,ax23+25,ay23+arrow_offset,0.02,"<|");
-  r23ar1->SetLineColor(1);
-  r23ar1->SetFillColor(1);
-
-  // Mpl
-  TArrow *r23ar2 = new TArrow(ax23,ay23+arrow_offset-arrow_step,ax23+25,ay23+arrow_offset-arrow_step,0.02,"|>");
-  r23ar2->SetLineColor(8);
-  r23ar2->SetFillColor(8);
-
-
-  // Mfl
-  TArrow *r23ar3 = new TArrow(ax23,ay23+arrow_offset-2*arrow_step,ax23+25,ay23+arrow_offset-2*arrow_step,0.02,"<|");
-  r23ar3->SetLineColor(9);
-  r23ar3->SetFillColor(9); 
-
-
- //REGIAO 2.5 ////////////////////////////
-
-
-  float ax25 = 60;
-  float ay25 = 0.065;
-
-  // H 
-  TArrow *r25ar1 = new TArrow(ax25,ay25+arrow_offset,ax25+25,ay25+arrow_offset,0.02,"|>");
-  r25ar1->SetLineColor(1);
-  r25ar1->SetFillColor(1);
-
-  // Mpl
-  TArrow *r25ar2 = new TArrow(ax25,ay25+arrow_offset-arrow_step,ax25+25,ay25+arrow_offset-arrow_step,0.02,"<|");
-  r25ar2->SetLineColor(8);
-  r25ar2->SetFillColor(8);
-
-
-  // Mfl
-  TArrow *r25ar3 = new TArrow(ax25,ay25+arrow_offset-2*arrow_step,ax25+25,ay25+arrow_offset-2*arrow_step,0.02,"|>");
-  r25ar3->SetLineColor(9);
-  r25ar3->SetFillColor(9);
 
 
   //Regiao 3///////
 
-  float ax3 = 180;
-  float ay3 = 0.012;
+  float ax3 = 60;
+  float ay3 = 0.008;
 
   // H 
-  TArrow *r3ar1 = new TArrow(ax3,ay3-arrow_offset,ax3+35,ay3-arrow_offset,0.02,"|>");
+  TArrow *r3ar1 = new TArrow(ax3,ay3,ax3+10,ay3,0.02,"<|");
   r3ar1->SetLineColor(1);
   r3ar1->SetFillColor(1);
 
-  // M pl 
-  TArrow *r3ar2 = new TArrow(ax3,ay3-arrow_offset-arrow_step,ax3+35,ay3-arrow_offset-arrow_step,0.02,"|>");
+  // Mpl
+  TArrow *r3ar2 = new TArrow(ax3,ay3-arrow_step,ax3+10,ay3-arrow_step,0.02,"<|");
   r3ar2->SetLineColor(8);
   r3ar2->SetFillColor(8);
 
-  // M fl
-  TArrow *r3ar3 = new TArrow(ax3,ay3-arrow_offset-2*arrow_step,ax3+35,ay3-arrow_offset-2*arrow_step,0.02,"|>");
+
+  // Mfl
+  TArrow *r3ar3 = new TArrow(ax3,ay3-2*arrow_step,ax3+10,ay3-2*arrow_step,0.02,"<|");
   r3ar3->SetLineColor(9);
   r3ar3->SetFillColor(9);
 
@@ -422,12 +373,11 @@ int main(int argc, char **argv)
   //Legenda///////////////////////////
 
   TLegend* leg;
- 
+
   //Usa-se a condicao para nao por a legenda em cima dos dados
   if(S1<0){
-    //leg = new TLegend(0.75,0.65,0.9,0.9);//(x1,y1,x2,y2
-    leg = new TLegend(0.1,0.7,0.2,0.9); //
-      }else{
+    leg = new TLegend(0.8,0.7,0.9,0.9);//(x1,y1,x2,y2)
+  }else{
     leg = new TLegend(0.1,0.7,0.2,0.9);//(x1,y1,x2,y2)
   }
   //leg->SetHeader("Orientac#tilde{o}es");
@@ -435,8 +385,8 @@ int main(int argc, char **argv)
   leg->AddEntry(MR_H2,"#leftarrow","p");
 
   leg->AddEntry(r1ar1,"H","l");
-  leg->AddEntry(r1ar2,"M + coercivo","l");
-  leg->AddEntry(r1ar3,"M - coercivo","l");
+  leg->AddEntry(r1ar2,"M pl","l");
+  leg->AddEntry(r1ar3,"M fl","l");
   //leg->AddEntry(arj,"J","l");
 
 
@@ -444,6 +394,9 @@ int main(int argc, char **argv)
 
   file.close();
   file_2.close();
+  //delete  g;
+  //delete gr1; // A classe do prof deve fazer delete aos objectos, quando descomento da segmentation violation
+  //delete  cubic;
   delete [] R;
   delete [] H;
   delete [] MR;
@@ -462,32 +415,24 @@ int main(int argc, char **argv)
   mg->GetXaxis()->SetTitle("H (Oe)");
   mg->GetYaxis()->SetTitle("MR");
   mg->GetYaxis()->SetTitleOffset(1.2);
-  R_H->Draw("AP");
- // R_H2->Draw("AP");
-  gStyle->SetOptFit(1);
-  /*
+
+  
   //arrows
   r1ar1->Draw();
   //r2ar1->Draw(); Basta por um texto a dizer que H=0
-  //text_H->Draw();
-   r23ar1->Draw(); //
-  r25ar1->Draw(); //
+  text_H->Draw();
   r3ar1->Draw();
 
   r1ar2->Draw();
- // r2ar2->Draw();
-  r23ar2->Draw(); //
-  r25ar2->Draw(); //
+  r2ar2->Draw();
   r3ar2->Draw();
 
   r1ar3->Draw();
- // r2ar3->Draw();
-   r23ar3->Draw(); //
-  r25ar3->Draw(); //
+  r2ar3->Draw();
   r3ar3->Draw();
 
   arku->Draw();
-  text_ku -> Draw(); */
+  text_ku -> Draw();
 
   //arj->Draw();
   //text_j->Draw();
