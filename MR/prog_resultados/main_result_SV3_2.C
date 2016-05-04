@@ -60,14 +60,14 @@ int main(int argc, char **argv)
   double I=0.0010038;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
-  double eh = 0.01;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
+  double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-8;
-  double high_lim=40;
-  double low_lim2=-10;
-  double high_lim2=40;
+  double low_lim=0;
+  double high_lim=25;
+  double low_lim2=-3;
+  double high_lim2=27;
 
   //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
 
@@ -108,8 +108,9 @@ int main(int argc, char **argv)
       file >> H[i] >> R[i]; // extracts 2 floating point values seperated by whitespace
       R[i]=R[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
       eR[i] = eV/I + R[i]/I*eI; //erro resistencia
-      i++; 
+      cout << eR[i] << endl;
 
+      i++; 
 
       if(i>=N)
 	test=1;
@@ -227,10 +228,8 @@ int main(int argc, char **argv)
   
 
   TGraphErrors *MR_H = new TGraphErrors(N,H,MR,eH,eMR);
-  MR_H->SetMarkerStyle(6);
-  MR_H->SetMarkerColor(kBlue);
-  MR_H->SetFillColor(kBlue);
-
+  MR_H->SetMarkerStyle(1);
+  MR_H->SetLineColor(kBlue);
 
   ///Varrimento 2
 
@@ -250,8 +249,8 @@ int main(int argc, char **argv)
   
 
   TGraphErrors *MR_H2 = new TGraphErrors(N,H2,MR2,eH2,eMR2);
-  MR_H2->SetMarkerColor(kRed);
-  MR_H2->SetMarkerStyle(7);
+  MR_H2->SetLineColor(kRed);
+  MR_H2->SetMarkerStyle(1);
 
 
 
@@ -286,25 +285,31 @@ int main(int argc, char **argv)
   double eR_half_med=(eR_half+eR_half2)/2;//Erro
 
 
+
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
-  f1->SetParLimits(1,-1,0);
+  f1->SetParLimits(1,-1,-0.1);
   TGraphErrors *R_H = new TGraphErrors(N,H,R,eH,eR);//Grafico R(H) para dazer o fit
+  R_H->SetMarkerStyle(1);
+  R_H->SetLineColor(kBlue);
   R_H->Fit("f1","","",low_lim,high_lim);
   double b=f1->GetParameter(0); //ordenada na origem 
   double eb =  f1->GetParError(0); // erro da ordenada na origem 
   double a=f1->GetParameter(1); //declive
   double ea =  f1->GetParError(0); //erro do declive 
-  
-  
+ 
+
   double dH1=(R_half_med-b)/a; //H correspondente a R a meia altura
   double edH1=(eR_half_med+eb)/a + TMath::Abs(R_half_med-b)/(a*a)*ea;
+
 
 
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
   f2->SetParLimits(1,-1,0);
   TGraphErrors *R_H2 = new TGraphErrors(N,H2,R2,eH2,eR2);//grafico R(H) para fazer o fit
+  R_H2->SetMarkerStyle(1);
+  R_H2->SetLineColor(kBlue);
   R_H2->Fit("f2","","",low_lim2,high_lim2);
   double b2=f2->GetParameter(0); // ordenada na origem
   double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
@@ -314,6 +319,10 @@ int main(int argc, char **argv)
   double dH2=(R_half_med-b2)/a2; //H correspondente a R a meia altura
   double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
 
+
+  double chi=f2->GetChisquare();
+
+  
   
   // Campo coercivo
   double Hc=TMath::Abs(dH2-dH1)/2;
@@ -533,7 +542,7 @@ int main(int argc, char **argv)
     c1->Print(plot_label2.c_str());
   }
 
-
+  
   
   file.close();
   file_2.close();

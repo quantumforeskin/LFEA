@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  bool fit=false;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
+  bool fit=true;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
 
   string res_label="";
   string plot_label="";
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
   double I=0.001004;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
-  double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
+  double eh = 0.1;//erro campo 
 
   //Limites da curva linear --> Para fazer o fit
   double low_lim=-12;
@@ -223,9 +223,8 @@ int main(int argc, char **argv)
   
 
   TGraphErrors *MR_H = new TGraphErrors(N,H,MR,eH,eMR);
-  MR_H->SetMarkerStyle(6);
-  MR_H->SetMarkerColor(kBlue);
-  MR_H->SetFillColor(kBlue);
+  MR_H->SetMarkerStyle(1);
+  MR_H->SetLineColor(kBlue);
 
 
   ///Varrimento 2
@@ -246,8 +245,8 @@ int main(int argc, char **argv)
   
 
   TGraphErrors *MR_H2 = new TGraphErrors(N,H2,MR2,eH2,eMR2);
-  MR_H2->SetMarkerColor(kRed);
-  MR_H2->SetMarkerStyle(7);
+  MR_H2->SetLineColor(kRed);
+  MR_H2->SetMarkerStyle(1);
 
 
 
@@ -264,11 +263,31 @@ int main(int argc, char **argv)
 
 
 
+  //////////////////////////DFJOFGOSEVBJOTGJTROBGFFGGGGGGGGGGGGGGGGGGGGG/////////////////////
+
+  ofstream chi_res;
+  chi_res.open ("chi_res_2.txt");
+
+
+  for(int l=-10;l<2;l++){
+    for(int j=13;j<14;j++){
+  //Limites da curva linear --> Para fazer o fit
+  double low_lim=(double)l;
+  double high_lim=(double)j;
+  double low_lim2=(double)l;
+  double high_lim2=(double)j;
+
+  
+  //////////////////////////////jJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ///////////
+
+
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
   f1->SetParLimits(1,-1,0);
   TGraphErrors *R_H = new TGraphErrors(N,H,R,eH,eR);//Grafico R(H) para dazer o fit
   R_H->Fit("f1","","",low_lim,high_lim);
+  R_H->SetMarkerStyle(1);
+  R_H->SetLineColor(kBlue);
   double b=f1->GetParameter(0); //ordenada na origem 
   double eb =  f1->GetParError(0); // erro da ordenada na origem 
   double a=f1->GetParameter(1); //declive
@@ -278,11 +297,43 @@ int main(int argc, char **argv)
   double dH1=(R_half_med-b)/a; //H correspondente a R a meia altura
   double edH1=(eR_half_med+eb)/a + TMath::Abs(R_half_med-b)/(a*a)*ea;
 
+  double chi=f1->GetChisquare();
+
+
+   chi_res << l << " " << j  << " " << chi << "\n";
+    }}
+
+  chi_res.close();
+
+  /*
+  
+  
+  
+  //////////////////////////DFJOFGOSEVBJOTGJTROBGFFGGGGGGGGGGGGGGGGGGGGG/////////////////////
+
+  ofstream chi_res;
+  chi_res.open ("chi_res_2.txt");
+
+
+  for(int l=-10;l<2;l++){
+    for(int j=13;j<14;j++){
+  //Limites da curva linear --> Para fazer o fit
+  double low_lim=(double)l;
+  double high_lim=(double)j;
+  double low_lim2=(double)l;
+  double high_lim2=(double)j;
+
+  
+  //////////////////////////////jJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ///////////
+
+
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
   f2->SetParLimits(1,-1,0);
   TGraphErrors *R_H2 = new TGraphErrors(N,H2,R2,eH2,eR2);//grafico R(H) para fazer o fit
   R_H2->Fit("f2","","",low_lim2,high_lim2);
+  R_H2->SetMarkerStyle(1);
+  R_H2->SetLineColor(kBlue);
   double b2=f2->GetParameter(0); // ordenada na origem
   double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
   double a2=f2->GetParameter(1); //declive
@@ -292,7 +343,19 @@ int main(int argc, char **argv)
   double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
 
 
+  double chi=f2->GetChisquare();
 
+
+   chi_res << l << " " << j  << " " << chi << "\n";
+    }}
+
+  chi_res.close();
+
+
+
+  
+
+  /*
 
   // Campo coercivo
   double Hc=TMath::Abs(dH2-dH1)/2;
@@ -443,8 +506,8 @@ int main(int argc, char **argv)
     leg = new TLegend(0.1,0.7,0.2,0.9);//(x1,y1,x2,y2)
   }
   //leg->SetHeader("Orientac#tilde{o}es");
-  leg->AddEntry(MR_H,"#rightarrow","p");
-  leg->AddEntry(MR_H2,"#leftarrow","p");
+  leg->AddEntry(MR_H,"#rightarrow","lep");
+  leg->AddEntry(MR_H2,"#leftarrow","lep");
 
   leg->AddEntry(r1ar3,"M fl","l");
   leg->AddEntry(r1ar2,"M pl","l");
@@ -453,7 +516,7 @@ int main(int argc, char **argv)
 
 
 
-  
+  */
   file.close();
   file_2.close();
   //delete  g;
@@ -478,8 +541,8 @@ int main(int argc, char **argv)
   delete [] H2_400;
   delete [] R2_400;
   delete [] eR2_400;
-
   
+  /*
   //arrows
   r1ar1->Draw();
   //r2ar1->Draw(); Basta por um texto a dizer que H=0
@@ -539,6 +602,6 @@ int main(int argc, char **argv)
   }
 
   theApp.Terminate();
-  
+  */
   return 0;  
 }

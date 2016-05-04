@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
 
-  bool fit=false;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
+  bool fit=true;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
 
   string res_label="";
   string plot_label="";
@@ -227,9 +227,8 @@ int main(int argc, char **argv)
   
 
   TGraphErrors *MR_H = new TGraphErrors(N,H,MR,eH,eMR);
-  MR_H->SetMarkerStyle(6);
-  MR_H->SetMarkerColor(kBlue);
-  MR_H->SetFillColor(kBlue);
+  MR_H->SetMarkerStyle(1);
+  MR_H->SetLineColor(kBlue);
 
 
   ///Varrimento 2
@@ -250,8 +249,8 @@ int main(int argc, char **argv)
   
 
   TGraphErrors *MR_H2 = new TGraphErrors(N,H2,MR2,eH2,eMR2);
-  MR_H2->SetMarkerColor(kRed);
-  MR_H2->SetMarkerStyle(7);
+  MR_H2->SetLineColor(kRed);
+  MR_H2->SetMarkerStyle(1);
 
 
 
@@ -273,6 +272,8 @@ int main(int argc, char **argv)
   f1->SetParLimits(1,0,1);
   TGraphErrors *R_H = new TGraphErrors(N,H,R,eH,eR);//Grafico R(H) para dazer o fit
   R_H->Fit("f1","","",low_lim,high_lim);
+  R_H->SetMarkerStyle(1);
+  R_H->SetLineColor(kBlue);
   double b=f1->GetParameter(0); //ordenada na origem 
   double eb =  f1->GetParError(0); // erro da ordenada na origem 
   double a=f1->GetParameter(1); //declive
@@ -287,6 +288,8 @@ int main(int argc, char **argv)
   f2->SetParLimits(1,0,1);
   TGraphErrors *R_H2 = new TGraphErrors(N,H2,R2,eH2,eR2);//grafico R(H) para fazer o fit
   R_H2->Fit("f2","","",low_lim2,high_lim2);
+  R_H2->SetMarkerStyle(1);
+  R_H2->SetLineColor(kBlue);
   double b2=f2->GetParameter(0); // ordenada na origem
   double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
   double a2=f2->GetParameter(1); //declive
@@ -446,8 +449,8 @@ int main(int argc, char **argv)
     leg = new TLegend(0.1,0.7,0.2,0.9);//(x1,y1,x2,y2)
   }
   //leg->SetHeader("Orientac#tilde{o}es");
-  leg->AddEntry(MR_H,"#rightarrow","p");
-  leg->AddEntry(MR_H2,"#leftarrow","p");
+  leg->AddEntry(MR_H,"#rightarrow","lep");
+  leg->AddEntry(MR_H2,"#leftarrow","lep");
 
   leg->AddEntry(r1ar1,"H","l");
   leg->AddEntry(r1ar2,"M pl","l");
