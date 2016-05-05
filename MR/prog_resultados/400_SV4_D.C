@@ -41,8 +41,6 @@ int main(int argc, char **argv)
   theApp.InitializeGraphics();
 
 
-  static int Ngraphs=8;
-
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
   string plot_label="SV4_D_400.pdf"; //Nome do ficheiro em que e feito o plot MR(H)
 
