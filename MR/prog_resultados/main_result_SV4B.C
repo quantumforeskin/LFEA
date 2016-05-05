@@ -65,10 +65,10 @@ int main(int argc, char **argv)
   double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-3;
-  double high_lim=17;
-  double low_lim2=-3;
-  double high_lim2=17;
+  double low_lim=2;
+  double high_lim=14;
+  double low_lim2=0;
+  double high_lim2=13;
 
   //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
 
@@ -283,6 +283,8 @@ int main(int argc, char **argv)
   double edH1=(eR_half_med+eb)/a + TMath::Abs(R_half_med-b)/(a*a)*ea;
 
 
+  
+
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
   f2->SetParLimits(1,0,1);
@@ -299,7 +301,7 @@ int main(int argc, char **argv)
   double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
 
 
-
+  
   // Campo coercivo
   double Hc=TMath::Abs(dH2-dH1)/2;
   double eHc = (edH1+edH2)/2; //erro

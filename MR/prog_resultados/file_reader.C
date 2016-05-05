@@ -11,8 +11,7 @@ int fr::getN(string file1){
   ifstream file;
   file.open (file1.c_str());
 
-  static int N=0;
-
+  N=0;
   
   char cur = '\0';
   char last = '\0';
@@ -38,19 +37,6 @@ double* fr::getH(string file1, double I){
   ifstream file;
   file.open (file1.c_str());
 
-  static int N=0;
-
-  
-  char cur = '\0';
-  char last = '\0';
-
-  while (file.get(cur)) {
-      if (cur == '\n' ||
-          (cur == '\f' && last == '\r'))
-         N++;
-  }
-
-  //N--;
   
   cout << N << endl;
 
@@ -70,6 +56,9 @@ double* fr::getH(string file1, double I){
       file >> H[i] >> R[i]; // extracts 2 floating point values seperated by whitespace
       R[i]=R[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
       eR[i] = eV/I + R[i]/I*eI; //erro resistencia
+
+      //cout << "i " << i << "  H " << H[i] << "  R " << R[i] << endl;
+
       i++; 
 
 
@@ -94,19 +83,6 @@ double* fr::getR(string file1, double I){
   ifstream file;
   file.open (file1.c_str());
 
-  static int N=0;
-
-  
-  char cur = '\0';
-  char last = '\0';
-
-  while (file.get(cur)) {
-      if (cur == '\n' ||
-          (cur == '\f' && last == '\r'))
-         N++;
-  }
-
-  //N--;
   
   cout << N << endl;
 
@@ -150,20 +126,6 @@ double* fr::get_eR(string file1, double I){
   ifstream file;
   file.open (file1.c_str());
 
-  static int N=0;
-
-  
-  char cur = '\0';
-  char last = '\0';
-
-  while (file.get(cur)) {
-      if (cur == '\n' ||
-          (cur == '\f' && last == '\r'))
-         N++;
-  }
-
-  //N--;
-  
   cout << N << endl;
 
   double *H = new double[N];

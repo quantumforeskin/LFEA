@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  bool fit=true;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
+  bool fit=false;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
 
   string res_label="";
   string plot_label="";
@@ -62,10 +62,10 @@ int main(int argc, char **argv)
   double eh = 0.1;//erro campo 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-12;
+  double low_lim=-3;
   double high_lim=19;
-  double low_lim2=-15;
-  double high_lim2=20;
+  double low_lim2=-6;
+  double high_lim2=19;
 
    /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
   ifstream file;
@@ -168,22 +168,22 @@ int main(int argc, char **argv)
 
   double Rp = *std::min_element(R_400,R_400+N_400);
   double eRp = *std::min_element(eR_400,eR_400+N_400); //Quanto maior a resistencia maior o seu erro, ver formula de erro
-  double Rap = *std::max_element(R_400,R_400+N_400);
-  double eRap = *std::max_element(eR_400,eR_400+N_400);
+  double Rap = *std::max_element(R,R+N);
+  double eRap = *std::max_element(eR,eR+N);
 
 
   /// MR max /////////
   double MRmax=(Rap-Rp)/Rp;
   double eMRmax=(eRap+eRp)/Rp + (Rap-Rp)*eRp/(Rp*Rp);
 
-
+  
 
   ///Varrimento 2
 
   double Rp2 = *std::min_element(R2_400,R2_400+N_400);
   double eRp2 = *std::min_element(eR2_400,eR2_400+N_400);
-  double Rap2 = *std::max_element(R2_400,R2_400+N_400);
-  double eRap2 = *std::max_element(eR2_400,eR2_400+N_400);
+  double Rap2 = *std::max_element(R2,R2+N);
+  double eRap2 = *std::max_element(eR2,eR2+N);
 
   /// MR max /////////
   double MRmax2=(Rap2-Rp2)/Rp2;
@@ -263,24 +263,6 @@ int main(int argc, char **argv)
 
 
 
-  //////////////////////////DFJOFGOSEVBJOTGJTROBGFFGGGGGGGGGGGGGGGGGGGGG/////////////////////
-
-  ofstream chi_res;
-  chi_res.open ("chi_res_2.txt");
-
-
-  for(int l=-10;l<2;l++){
-    for(int j=13;j<14;j++){
-  //Limites da curva linear --> Para fazer o fit
-  double low_lim=(double)l;
-  double high_lim=(double)j;
-  double low_lim2=(double)l;
-  double high_lim2=(double)j;
-
-  
-  //////////////////////////////jJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ///////////
-
-
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
   f1->SetParLimits(1,-1,0);
@@ -297,36 +279,8 @@ int main(int argc, char **argv)
   double dH1=(R_half_med-b)/a; //H correspondente a R a meia altura
   double edH1=(eR_half_med+eb)/a + TMath::Abs(R_half_med-b)/(a*a)*ea;
 
-  double chi=f1->GetChisquare();
-
-
-   chi_res << l << " " << j  << " " << chi << "\n";
-    }}
-
-  chi_res.close();
-
-  /*
-  
-  
-  
-  //////////////////////////DFJOFGOSEVBJOTGJTROBGFFGGGGGGGGGGGGGGGGGGGGG/////////////////////
-
-  ofstream chi_res;
-  chi_res.open ("chi_res_2.txt");
-
-
-  for(int l=-10;l<2;l++){
-    for(int j=13;j<14;j++){
-  //Limites da curva linear --> Para fazer o fit
-  double low_lim=(double)l;
-  double high_lim=(double)j;
-  double low_lim2=(double)l;
-  double high_lim2=(double)j;
 
   
-  //////////////////////////////jJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ///////////
-
-
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
   f2->SetParLimits(1,-1,0);
@@ -342,20 +296,7 @@ int main(int argc, char **argv)
   double dH2=(R_half_med-b2)/a2; //H correspondente a R a meia altura
   double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
 
-
-  double chi=f2->GetChisquare();
-
-
-   chi_res << l << " " << j  << " " << chi << "\n";
-    }}
-
-  chi_res.close();
-
-
-
   
-
-  /*
 
   // Campo coercivo
   double Hc=TMath::Abs(dH2-dH1)/2;
@@ -514,9 +455,9 @@ int main(int argc, char **argv)
   leg->AddEntry(r1ar1,"H","l");
   //leg->AddEntry(arj,"J","l");
 
+  
 
-
-  */
+  
   file.close();
   file_2.close();
   //delete  g;
@@ -542,7 +483,7 @@ int main(int argc, char **argv)
   delete [] R2_400;
   delete [] eR2_400;
   
-  /*
+  
   //arrows
   r1ar1->Draw();
   //r2ar1->Draw(); Basta por um texto a dizer que H=0
@@ -602,6 +543,6 @@ int main(int argc, char **argv)
   }
 
   theApp.Terminate();
-  */
+  
   return 0;  
 }

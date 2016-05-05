@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
 
-  bool fit=false;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
+  bool fit=true;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
 
   string res_label="";
   string plot_label="";
@@ -64,10 +64,10 @@ int main(int argc, char **argv)
 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=0;
-  double high_lim=25;
-  double low_lim2=-3;
-  double high_lim2=27;
+  double low_lim=-10;
+  double high_lim=40;
+  double low_lim2=-10;
+  double high_lim2=40;
 
   //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
 
@@ -108,7 +108,8 @@ int main(int argc, char **argv)
       file >> H[i] >> R[i]; // extracts 2 floating point values seperated by whitespace
       R[i]=R[i]/I; //PASSAR TENSOES PARA RESISTENCIAS
       eR[i] = eV/I + R[i]/I*eI; //erro resistencia
-      cout << eR[i] << endl;
+
+      //cout << "i " << i << "  H " << H[i] << "  R " << R[i] << endl;
 
       i++; 
 
@@ -171,10 +172,10 @@ int main(int argc, char **argv)
 
   ///Varrimento 1
 
-  double Rp = *std::min_element(R_400,R_400+N_400);
-  double eRp = *std::min_element(eR_400,eR_400+N_400); //Quanto maior a resistencia maior o seu erro, ver formula de erro
-  double Rap = *std::max_element(R,R+N);
-  double eRap = *std::max_element(eR,eR+N);
+  double Rp = *std::min_element(R,R+N);
+  double eRp = *std::min_element(eR,eR+N); //Quanto maior a resistencia maior o seu erro, ver formula de erro
+  double Rap = *std::max_element(R_400,R_400+N_400);
+  double eRap = *std::max_element(eR_400,eR_400+N_400);
 
 
   /// MR max /////////
@@ -185,16 +186,18 @@ int main(int argc, char **argv)
 
   ///Varrimento 2
 
-  double Rp2 = *std::min_element(R2_400,R2_400+N_400);
-  double eRp2 = *std::min_element(eR2_400,eR2_400+N_400);
-  double Rap2 = *std::max_element(R2,R2+N);
-  double eRap2 = *std::max_element(eR2,eR2+N);
+  double Rp2 = *std::min_element(R2,R2+N);
+  double eRp2 = *std::min_element(eR2,eR2+N);
+  double Rap2 = *std::max_element(R2_400,R2_400+N_400);
+  double eRap2 = *std::max_element(eR2_400,eR2_400+N_400);
+
+  cout << Rap << endl ;
 
   /// MR max /////////
   double MRmax2=(Rap2-Rp2)/Rp2;
   double eMRmax2=(eRap2+eRp2)/Rp2 + (Rap2-Rp2)*eRp2/(Rp2*Rp2);
 
-
+  cout << MRmax << endl;
 
   // Media do Rp e Rap
   double Rp_med = (Rp+Rp2)/2;
@@ -257,25 +260,6 @@ int main(int argc, char **argv)
 
   ////////////////////Encontrar Hc e Hoff////////////////////
 
-  //////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //////////////////////! Excepcionalmente para este caso, calcula-se Hc e Hoff          ! 
-  //////////////////////! de uma forma diferente, pois R vai sempre diminuindo           !
-  //////////////////////! mesmo ate 400 Oe. Assim, para se estimar a resistencia         !
-  //////////////////////! a meia altura, considera-se o valor de saturacao como sendo    !
-  //////////////////////! o valor minimo de R no intervalo [-50,50]Oe                    !
-  //////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  ///Varrimento 1 - Redefine-se Rp para o calculo de Hc e Hoff
-
-  Rp = *std::min_element(R,R+N);
-  eRp = *std::min_element(eR,eR+N); //Quanto maior a resistencia maior o seu erro, ver formula de erro
-
-
-  ///Varrimento 2
-
-  Rp2 = *std::min_element(R2,R2+N);
-  eRp2 = *std::min_element(eR2,eR2+N);
-
 
   double R_half = (Rap+Rp)/2; //Resistencia a meia altura para o varrimento 1
   double eR_half = (eRap+eRp)/2; //Erro
@@ -283,7 +267,6 @@ int main(int argc, char **argv)
   double eR_half2 = (eRap2+eRp2)/2; //Erro
   double R_half_med=(R_half+R_half2)/2; //Faz-se a media para obter a resistencia a meia altura final
   double eR_half_med=(eR_half+eR_half2)/2;//Erro
-
 
 
   //Varrimento 1
@@ -320,9 +303,6 @@ int main(int argc, char **argv)
   double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
 
 
-  double chi=f2->GetChisquare();
-
-  
   
   // Campo coercivo
   double Hc=TMath::Abs(dH2-dH1)/2;
