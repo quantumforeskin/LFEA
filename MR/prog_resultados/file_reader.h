@@ -5,6 +5,7 @@ using namespace std;
 
 class fr{
 
+  int N;
 
  public:
     int getN(string);
