@@ -332,15 +332,16 @@ int main(int argc, char **argv)
   double eS1 = (ea/Rp + a/(Rp*Rp)*eRp)*100; 
   double S2 = a2/Rp2*100; //Varrimento 2
   double eS2 = (ea2/Rp2 + a2/(Rp2*Rp2)*eRp2)*100;
+  double Smed = (S1+S2)/2;//media
+  double eSmed = (eS1+eS2)/2;
 
 
+  
   //Ficheiro com os resultados
   ofstream resultados;
   resultados.open (res_label.c_str());
-  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "MR max: " << MRmax << " +- " << eMRmax << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "MR max: " << MRmax2 << " +- " << eMRmax2 << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" << "MR max: " << MRmax_med << " +- " << eMRmax_med <<"\n" <<  "---------------------" << "\n"<< "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n";
+  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "MR max: " << MRmax << " +- " << eMRmax << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "MR max: " << MRmax2 << " +- " << eMRmax2 << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" << "MR max: " << MRmax_med << " +- " << eMRmax_med <<"\n" <<  "---------------------" << "\n"<< "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n" << "S media (%) " << Smed << " +- " << eSmed << "\n";
   resultados.close();
-
-
 
   //faz aparecer o canvas
   TApplication theApp("App",&argc, argv);

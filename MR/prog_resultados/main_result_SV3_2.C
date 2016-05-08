@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
 
-  bool fit=false;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
+  bool fit=true;//Opcao de fazer os graficos dos fits R(H) ou fazer a analise de resultados normal com o grafico MR(H)
 
   string res_label="";
   string plot_label="";
@@ -297,10 +297,25 @@ int main(int argc, char **argv)
   R_H->SetMarkerStyle(1);
   R_H->SetLineColor(kBlue);
   R_H->Fit("f1","","",low_lim,high_lim);
-  double b=f1->GetParameter(0); //ordenada na origem 
-  double eb =  f1->GetParError(0); // erro da ordenada na origem 
-  double a=f1->GetParameter(1); //declive
-  double ea =  f1->GetParError(1); //erro do declive 
+
+  double a_sens=f1->GetParameter(1); //declive para o calculo da sensibilidade
+  double ea_sens =  f1->GetParError(1); //erro do declive 
+
+
+
+
+  //Fit para os calculos de Hc e Hoff - MAIS LOCALIZADO!
+  TF1 *faux= new TF1("faux","[0]+[1]*x");//Funcao a fitar
+  faux->SetParLimits(1,-1,-0.1);
+  TGraphErrors *R_Haux = new TGraphErrors(N,H,R,eH,eR);//Grafico R(H) para dazer o fit
+  R_Haux->SetMarkerStyle(1);
+  R_Haux->SetLineColor(kBlue);
+  R_Haux->Fit("faux","","",5,20);
+
+  double b=faux->GetParameter(0); //ordenada na origem 
+  double eb =  faux->GetParError(0); // erro da ordenada na origem 
+  double a=faux->GetParameter(1); //declive
+  double ea =  faux->GetParError(1); //erro do declive 
  
 
   double dH1=(R_half_med-b)/a; //H correspondente a R a meia altura
@@ -315,10 +330,23 @@ int main(int argc, char **argv)
   R_H2->SetMarkerStyle(1);
   R_H2->SetLineColor(kBlue);
   R_H2->Fit("f2","","",low_lim2,high_lim2);
-  double b2=f2->GetParameter(0); // ordenada na origem
-  double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
-  double a2=f2->GetParameter(1); //declive
-  double ea2 =  f2->GetParError(1); //erro do declive 
+
+  double a_sens2=f2->GetParameter(1); //declive para o calculo da sensibilidade
+  double ea_sens2=f2->GetParError(1); //erro do declive 
+
+
+  //Fit para os calculos de Hc e Hoff - MAIS LOCALIZADO!
+  TF1 *faux2= new TF1("faux2","[0]+[1]*x");//Funcao a fitar
+  faux2->SetParLimits(1,-1,-0.1);
+  TGraphErrors *R_Haux2 = new TGraphErrors(N,H2,R2,eH2,eR2);//Grafico R(H) para dazer o fit
+  R_Haux2->SetMarkerStyle(1);
+  R_Haux2->SetLineColor(kBlue);
+  R_Haux2->Fit("faux2","","",5,20);
+
+  double b2=faux2->GetParameter(0); // ordenada na origem
+  double eb2 =  faux2->GetParError(0); // erro da ordenada na origem 
+  double a2=faux2->GetParameter(1); //declive
+  double ea2 =  faux2->GetParError(1); //erro do declive 
 
   double dH2=(R_half_med-b2)/a2; //H correspondente a R a meia altura
   double edH2=(eR_half_med+eb2)/TMath::Abs(a2) + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
@@ -334,17 +362,19 @@ int main(int argc, char **argv)
   double eHoff = (edH1+edH2)/2; //erro
 
   //// Sensibilidade e erros (em percentagem)
-  double S1 = a/Rp*100; //Varrimento 1
-  double eS1 = (ea/Rp + a/(Rp*Rp)*eRp)*100; 
-  double S2 = a2/Rp2*100; //Varrimento 2
-  double eS2 = (ea2/Rp2 + a2/(Rp2*Rp2)*eRp2)*100;
+  double S1 = a_sens/Rp*100; //Varrimento 1
+  double eS1 = (ea_sens/Rp + a_sens/(Rp*Rp)*eRp)*100; 
+  double S2 = a_sens2/Rp2*100; //Varrimento 2
+  double eS2 = (ea_sens2/Rp2 + a_sens2/(Rp2*Rp2)*eRp2)*100;
+  double Smed = (S1+S2)/2;//media
+  double eSmed = (eS1+eS2)/2;
 
 
   
   //Ficheiro com os resultados
   ofstream resultados;
   resultados.open (res_label.c_str());
-  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "MR max: " << MRmax << " +- " << eMRmax << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "MR max: " << MRmax2 << " +- " << eMRmax2 << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" << "MR max: " << MRmax_med << " +- " << eMRmax_med <<"\n" <<  "---------------------" << "\n"<< "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n";
+  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "MR max: " << MRmax << " +- " << eMRmax << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "MR max: " << MRmax2 << " +- " << eMRmax2 << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" << "MR max: " << MRmax_med << " +- " << eMRmax_med <<"\n" <<  "---------------------" << "\n"<< "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n" << "S media (%) " << Smed << " +- " << eSmed << "\n";
   resultados.close();
  
   //faz aparecer o canvas
