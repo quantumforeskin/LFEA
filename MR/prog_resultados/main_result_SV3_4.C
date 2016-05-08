@@ -386,17 +386,17 @@ int main(int argc, char **argv)
   float ay1 = 0.04;
 
   // H 
-  TArrow *r1ar1 = new TArrow(ax1,ay1,ax1+10,ay1,0.02,"|>");
+  TArrow *r1ar1 = new TArrow(ax1,ay1,ax1+10,ay1,0.02,"<|");
   r1ar1->SetLineColor(1);
   r1ar1->SetFillColor(1);
 
   // M pl 
-  TArrow *r1ar2 = new TArrow(ax1,ay1-arrow_step,ax1+10,ay1-arrow_step,0.02,"<|");
+  TArrow *r1ar2 = new TArrow(ax1,ay1-arrow_step,ax1+10,ay1-arrow_step,0.02,"|>");
   r1ar2->SetLineColor(8);
   r1ar2->SetFillColor(8);
 
   // M fl
-  TArrow *r1ar3 = new TArrow(ax1,ay1-2*arrow_step,ax1+10,ay1-2*arrow_step,0.02,"|>");
+  TArrow *r1ar3 = new TArrow(ax1,ay1-2*arrow_step,ax1+10,ay1-2*arrow_step,0.02,"<|");
   r1ar3->SetLineColor(9);
   r1ar3->SetFillColor(9);
 
@@ -422,7 +422,7 @@ int main(int argc, char **argv)
 
 
   // M pl
-  TArrow *r2ar2 = new TArrow(ax2,ay2+arrow_step/2,ax2+10,ay2+arrow_step/2,0.02,"<|");
+  TArrow *r2ar2 = new TArrow(ax2,ay2+arrow_step/2,ax2+10,ay2+arrow_step/2,0.02,"|>");
   r2ar2->SetLineColor(8);
   r2ar2->SetFillColor(8);
 
@@ -439,18 +439,18 @@ int main(int argc, char **argv)
   float ay3 = 0.014;
 
   // H 
-  TArrow *r3ar1 = new TArrow(ax3,ay3,ax3+10,ay3,0.02,"<|");
+  TArrow *r3ar1 = new TArrow(ax3,ay3,ax3+10,ay3,0.02,"|>");
   r3ar1->SetLineColor(1);
   r3ar1->SetFillColor(1);
 
   // Mpl
-  TArrow *r3ar2 = new TArrow(ax3,ay3-arrow_step,ax3+10,ay3-arrow_step,0.02,"<|");
+  TArrow *r3ar2 = new TArrow(ax3,ay3-arrow_step,ax3+10,ay3-arrow_step,0.02,"|>");
   r3ar2->SetLineColor(8);
   r3ar2->SetFillColor(8);
 
 
   // Mfl
-  TArrow *r3ar3 = new TArrow(ax3,ay3-2*arrow_step,ax3+10,ay3-2*arrow_step,0.02,"<|");
+  TArrow *r3ar3 = new TArrow(ax3,ay3-2*arrow_step,ax3+10,ay3-2*arrow_step,0.02,"|>");
   r3ar3->SetLineColor(9);
   r3ar3->SetFillColor(9);
 

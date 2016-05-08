@@ -272,12 +272,12 @@ int main(int argc, char **argv)
 
 
   // M pl
-  TArrow *r2ar2 = new TArrow(ax2,ay2-arrow_step,ax2+l,ay2-arrow_step,0.02,"<|");
+  TArrow *r2ar2 = new TArrow(ax2,ay2-arrow_step,ax2+l,ay2-arrow_step,0.02,"|>");
   r2ar2->SetLineColor(8);
   r2ar2->SetFillColor(8);
 
   // M fl
-  TArrow *r2ar3 = new TArrow(ax2,ay2-2*arrow_step,ax2+l,ay2-2*arrow_step,0.02,"|>");
+  TArrow *r2ar3 = new TArrow(ax2,ay2-2*arrow_step,ax2+l,ay2-2*arrow_step,0.02,"<|");
   r2ar3->SetLineColor(9);
   r2ar3->SetFillColor(9);
 

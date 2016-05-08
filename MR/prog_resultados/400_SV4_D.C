@@ -266,7 +266,7 @@ int main(int argc, char **argv)
   float ay2 = 0.045;
 
   // H
-  TArrow *r2ar1 = new TArrow(ax2,ay2,ax2+l,ay2,0.02,"<|");
+  TArrow *r2ar1 = new TArrow(ax2,ay2,ax2+l,ay2,0.02,"|>");
   r2ar1->SetLineColor(1);
   r2ar1->SetFillColor(1);
 
