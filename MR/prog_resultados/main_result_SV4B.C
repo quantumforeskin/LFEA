@@ -258,12 +258,33 @@ int main(int argc, char **argv)
   ////////////////////Encontrar Hc e Hoff////////////////////
 
 
-  double R_half = (Rap+Rp)/2; //Resistencia a meia altura para o varrimento 1
-  double eR_half = (eRap+eRp)/2; //Erro
-  double R_half2 = (Rap2+Rp2)/2; //Resistencia a meia altura para o varrimento 2
-  double eR_half2 = (eRap2+eRp2)/2; //Erro
+  ///Uma vez que a saturacao nao e simetrica em relacao ao centro da zonna linear, e necessario ter descernimento e considerar um intervalo de campos adequado para obter o ponto central da zona linear. As resistencias correspondentes aos limites dessa regiao sao estimadas como sendo Ru (resistencia maxima na regiao considerada) e Rl(resistencia minima na regiao considerada)
+
+
+ ///Varrimento 1
+
+  double Rl = *std::min_element(R,R+N);
+  double eRl = *std::min_element(eR,eR+N); 
+  double Ru = *std::max_element(R,R+N);
+  double eRu = *std::max_element(eR,eR+N);
+
+  
+
+  ///Varrimento 2
+
+  double Rl2 = *std::min_element(R2,R2+N);
+  double eRl2 = *std::min_element(eR2,eR2+N);
+  double Ru2 = *std::max_element(R2,R2+N);
+  double eRu2 = *std::max_element(eR2,eR2+N);
+
+
+  double R_half = (Ru+Rl)/2; //Resistencia a meia altura para o varrimento 1
+  double eR_half = (eRu+eRl)/2; //Erro
+  double R_half2 = (Ru2+Rl2)/2; //Resistencia a meia altura para o varrimento 2
+  double eR_half2 = (eRu2+eRl2)/2; //Erro
   double R_half_med=(R_half+R_half2)/2; //Faz-se a media para obter a resistencia a meia altura final
   double eR_half_med=(eR_half+eR_half2)/2;//Erro
+
 
 
 
@@ -277,10 +298,10 @@ int main(int argc, char **argv)
   double b=f1->GetParameter(0); //ordenada na origem 
   double eb =  f1->GetParError(0); // erro da ordenada na origem 
   double a=f1->GetParameter(1); //declive
-  double ea =  f1->GetParError(0); //erro do declive 
+  double ea =  f1->GetParError(1); //erro do declive 
 
   double dH1=(R_half_med-b)/a; //H correspondente a R a meia altura
-  double edH1=(eR_half_med+eb)/a + TMath::Abs(R_half_med-b)/(a*a)*ea;
+  double edH1=(eR_half_med+eb)/TMath::Abs(a) + TMath::Abs(R_half_med-b)/(a*a)*ea;
 
 
   
@@ -295,10 +316,10 @@ int main(int argc, char **argv)
   double b2=f2->GetParameter(0); // ordenada na origem
   double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
   double a2=f2->GetParameter(1); //declive
-  double ea2 =  f2->GetParError(0); //erro do declive 
+  double ea2 =  f2->GetParError(1); //erro do declive 
 
   double dH2=(R_half_med-b2)/a2; //H correspondente a R a meia altura
-  double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
+  double edH2=(eR_half_med+eb2)/TMath::Abs(a2) + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
 
 
   
