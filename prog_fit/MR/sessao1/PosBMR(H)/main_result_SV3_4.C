@@ -47,9 +47,9 @@ int main(int argc, char **argv)
 
   //Limites da curva linear --> Para fazer o fit
   double low_lim=0.1;
-  double high_lim=9;
-  double low_lim2=0.1;
-  double high_lim2=9;
+  double high_lim=5;
+  double low_lim2=-3;
+  double high_lim2=2;
 
    /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
   ifstream file;
@@ -72,8 +72,8 @@ int main(int argc, char **argv)
   cout << N << endl;
 
   double *H = new double[N];
-  double *MR = new double[N];
-  double *eMR = new double[N];
+  double *R = new double[N];
+  double *eR = new double[N];
 
 
   file.close();
@@ -84,9 +84,8 @@ int main(int argc, char **argv)
   while(!file.eof() && test==0)
     {
 
-      file >> H[i] >> MR[i] >> eMR[i]; // extracts 2 floating point values seperated by whitespace
+      file >> H[i] >> R[i] >> eR[i]; // extracts 2 floating point values seperated by whitespace
       i++; 
-
 
       if(i>=N)
 	test=1;
@@ -102,8 +101,8 @@ int main(int argc, char **argv)
 
 
   double *H2 = new double[N];
-  double *MR2 = new double[N];
-  double *eMR2 = new double[N];
+  double *R2 = new double[N];
+  double *eR2 = new double[N];
 
   file_2.close();
   file_2.open (file2.c_str());
@@ -112,15 +111,42 @@ int main(int argc, char **argv)
   test=0;
   while(!file_2.eof() && test==0)
     {
-      file_2 >> H2[i] >> MR2[i] >> eMR2[i]; // extracts 2 floating point values seperated by whitespace
+      file_2 >> H2[i] >> R2[i] >> eR2[i]; // extracts 2 floating point values seperated by whitespace
       i++;
-
       if(i>=N)
 	test=1;
       // do something with them
     }
 
+  /////////////////////////Rp e Rap////////////////////////////////////////////////
 
+
+  i=0;
+  while(i<N){
+     cout << R[i] <<endl;
+     ++i;
+    }
+
+  ///Varrimento 1
+
+  double Rp = *std::min_element(R,R+N);
+  double eRp = *std::min_element(eR,eR+N); //Quanto maior a resistencia maior o seu erro, ver formula de erro
+  double Rap = *std::max_element(R,R+N);
+  double eRap = *std::max_element(eR,eR+N);
+
+  ///Varrimento 2
+
+  double Rp2 = *std::min_element(R2,R2+N);
+  double eRp2 = *std::min_element(eR2,eR2+N);
+  double Rap2 = *std::max_element(R2,R2+N);
+  double eRap2 = *std::max_element(eR2,eR2+N);
+
+
+  // Media do Rp e Rap
+  double Rp_med = (Rp+Rp2)/2;
+  double eRp_med = (eRp+eRp2)/2;
+  double Rap_med = (Rap+Rap2)/2;
+  double eRap_med = (eRap+eRap2)/2;
   
 
 
@@ -137,17 +163,27 @@ int main(int argc, char **argv)
   }
   
 
-  TGraphErrors *MR_H = new TGraphErrors(N,H,MR,eH,eMR);
+  TGraphErrors *MR_H = new TGraphErrors(N,H,R,eH,eR);
   MR_H->SetMarkerStyle(1);
   MR_H->SetLineColor(kBlue);
   //MR_H->SetFillColor(kBlue);
 
   
 
-  TGraphErrors *MR_H2 = new TGraphErrors(N,H2,MR2,eH,eMR2);
+  TGraphErrors *MR_H2 = new TGraphErrors(N,H2,R2,eH,eR2);
   MR_H2->SetLineColor(kRed);
   MR_H2->SetMarkerStyle(1);
 
+
+  ////////////////////Encontrar Hc e Hoff////////////////////
+
+
+  double R_half = (Rap+Rp)/2; //Resistencia a meia altura para o varrimento 1
+  double eR_half = (eRap+eRp)/2; //Erro
+  double R_half2 = (Rap2+Rp2)/2; //Resistencia a meia altura para o varrimento 2
+  double eR_half2 = (eRap2+eRp2)/2; //Erro
+  double R_half_med=(R_half+R_half2)/2; //Faz-se a media para obter a resistencia a meia altura final
+  double eR_half_med=(eR_half+eR_half2)/2;//Erro
 
 
 
@@ -155,34 +191,52 @@ int main(int argc, char **argv)
 
   //Varrimento 1
   TF1 *f1= new TF1("f1","[0]+[1]*x");//Funcao a fitar
-  //f1->SetParLimits(0,2,10);
-  //f1->SetParLimits(1,0,1);
+  f1->SetParLimits(0,2,10);
+  f1->SetParLimits(1,0,1);
   f1->SetLineColor(kRed);
-  //MR_H->Fit("f1","","",low_lim,high_lim);
+  MR_H->Fit("f1","","",low_lim,high_lim);
   double b=f1->GetParameter(0); //ordenada na origem 
   double eb =  f1->GetParError(0); // erro da ordenada na origem 
   double a=f1->GetParameter(1); //declive
   double ea =  f1->GetParError(0); //erro do declive 
 
-
+  double dH1=(R_half_med-b)/a; //H correspondente a R a meia altura
+  double edH1=(eR_half_med+eb)/a + TMath::Abs(R_half_med-b)/(a*a)*ea;
+  
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
-  //f2->SetParLimits(0,2,10);
-  //f2->SetParLimits(1,0,1);
+  f2->SetParLimits(0,2,10);
+  f2->SetParLimits(1,0,1);
   f2->SetLineColor(kBlue);
-  //MR_H2->Fit("f2","","",low_lim2,high_lim2);
+  MR_H2->Fit("f2","","",low_lim2,high_lim2);
   double b2=f2->GetParameter(0); // ordenada na origem
   double eb2 =  f2->GetParError(0); // erro da ordenada na origem 
   double a2=f2->GetParameter(1); //declive
   double ea2 =  f2->GetParError(0); //erro do declive 
 
+  double dH2=(R_half_med-b2)/a2; //H correspondente a R a meia altura
+  double edH2=(eR_half_med+eb2)/a2 + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
 
-  //Ficheiro com os resultados
+
+  // Campo coercivo
+  double Hc=TMath::Abs(dH2-dH1)/2;
+  double eHc = (edH1+edH2)/2; //erro
+  
+  // Campo de offset
+  double Hoff=(dH2+dH1)/2;
+  double eHoff = (edH1+edH2)/2; //erro
+
+   //// Sensibilidade e erros (em percentagem)
+  double S1 = a/Rp*100; //Varrimento 1
+  double eS1 = (ea/Rp + a/(Rp*Rp)*eRp)*100; 
+  double S2 = a2/Rp2*100; //Varrimento 2
+  double eS2 = (ea2/Rp2 + a2/(Rp2*Rp2)*eRp2)*100;
+  
+ //Ficheiro com os resultados
   ofstream resultados;
   resultados.open (res_label.c_str());
-  resultados << "chupa";
+  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" <<  "---------------------" << "\n" << "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n";
   resultados.close();
-
 
 
   //faz aparecer o canvas
@@ -312,12 +366,12 @@ int main(int argc, char **argv)
   //delete  cubic;
 
   delete [] H;
-  delete [] MR;
+  delete [] R;
   delete [] eH;
-  delete [] eMR;
+  delete [] eR;
   delete [] H2;
-  delete [] MR2;
-  delete [] eMR2;
+  delete [] R2;
+  delete [] eR2;
  
 
   
