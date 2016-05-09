@@ -1,6 +1,6 @@
-opcao:fit
+opcao:Histograma
 titulo: Lei Arctan - Face B;d [cm];Hoff[ Oe ]
-func: [0]*atan(1/x)+[1]
+func: Gaus([0],[1])
 xmin:-1
 xmax:5
 ymin:-40

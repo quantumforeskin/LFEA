@@ -1,7 +1,7 @@
 opcao:fit
-titulo: Lei Arctan - Face A;d [cm];Hoff[ Oe ]
-func: [0]*atan(1/x)+[1]
+titulo: Lei Arctan - Face B;d [cm];Hoff[ Oe ]
+func: Gaus([0],[1])
 xmin:-1
 xmax:5
-ymin:0
-ymax:40
+ymin:-40
+ymax:0
