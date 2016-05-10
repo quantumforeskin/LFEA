@@ -41,18 +41,18 @@ int main(int argc, char **argv)
   string file1="../2s/data_SV2_100.txt"; //directoria dos dados do primeiro varrimento 
   string file2="../2s/data_SV2_100_2.txt"; //directoria dos dados do segundo varrimento
 
-  double I=0.0010004;//corrente
+  double I=0.0010082;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
   double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-14;
-  double high_lim=-6;
-  double low_lim2=-21;
+  double low_lim=-13;
+  double high_lim=-5;
+  double low_lim2=-20;
   double high_lim2=-11;
 
-  //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
+  //FIM DAS 3OISAS PARA PREENCHER A CADA ANALISE///////////////////
 
 
   /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
@@ -462,8 +462,8 @@ int main(int argc, char **argv)
   mg->GetXaxis()->SetTitle("H (Oe)");
   mg->GetYaxis()->SetTitle("MR");
   mg->GetYaxis()->SetTitleOffset(1.2);
- // R_H->Draw("AP");
- R_H2->Draw("AP");
+ R_H->Draw("AP");
+ //R_H2->Draw("AP");
   gStyle->SetOptFit(1);
   /*
   //arrows
