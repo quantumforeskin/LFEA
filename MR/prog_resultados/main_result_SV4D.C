@@ -298,6 +298,28 @@ int main(int argc, char **argv)
   double edH1=(eR_half_med+eb)/TMath::Abs(a) + TMath::Abs(R_half_med-b)/(a*a)*ea;
 
 
+  //Calculo de Hsat(varrimento 1)
+
+  //Efectua-se um novo fit numa regiao mais ampla para o calculo de Hsat devido as caracteristicas do grafico do varrimento 1:
+
+  TF1 *faux= new TF1("faux","[0]+[1]*x");//Funcao a fitar
+  faux->SetParLimits(1,0,1);
+  TGraphErrors *R_Haux = new TGraphErrors(N,H,R,eH,eR);//Grafico R(H) para dazer o fit
+  R_Haux->SetLineColor(kBlue);
+  R_Haux->SetMarkerStyle(1);
+  R_Haux->Fit("faux","","",0,15);
+  double bn=faux->GetParameter(0); //ordenada na origem 
+  double ebn =  faux->GetParError(0); // erro da ordenada na origem 
+  double an=faux->GetParameter(1); //declive
+  double ean =  faux->GetParError(1); //erro do declive 
+
+  double Hsat1 = (Rp - bn)/an;//Campo de saturacao que surge da interseccao da reta com a resistencia minima
+  double Hsat2 = (Rap - bn)/an;//Campo de saturacao que surge da interseccao da reta com a resistencia maxima
+  double eHsat1 = TMath::Abs((eRp + ebn)/an) + TMath::Abs((Rp - bn)*ean/(an*an));
+  double eHsat2 = TMath::Abs((eRap + ebn)/an) + TMath::Abs((Rap - bn)*ean/(an*an));
+
+
+
 
   //Varrimento 2
   TF1 *f2= new TF1("f2","[0]+[1]*x");
@@ -315,6 +337,26 @@ int main(int argc, char **argv)
   double edH2=(eR_half_med+eb2)/TMath::Abs(a2) + TMath::Abs(R_half_med-b2)/(a2*a2)*ea2;
 
   double chi=f2->GetChisquare();
+
+  //Calculo de Hsat(varrimento 2)
+
+
+  double Hsat1_2 = (Rp2 - b2)/a2;//Campo de saturacao que surge da interseccao da reta com a resistencia minima
+  double Hsat2_2 = (Rap2 - b2)/a2;//Campo de saturacao que surge da interseccao da reta com a resistencia maxima
+  double eHsat1_2 = TMath::Abs((eRp2 + eb2)/a2) + TMath::Abs((Rp2 - b2)*ea2/(a2*a2));
+  double eHsat2_2 = TMath::Abs((eRap2 + eb2)/a2) + TMath::Abs((Rap2 - b2)*ea2/(a2*a2));
+
+
+
+  //Media de Hsat
+
+  double Hsat1_med = (Hsat1+Hsat1_2)/2;
+  double Hsat2_med = (Hsat2+Hsat2_2)/2;
+  double eHsat1_med = (eHsat1+eHsat1_2)/2;
+  double eHsat2_med = (eHsat2+eHsat2_2)/2;
+
+  double DHsat = TMath::Abs(Hsat1_med) + TMath::Abs(Hsat2_med);
+  double eDHsat = eHsat1_med + eHsat2_med;
 
 
   
@@ -340,8 +382,10 @@ int main(int argc, char **argv)
   //Ficheiro com os resultados
   ofstream resultados;
   resultados.open (res_label.c_str());
-  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "MR max: " << MRmax << " +- " << eMRmax << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "MR max: " << MRmax2 << " +- " << eMRmax2 << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" << "MR max: " << MRmax_med << " +- " << eMRmax_med <<"\n" <<  "---------------------" << "\n"<< "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n" << "S media (%) " << Smed << " +- " << eSmed << "\n";
+  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "MR max: " << MRmax << " +- " << eMRmax << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "MR max: " << MRmax2 << " +- " << eMRmax2 << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n "<<  "---------------------" << "\n"<< "MR max: " << MRmax_med << " +- " << eMRmax_med <<"\n" << "H sat1: " << Hsat1_med << " +- "  << eHsat1_med << " Oe" << "\n" << "H sat2: " << Hsat2_med << " +- "  << eHsat2_med << " Oe"  << "\n " << "Delta Hsat " << DHsat << " +- " << eDHsat << " Oe " <<  "\n" <<  "---------------------" << "\n"<< "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n" << "S media (%) " << Smed << " +- " << eSmed << "\n";
   resultados.close();
+
+
 
   //faz aparecer o canvas
   TApplication theApp("App",&argc, argv);
