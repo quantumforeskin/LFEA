@@ -43,9 +43,13 @@ D400:lib3Trab2.a 400_SV4_D.o
 graphs:lib3Trab2.a MR_graphs.o
 	g++ -o MR_graphs.exe MR_graphs.o $(mylib) $(rootlibs)
 	@echo "\n\n" The executable file teste.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./MR_graphs.exe "\n\n" 
+qui_graphs:lib3Trab2.a qui_graphs.o
+	g++ -o qui_graphs.exe qui_graphs.o $(mylib) $(rootlibs)
+	@echo "\n\n" The executable file teste.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./qui_graphs.exe "\n\n" 
 MR_graphs.o: MR_graphs.C 
 	g++ -c MR_graphs.C $(rootlibs)
-
+qui_graphs.o: qui_graphs.C
+	g++ -c qui_graphs.C $(rootlibs)
 main_result_SV3_4.o: main_result_SV3_4.C 
 	g++ -c main_result_SV3_4.C $(rootlibs)
 400_SV3_4.o: 400_SV3_4.C

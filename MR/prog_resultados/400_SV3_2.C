@@ -181,9 +181,8 @@ int main(int argc, char **argv)
   
 
   TGraphErrors *MR_H = new TGraphErrors(N,H,MR,eH,eMR);
-  MR_H->SetMarkerStyle(6);
-  MR_H->SetMarkerColor(kBlue);
-  MR_H->SetFillColor(kBlue);
+  MR_H->SetMarkerStyle(1);
+  MR_H->SetLineColor(kBlue);
 
 
   ///Varrimento 2
@@ -204,8 +203,8 @@ int main(int argc, char **argv)
   
 
   TGraphErrors *MR_H2 = new TGraphErrors(N,H2,MR2,eH2,eMR2);
-  MR_H2->SetMarkerColor(kRed);
-  MR_H2->SetMarkerStyle(7);
+  MR_H2->SetLineColor(kRed);
+  MR_H2->SetMarkerStyle(1);
 
 
 
@@ -273,12 +272,12 @@ int main(int argc, char **argv)
 
 
   // M pl
-  TArrow *r2ar2 = new TArrow(ax2,ay2-arrow_step,ax2+l,ay2-arrow_step,0.02,"<|");
+  TArrow *r2ar2 = new TArrow(ax2,ay2-arrow_step,ax2+l,ay2-arrow_step,0.02,"|>");
   r2ar2->SetLineColor(8);
   r2ar2->SetFillColor(8);
 
   // M fl
-  TArrow *r2ar3 = new TArrow(ax2,ay2-2*arrow_step,ax2+l,ay2-2*arrow_step,0.02,"|>");
+  TArrow *r2ar3 = new TArrow(ax2,ay2-2*arrow_step,ax2+l,ay2-2*arrow_step,0.02,"<|");
   r2ar3->SetLineColor(9);
   r2ar3->SetFillColor(9);
 
@@ -311,8 +310,8 @@ int main(int argc, char **argv)
   TLegend* leg = new TLegend(0.1,0.7,0.2,0.9);//(x1,y1,x2,y2)
   
   //leg->SetHeader("Orientac#tilde{o}es");
-  leg->AddEntry(MR_H,"#rightarrow","p");
-  leg->AddEntry(MR_H2,"#leftarrow","p");
+  leg->AddEntry(MR_H,"#rightarrow","lep");
+  leg->AddEntry(MR_H2,"#leftarrow","lep");
 
   leg->AddEntry(r1ar1,"H","l");
   leg->AddEntry(r1ar2,"M pl","l");

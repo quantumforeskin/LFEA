@@ -41,8 +41,6 @@ int main(int argc, char **argv)
   theApp.InitializeGraphics();
 
 
-  static int Ngraphs=8;
-
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
   string plot_label="SV4_D_400.pdf"; //Nome do ficheiro em que e feito o plot MR(H)
 
@@ -183,9 +181,8 @@ int main(int argc, char **argv)
   
 
   TGraphErrors *MR_H = new TGraphErrors(N,H,MR,eH,eMR);
-  MR_H->SetMarkerStyle(6);
-  MR_H->SetMarkerColor(kBlue);
-  MR_H->SetFillColor(kBlue);
+  MR_H->SetMarkerStyle(1);
+  MR_H->SetLineColor(kBlue);
 
 
   ///Varrimento 2
@@ -206,8 +203,8 @@ int main(int argc, char **argv)
   
 
   TGraphErrors *MR_H2 = new TGraphErrors(N,H2,MR2,eH2,eMR2);
-  MR_H2->SetMarkerColor(kRed);
-  MR_H2->SetMarkerStyle(7);
+  MR_H2->SetLineColor(kRed);
+  MR_H2->SetMarkerStyle(1);
 
 
 
@@ -269,7 +266,7 @@ int main(int argc, char **argv)
   float ay2 = 0.045;
 
   // H
-  TArrow *r2ar1 = new TArrow(ax2,ay2,ax2+l,ay2,0.02,"<|");
+  TArrow *r2ar1 = new TArrow(ax2,ay2,ax2+l,ay2,0.02,"|>");
   r2ar1->SetLineColor(1);
   r2ar1->SetFillColor(1);
 
@@ -313,8 +310,8 @@ int main(int argc, char **argv)
   TLegend* leg = new TLegend(0.1,0.7,0.2,0.9);//(x1,y1,x2,y2)
   
   //leg->SetHeader("Orientac#tilde{o}es");
-  leg->AddEntry(MR_H,"#rightarrow","p");
-  leg->AddEntry(MR_H2,"#leftarrow","p");
+  leg->AddEntry(MR_H,"#rightarrow","lep");
+  leg->AddEntry(MR_H2,"#leftarrow","lep");
 
   leg->AddEntry(r1ar3,"M fl","l");
   leg->AddEntry(r1ar2,"M pl","l");
