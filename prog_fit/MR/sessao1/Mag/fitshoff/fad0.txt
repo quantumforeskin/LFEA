@@ -1,0 +1,6 @@
+------ Varrimento 1 ------ 
+Rp: 3.93621 +- 0.00139334 Ohm
+Rap: 4.0122 +- 0.00140094 Ohm
+------ Varrimento 2 ------ 
+Rp: 0 +- 0 Ohm
+Rap: 0 +- 0 Ohm

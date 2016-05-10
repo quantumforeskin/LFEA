@@ -41,11 +41,11 @@ int main(int argc, char **argv) {
  
  
   //grafico 1
-  TGraphErrors *gr1 = new TGraphErrors("data1.txt","%lg %lg %lg %lg");
+  TGraphErrors *gr1 = new TGraphErrors("data1.txt","%lg %lg %lg");
   gr1->SetName("gr1");
   gr1->SetTitle("graph 1");
   gr1->SetMarkerStyle(1);
-  gr1->SetLineColor(kBlue);
+  gr1->SetLineColor(kPink+10);
 
   //por L e comentar o fit e o stat do fit correspondete -> pa desenhar linha a unir pontos
   gr1->SetDrawOption("AP");
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
   // gr1->Fit("f1","EMF");
    mg->Add(gr1);
 
- TGraphErrors *gr2 = new TGraphErrors("data2.txt","%lg %lg %lg %lg");
+ TGraphErrors *gr2 = new TGraphErrors("data2.txt"," %lg %lg %lg");
   gr2->SetName("gr2");
   gr2->SetTitle("graph 2");
   gr2->SetMarkerStyle(1);
@@ -68,12 +68,115 @@ int main(int argc, char **argv) {
   gr2->SetDrawOption("AP");
   //Com opçao L define a cor da linha que une os pontos, e a cor das barras de erro
   gr2->SetLineWidth(1);
-  gr1->SetFillStyle(0);
+  gr2->SetFillStyle(0);
   //funcao a fittar
   // TF1 *f1 = new TF1("f1", "[1] * x  + [0]");
   // f1->SetLineColor(kBlue);
   // gr1->Fit("f1","EMF");
    mg->Add(gr2);
+
+    TGraphErrors *gr3 = new TGraphErrors("data3.txt","%lg %lg %lg");
+  gr3->SetName("gr3");
+  gr3->SetTitle("graph 3");
+  gr3->SetMarkerStyle(1);
+  gr3->SetLineColor(kOrange+10);
+
+  //por L e comentar o fit e o stat do fit correspondete -> pa desenhar linha a unir pontos
+  gr3->SetDrawOption("AP");
+  //Com opçao L define a cor da linha que une os pontos, e a cor das barras de erro
+  gr3->SetLineWidth(1);
+  gr3->SetFillStyle(0);
+  //funcao a fittar
+  // TF1 *f1 = new TF1("f1", "[1] * x  + [0]");
+  // f1->SetLineColor(kBlue);
+  // gr1->Fit("f1","EMF");
+   mg->Add(gr3);
+
+   TGraphErrors *gr4 = new TGraphErrors("data4.txt"," %lg %lg %lg");
+  gr4->SetName("gr4");
+  gr4->SetTitle("graph 4");
+  gr4->SetMarkerStyle(1);
+  gr4->SetLineColor(kOrange+4);
+
+  //por L e comentar o fit e o stat do fit correspondete -> pa desenhar linha a unir pontos
+  gr4->SetDrawOption("AP");
+  //Com opçao L define a cor da linha que une os pontos, e a cor das barras de erro
+  gr4->SetLineWidth(1);
+  gr4->SetFillStyle(0);
+  //funcao a fittar
+  // TF1 *f1 = new TF1("f1", "[1] * x  + [0]");
+  // f1->SetLineColor(kBlue);
+  // gr1->Fit("f1","EMF");
+   mg->Add(gr4);
+
+   TGraphErrors *gr5 = new TGraphErrors("data5.txt"," %lg %lg %lg");
+  gr5->SetName("gr5");
+  gr5->SetTitle("graph 5");
+  gr5->SetMarkerStyle(1);
+  gr5->SetLineColor(kYellow);
+
+  //por L e comentar o fit e o stat do fit correspondete -> pa desenhar linha a unir pontos
+  gr5->SetDrawOption("AP");
+  //Com opçao L define a cor da linha que une os pontos, e a cor das barras de erro
+  gr5->SetLineWidth(1);
+  gr5->SetFillStyle(0);
+  //funcao a fittar
+  // TF1 *f1 = new TF1("f1", "[1] * x  + [0]");
+  // f1->SetLineColor(kBlue);
+  // gr1->Fit("f1","EMF");
+   mg->Add(gr5);
+
+      TGraphErrors *gr6 = new TGraphErrors("data6.txt"," %lg %lg %lg");
+  gr6->SetName("gr6");
+  gr6->SetTitle("graph 6");
+  gr6->SetMarkerStyle(1);
+  gr6->SetLineColor(kYellow+3);
+
+  //por L e comentar o fit e o stat do fit correspondete -> pa desenhar linha a unir pontos
+  gr6->SetDrawOption("AP");
+  //Com opçao L define a cor da linha que une os pontos, e a cor das barras de erro
+  gr6->SetLineWidth(1);
+  gr6->SetFillStyle(0);
+  //funcao a fittar
+  // TF1 *f1 = new TF1("f1", "[1] * x  + [0]");
+  // f1->SetLineColor(kBlue);
+  // gr1->Fit("f1","EMF");
+   mg->Add(gr6);
+
+   TGraphErrors *gr7 = new TGraphErrors("data7.txt"," %lg %lg %lg");
+  gr7->SetName("gr7");
+  gr7->SetTitle("graph 7");
+  gr7->SetMarkerStyle(1);
+  gr7->SetLineColor(kSpring);
+
+  //por L e comentar o fit e o stat do fit correspondete -> pa desenhar linha a unir pontos
+  gr7->SetDrawOption("AP");
+  //Com opçao L define a cor da linha que une os pontos, e a cor das barras de erro
+  gr7->SetLineWidth(1);
+  gr7->SetFillStyle(0);
+  //funcao a fittar
+  // TF1 *f1 = new TF1("f1", "[1] * x  + [0]");
+  // f1->SetLineColor(kBlue);
+  // gr1->Fit("f1","EMF");
+   mg->Add(gr7);
+
+   TGraphErrors *gr8 = new TGraphErrors("data8.txt"," %lg %lg %lg");
+  gr8->SetName("gr8");
+  gr8->SetTitle("graph 8");
+  gr8->SetMarkerStyle(1);
+  gr8->SetLineColor(kGreen+3);
+
+  //por L e comentar o fit e o stat do fit correspondete -> pa desenhar linha a unir pontos
+  gr8->SetDrawOption("AP");
+  //Com opçao L define a cor da linha que une os pontos, e a cor das barras de erro
+  gr8->SetLineWidth(1);
+  gr8->SetFillStyle(0);
+  //funcao a fittar
+  // TF1 *f1 = new TF1("f1", "[1] * x  + [0]");
+  // f1->SetLineColor(kBlue);
+  // gr1->Fit("f1","EMF");
+   mg->Add(gr8);
+
 
 
 
@@ -94,8 +197,14 @@ int main(int argc, char **argv) {
   //  E: draw vertical error bar 
 
  //   leg->SetHeader("Legenda");
-  leg->AddEntry("gr1","(-50 Oe a 50 Oe) #rightarrow ","lep");
-  leg->AddEntry("gr2","(50 Oe a -50 Oe) #leftarrow","lep");
+  leg->AddEntry("gr1","FA d=0cm #rightarrow ","lep");
+  leg->AddEntry("gr2","FA d=2cm  #leftarrow","lep");
+ leg->AddEntry("gr3","FA d=3cm #rightarrow","lep");
+ leg->AddEntry("gr4","FA d=4cm #leftarrow","lep");
+   leg->AddEntry("gr5","FB d=0cm #rightarrow ","lep");
+  leg->AddEntry("gr6","FB d=2cm  #rightarrow","lep");
+ leg->AddEntry("gr7","FB d=3cm #rightarrow","lep");
+ leg->AddEntry("gr8","FB d=4cm #leftarrow","lep");
  
  
     leg->Draw();
