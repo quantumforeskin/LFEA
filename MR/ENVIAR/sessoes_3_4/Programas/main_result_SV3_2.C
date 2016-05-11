@@ -300,7 +300,17 @@ int main(int argc, char **argv)
 
   double a_sens=f1->GetParameter(1); //declive para o calculo da sensibilidade
   double ea_sens =  f1->GetParError(1); //erro do declive 
+  double b_sens=f1->GetParameter(0);
+  double eb_sens = f1->GetParError(0);
 
+
+  //Calculo de Hsat(varrimento 1)
+
+
+  double Hsat1 = (Rp - b_sens)/a_sens;//Campo de saturacao que surge da interseccao da reta com a resistencia minima
+  double Hsat2 = (Rap - b_sens)/a_sens;//Campo de saturacao que surge da interseccao da reta com a resistencia maxima
+  double eHsat1 = TMath::Abs((eRp + eb_sens)/a_sens) + TMath::Abs((Rp - b_sens)*ea_sens/(a_sens*a_sens));
+  double eHsat2 = TMath::Abs((eRap + eb_sens)/a_sens) + TMath::Abs((Rap - b_sens)*ea_sens/(a_sens*a_sens));
 
 
 
@@ -333,6 +343,30 @@ int main(int argc, char **argv)
 
   double a_sens2=f2->GetParameter(1); //declive para o calculo da sensibilidade
   double ea_sens2=f2->GetParError(1); //erro do declive 
+  double b_sens2=f2->GetParameter(0);
+  double eb_sens2 = f2->GetParError(0);
+
+
+  //Calculo de Hsat(varrimento 2)
+
+
+  double Hsat1_2 = (Rp2 - b_sens2)/a_sens2;//Campo de saturacao que surge da interseccao da reta com a resistencia minima
+  double Hsat2_2 = (Rap2 - b_sens2)/a_sens2;//Campo de saturacao que surge da interseccao da reta com a resistencia maxima
+  double eHsat1_2 = TMath::Abs((eRp2 + eb_sens2)/a_sens2) + TMath::Abs((Rp2 - b_sens2)*ea_sens2/(a_sens2*a_sens2));
+  double eHsat2_2 = TMath::Abs((eRap2 + eb_sens2)/a_sens2) + TMath::Abs((Rap2 - b_sens2)*ea_sens2/(a_sens2*a_sens2));
+
+
+  //Media de Hsat
+
+  double Hsat1_med = (Hsat1+Hsat1_2)/2;
+  double Hsat2_med = (Hsat2+Hsat2_2)/2;
+  double eHsat1_med = (eHsat1+eHsat1_2)/2;
+  double eHsat2_med = (eHsat2+eHsat2_2)/2;
+
+  double DHsat = TMath::Abs(Hsat1_med) + TMath::Abs(Hsat2_med);
+  double eDHsat = eHsat1_med + eHsat2_med;
+
+
 
 
   //Fit para os calculos de Hc e Hoff - MAIS LOCALIZADO!
@@ -370,11 +404,10 @@ int main(int argc, char **argv)
   double eSmed = (eS1+eS2)/2;
 
 
-  
   //Ficheiro com os resultados
   ofstream resultados;
   resultados.open (res_label.c_str());
-  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "MR max: " << MRmax << " +- " << eMRmax << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "MR max: " << MRmax2 << " +- " << eMRmax2 << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n" << "MR max: " << MRmax_med << " +- " << eMRmax_med <<"\n" <<  "---------------------" << "\n"<< "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n" << "S media (%) " << Smed << " +- " << eSmed << "\n";
+  resultados << "------ Varrimento 1 ------ " << "\n" <<"Rp: " << Rp  << " +- " << eRp << " Ohm" << "\n" << "Rap: " << Rap << " +- " << eRap << " Ohm" << "\n" << "MR max: " << MRmax << " +- " << eMRmax << "\n" << "------ Varrimento 2 ------ " << "\n" << "Rp: " << Rp2  << " +- " << eRp2 << " Ohm" << "\n" << "Rap: " << Rap2 << " +- " << eRap2 << " Ohm" << "\n" << "MR max: " << MRmax2 << " +- " << eMRmax2 << "\n" << "------ Media ------ " << "\n" << "Rp: " << Rp_med  << " +- " << eRp_med << " Ohm" << "\n" << "Rap: " << Rap_med << " +- " << eRap_med << " Ohm" << "\n "<<  "---------------------" << "\n"<< "MR max: " << MRmax_med << " +- " << eMRmax_med <<"\n" << "H sat1: " << Hsat1_med << " +- "  << eHsat1_med << " Oe" << "\n" << "H sat2: " << Hsat2_med << " +- "  << eHsat2_med << " Oe"  << "\n " << "Delta Hsat " << DHsat << " +- " << eDHsat << " Oe " <<  "\n" <<  "---------------------" << "\n"<< "Hc: " << Hc  << " +- " << eHc << " Oe" << "\n" << "Hoff: " << Hoff << " +- " << eHoff << " Oe" << "\n" << "S (varrimento 1) (%) " << S1 << " +- " << eS1 << "\n" << "S (varrimento 2) (%)" << S2 << " +- " << eS2 << "\n" << "S media (%) " << Smed << " +- " << eSmed << "\n";
   resultados.close();
  
   //faz aparecer o canvas

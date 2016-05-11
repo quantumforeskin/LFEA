@@ -37,22 +37,22 @@ int main(int argc, char **argv)
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
   string res_label = "res1.txt";//Nome do ficheiro onde sao apresentados os resultados
-  string plot_label = "cococo.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
-  string file1="../2s/datar.txt"; //directoria dos dados do primeiro varrimento 
-  string file2="../2s/datal.txt"; //directoria dos dados do segundo varrimento
+  string plot_label = "coco1.pdf"; //Nome do ficheiro em que e feito o plot MR(H) 
+  string file1="../2s/data_SV2_100.txt"; //directoria dos dados do primeiro varrimento 
+  string file2="../2s/data_SV2_100_2.txt"; //directoria dos dados do segundo varrimento
 
-  double I=0.0010004;//corrente
+  double I=0.0010082;//corrente
   double eI=0.0000001;//erro corrente
   double eV = 0.000001; //erro tensao
   double eh = 0.1;//erro campo !!!!! TOU A POR ASSIM PARA O FIT DAR, MAS NA VERDADE O ERRO E 0.1 !!!!!!! 
 
   //Limites da curva linear --> Para fazer o fit
-  double low_lim=-12;
-  double high_lim=-7;
-  double low_lim2=-22;
-  double high_lim2=-17;
+  double low_lim=-13;
+  double high_lim=-5;
+  double low_lim2=-20;
+  double high_lim2=-11;
 
-  //FIM DAS COISAS PARA PREENCHER A CADA ANALISE///////////////////
+  //FIM DAS 3OISAS PARA PREENCHER A CADA ANALISE///////////////////
 
 
   /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
@@ -420,7 +420,7 @@ int main(int argc, char **argv)
 
 
   //Legenda///////////////////////////
-
+/*
   TLegend* leg;
  
   //Usa-se a condicao para nao por a legenda em cima dos dados
@@ -438,7 +438,7 @@ int main(int argc, char **argv)
   leg->AddEntry(r1ar2,"M Pl","l");
   leg->AddEntry(r1ar3,"M Fl","l");
   //leg->AddEntry(arj,"J","l");
-
+*/
 
 
 
@@ -462,10 +462,10 @@ int main(int argc, char **argv)
   mg->GetXaxis()->SetTitle("H (Oe)");
   mg->GetYaxis()->SetTitle("MR");
   mg->GetYaxis()->SetTitleOffset(1.2);
-  //R_H->Draw("AP");
- // R_H2->Draw("AP");
-  //gStyle->SetOptFit(1);
-  
+ R_H->Draw("AP");
+ //R_H2->Draw("AP");
+  gStyle->SetOptFit(1);
+  /*
   //arrows
   r1ar1->Draw();
   //r2ar1->Draw(); Basta por um texto a dizer que H=0
@@ -487,7 +487,7 @@ int main(int argc, char **argv)
   r3ar3->Draw();
 
   arku->Draw();
-  text_ku -> Draw(); 
+  text_ku -> Draw(); */
 
   //arj->Draw();
   //text_j->Draw();
@@ -496,7 +496,7 @@ int main(int argc, char **argv)
   
 
   //legenda
-  leg->Draw();
+ // leg->Draw();
   
 
 
