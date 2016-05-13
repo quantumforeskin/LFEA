@@ -1,0 +1,26 @@
+mylib=-L . -lTrab2
+rootlibs=`root-config --cflags` -L `root-config --libdir` -lGui -lCore -lCint -lRIO -lNet -lHist -lGraf -lGpad -lTree -lRint -lMatrix -lMathCore -lThread -pthread -lm -ldl -rdynamic
+
+help:
+	@echo "run:\n\n\t\"make graphs\" to compile graphs.C program\n\n\n"     
+graphs:lib3Trab2.a graphs.o
+	g++ -o graphs.exe graphs.o $(mylib) $(rootlibs)
+	@echo "\n\n" The executable file teste.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./graphs.exe "\n\n" 
+hist:lib3Trab2.a hist.o
+	g++ -o hist.exe hist.o $(mylib) $(rootlibs)
+	@echo "\n\n" The executable file teste.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./hist.exe "\n\n" 
+graphs.o: graphs.C 
+	g++ -c graphs.C $(rootlibs)
+hist.o: hist.C 
+	g++ -c hist.C $(rootlibs)
+lib2Trab2.a:$(objects2)
+	ar ruv libTrab2.a $^
+	ranlib libTrab2.a
+lib3Trab2.a:$(objects3)
+	ar ruv libTrab2.a $^
+	ranlib libTrab2.a
+lib4Trab2.a:$(objects4)
+	ar ruv libTrab2.a $^
+	ranlib libTrab2.a
+clean:
+	rm -f *.a *.o
