@@ -15,11 +15,11 @@ int main(){
   float g=k*q*q*ZA*log(2*me/I);
 
 
-  float R=10;//Range em g/(cm2) 
-  double density=1.03; // g/(cm3)
-  double x_range=R/density; // range em cm
+  double density=1.032; // g/(cm3), densidade do plastico do cintilador
+  double x_range=300; // range em cm
+  double R=density*x_range; //Range em g/(cm2) 
   float m=105.65837;//energia em repouso do muao
-  float E_R = x_range*g/4*(1+sqrt(1+4*m/(x_range*g)))*(1+sqrt(1+4*m/(x_range*g)));
+  float E_R = R*g/4*(1+sqrt(1+4*m/(R*g)))*(1+sqrt(1+4*m/(R*g)));
 
 
   cout << E_R << endl;

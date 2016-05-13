@@ -1,7 +1,7 @@
-opcao:fit
+opcao:grafico
 titulo: Lei Arctan - Face B;d [cm];Hoff[ Oe ]
-func: Gaus([0],[1])
-xmin:-1
-xmax:5
-ymin:-40
-ymax:0
+func: [0]+[1]*x
+xmin:0
+xmax:0.2
+ymin:0
+ymax:7

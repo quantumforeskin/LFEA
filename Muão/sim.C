@@ -18,6 +18,7 @@ int main(){
   float ly=40.9; //comprimento do bloco
   float eS1=2.05; //espessura de S1
   float eB=9.7; // espessura do bloco 
+  float dz = 56.6;//distancia entre S1 e o bloco
 
 
  srand (time(NULL));
@@ -27,9 +28,9 @@ int main(){
 for(int j=0;j<1;j++){
 
   int events=0;
-  int totalevents=0;
+  int totalevents=1000;
 
-  for(int i=0;i<1000;i++){
+  for(int i=0;i<totalevents;i++){
 
   float u = ((double) rand() / (RAND_MAX));
 
@@ -60,11 +61,8 @@ for(int j=0;j<1;j++){
   v[0] = cos(fi)*sin(th);
   v[1] = sin(fi)*sin(th);
 
-
-  float s = 56.6;//posiçao z de S2
-
   
-  float t=s/cos(th); // parametro da parametrizacao
+  float t=dz/cos(th); // parametro da parametrizacao
 
 
   x = x + t*v[0]; //Abcissa do ponto a altura de S1 que segue a direçao de v
@@ -72,9 +70,6 @@ for(int j=0;j<1;j++){
 
   if(x>-Lx/2 && x<Lx/2 && y>-Ly/2 && y<Ly/2)
     events++;
-
-
-  totalevents++;
 
   //(th,fi) da-me info sobre a direccao de propagaçao do muao
   //(x,y) da-me info sobre o ponto do bloco que este vai atingir
