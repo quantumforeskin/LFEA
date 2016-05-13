@@ -74,10 +74,10 @@ int main(int argc, char **argv) {
   mg->SetTitle("Stopping Time;#Energy(MeV);time(s)");
  
   //range
-  TF1* func=new TF1("Func","(   1/ (0.307075*0.56*( (log(2/0.0000784*0.511/(sqrt(1+2*0.511*x/(105.658*105.658)))*          (1-(105.68/x)*(105.658/x))))/((1-(105.68/x)*(105.658/x))) -1)))",110,1000);
+  //TF1* func=new TF1("Func","(   1/ (0.307075*0.56*( (log(2/0.0000784*0.511/(sqrt(1+2*0.511*x/(105.658*105.658)))*          (1-(105.68/x)*(105.658/x))))/((1-(105.68/x)*(105.658/x))) -1)))",110,1000);
  
   //stopping time
-  //TF1* func=new TF1("Func","(1/(3e8*sqrt(1-(105.658/x)*(105.658/x))))*(   1/ (0.307075*0.56*( (log(2/0.0000784*0.511/(sqrt(1+2*0.511*x/(105.658*105.658)))*          (1-(105.68/x)*(105.658/x))))/((1-(105.68/x)*(105.658/x))) -1)))",110,1000);
+  TF1* func=new TF1("Func","(1/(3e8*sqrt(1-(105.658/x)*(105.658/x))))*(   1/ (0.307075*0.56*( (log(2/0.0000784*0.511/(sqrt(1+2*0.511*x/(105.658*105.658)))*          (1-(105.68/x)*(105.658/x))))/((1-(105.68/x)*(105.658/x))) -1)))",110,1000);
   func->SetLineColor(kBlue);
  
 
@@ -100,6 +100,7 @@ double y[n];
   gr1->SetTitle("graph 1");
   gr1->SetMarkerStyle(5);
   gr1->SetMarkerColor(kBlue);
+  mg->SetMaximum(2e-6);
 
   //por L e comentar o fit e o stat do fit correspondete -> pa desenhar linha a unir pontos
   gr1->SetDrawOption("ALP");
