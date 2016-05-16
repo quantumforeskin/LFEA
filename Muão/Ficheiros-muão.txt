@@ -1,0 +1,17 @@
+more /RAID5/LabRC/DATA/muondecay.dat
+
+#evento
+unix time (segundos)
+unix time (microsegundos)
+tempo desde o evento anterior
+tempo entre o start e o 1º stop
+tempo entre o start e o 2º stop
+não importante
+
+
+more /RAID5/LabRC/DATA/MUONRATE.all.22-10-1970_10:22:56.dat (Usar o mais atual!!!)
+
+#evento
+unix time (segundos)
+unix time (microsegundos)
+taxa
