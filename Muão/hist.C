@@ -34,14 +34,15 @@ int main(int argc, char **argv)
 {
 
   string titulo = "histograma";
-  int nbins=5;
-  float low_lim=0.5;
-  float up_lim=5.5;
+  int nbins=350;
+  float low_lim=0;
+  float up_lim=64;
 
   bool optfit=true;
 
-  TF1 *fit = new TF1("myfit","[0]*exp(-x/[1])", low_lim, up_lim);
-  //fit->SetParLimits(1,0,2);
+  TF1 *fit = new TF1("myfit","[0]*exp(-x/[1])+[2]", 0, 64);
+  fit->SetParLimits(1,2,3);
+  fit->SetParLimits(0,0,2000);
 
   if(optfit==true)
     gStyle->SetOptFit();
@@ -157,6 +158,8 @@ int main(int argc, char **argv)
   c1->Update();
   c1->Modified();
   c1->Print(plot_label[j].c_str());
+
+  getchar();
   //getchar();
 
   }
