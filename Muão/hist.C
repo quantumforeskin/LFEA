@@ -40,8 +40,9 @@ int main(int argc, char **argv)
 
   bool optfit=true;
 
-  TF1 *fit = new TF1("myfit","[0]*exp(-x/[1])+[2]", 0, 64);
+  TF1 *fit = new TF1("myfit","[0]*(0.56*exp(-x/[1])+0.44*exp(-x/[2]))+[3]", 0, 64);
   fit->SetParLimits(1,2,3);
+  fit->SetParLimits(2,2,3);
   fit->SetParLimits(0,0,2000);
 
   if(optfit==true)
