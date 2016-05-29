@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
 
 using namespace std;
 
@@ -25,10 +26,17 @@ int main(){
 
 
 
+
+
+  vector<double> d_travel_S1B;  
+  vector<double> d_travel_S1;  
+  vector<double> d_travel_B;  
+
+
 for(int j=0;j<1;j++){
 
+  int totalevents=100000;
   int events=0;
-  int totalevents=1000;
 
   for(int i=0;i<totalevents;i++){
 
@@ -68,8 +76,15 @@ for(int j=0;j<1;j++){
   x = x + t*v[0]; //Abcissa do ponto a altura de S1 que segue a direçao de v
   y = y + t*v[1];
 
-  if(x>-Lx/2 && x<Lx/2 && y>-Ly/2 && y<Ly/2)
+  if(x>-Lx/2 && x<Lx/2 && y>-Ly/2 && y<Ly/2){
+    d_travel_S1B.push_back((eB+eS1)*cos(th)); //distancia percorrida em S1 e B 
+    d_travel_S1.push_back(eS1*cos(th)); //distancia percorrida em S1 
     events++;
+  }else{
+    d_travel_B.push_back(eB*cos(th));  // distancia percorrida em B
+  }
+
+
 
   //(th,fi) da-me info sobre a direccao de propagaçao do muao
   //(x,y) da-me info sobre o ponto do bloco que este vai atingir
@@ -82,8 +97,42 @@ for(int j=0;j<1;j++){
 
   cout << ratio << endl;
 
+
 }
 
+
+//Distancia media percorrida quando passa em B apenas
+ double d_Bmed=0;
+ for(int t=0;t<d_travel_B.size();t++){
+   d_Bmed+=d_travel_B[t];
+ }
+
+ d_Bmed=d_Bmed/d_travel_B.size();
+
+ cout << "distancia B " << d_Bmed << endl;
+
+
+//Distancia media percorrida quando passa em S1 
+ double d_S1med=0;
+ for(int t=0;t<d_travel_S1.size();t++){
+   d_S1med+=d_travel_S1[t];
+ }
+
+ d_S1med=d_S1med/d_travel_S1.size();
+
+ cout << "distancia S1 " << d_S1med << endl;
+
+
+
+//Distancia media percorrida quando passa em S1 e B
+ double d_S1Bmed=0;
+ for(int t=0;t<d_travel_S1B.size();t++){
+   d_S1Bmed+=d_travel_S1B[t];
+ }
+
+ d_S1Bmed=d_S1Bmed/d_travel_S1B.size();
+
+ cout << "distancia S1B " << d_S1Bmed << endl;
 
 
   return 0;
