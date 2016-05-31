@@ -9,6 +9,11 @@ graphs:lib3Trab2.a graphs.o
 hist:lib3Trab2.a hist.o
 	g++ -o hist.exe hist.o $(mylib) $(rootlibs)
 	@echo "\n\n" The executable file teste.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./hist.exe "\n\n" 
+range:lib3Trab2.a Range.o
+	g++ -o Range.exe Range.o $(mylib) $(rootlibs)
+	@echo "\n\n" The executable file teste.exe has been created "\n\n                " to execute run on terminal:"\n                               " ./Range.exe "\n\n" 
+Range.o: Range.C
+	g++ -c Range.C $(rootlibs)
 graphs.o: graphs.C 
 	g++ -c graphs.C $(rootlibs)
 hist.o: hist.C 

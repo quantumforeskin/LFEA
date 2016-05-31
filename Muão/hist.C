@@ -34,16 +34,24 @@ int main(int argc, char **argv)
 {
 
   string titulo = "histograma";
-  int nbins=350;
+  //int nbins=350; nbins utilizado para o hist.pdf
+  int nbins=5000;
   float low_lim=0;
   float up_lim=64;
 
   bool optfit=true;
 
-  TF1 *fit = new TF1("myfit","[0]*(0.56*exp(-x/[1])+0.44*exp(-x/[2]))+[3]", 0, 64);
-  fit->SetParLimits(1,2,3);
-  fit->SetParLimits(2,2,3);
+  //TF1 *fit = new TF1("myfit","[0]*(0.56*exp(-x/[1])+0.44*exp(-x/[2]))+[3]", 2, 9);
+  
+  //fit->SetParLimits(1,1,3);
+  //fit->SetParLimits(2,1,3);
+  //fit->SetParLimits(0,0,10000);
+  //fit->SetParLimits(3,0,2000);
+  
+  TF1 *fit = new TF1("myfit","[0]*exp(-x/[1])+[2]", 1.8, 9);
+  fit->SetParLimits(1,1,3);
   fit->SetParLimits(0,0,2000);
+  fit->SetParLimits(2,0,2000);
 
   if(optfit==true)
     gStyle->SetOptFit();
@@ -59,11 +67,11 @@ int main(int argc, char **argv)
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
   string plot_label[Ngraphs]; //Nome do ficheiro em que e feito o plot MR(H)
-  plot_label[0] = "hist.pdf"; 
+  plot_label[0] = "hist_latest.pdf"; 
 
 
   string file1[Ngraphs]; //directoria dos dados para plotar
-  file1[0]="dados_hist.txt";  
+  file1[0]="dados_last.txt";  
 
 
   for(int j=0;j<Ngraphs;j++){
@@ -101,6 +109,7 @@ int main(int argc, char **argv)
     {
 
       file >> X[i]; // extracts 2 floating point values seperated by whitespace
+      X[i]=X[i]/1000;
       i++; 
 
 
@@ -119,7 +128,7 @@ int main(int argc, char **argv)
   }
 
   if(optfit==true)
-    hist->Fit("myfit");
+    hist->Fit("myfit","R");//,"",0,10);
 
   TCanvas *c1 = new TCanvas("c1","Nome",200,10,700,500);
   c1->SetFillColor(0);
