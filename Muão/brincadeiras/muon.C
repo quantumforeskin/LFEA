@@ -100,7 +100,7 @@ double y[n];
   gr1->SetTitle("graph 1");
   gr1->SetMarkerStyle(5);
   gr1->SetMarkerColor(kBlue);
-  mg->SetMaximum(2e-6);
+  //mg->SetMaximum(2e-6);
 
   //por L e comentar o fit e o stat do fit correspondete -> pa desenhar linha a unir pontos
   gr1->SetDrawOption("ALP");

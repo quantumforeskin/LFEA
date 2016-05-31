@@ -1,0 +1,8 @@
+ssh Grupo3C@ccams02 
+
+pass: WWQWuN96
+
+copiar folders de la:
+
+-fazer ssh num terminal
+-noutro fazer: scp -r Grupo3C@ccams02:/RAID5/LabRC . 
