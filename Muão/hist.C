@@ -33,25 +33,43 @@ using namespace std;
 int main(int argc, char **argv)
 {
 
-  string titulo = "histograma";
+  string titulo = "Tempo de vida m#acute{e}dia do mu#tilde{a}o";
   //int nbins=350; nbins utilizado para o hist.pdf
-  int nbins=5000;
+  int nbins=630;//Para cada bin ter 0.1 micros  //5000; 
   float low_lim=0;
-  float up_lim=64;
+  float up_lim=63;
 
   bool optfit=true;
+  bool stdfit=true;
+  bool subregion=false;//fitar subregiao
+  float fit_ul=63;//no standart e isto, se subregion=True e o lim superior da subregion
 
-  //TF1 *fit = new TF1("myfit","[0]*(0.56*exp(-x/[1])+0.44*exp(-x/[2]))+[3]", 2, 9);
+  TF1 *fit;
+  if(stdfit==true){//1.16
+    fit = new TF1("myfit","[0]*exp(-x/[1])+[2]", 1.16, 63);
+    fit->SetParLimits(1,1,3);
+    fit->SetParLimits(0,0,50000);
+    fit->SetParLimits(2,0,2200);
+  }
+
+
+  if(stdfit==false){
+    fit = new TF1("myfit","[0]*(0.56*exp(-x/[1])+0.44*exp(-x/1.7))+[2]", 1, 64);
   
-  //fit->SetParLimits(1,1,3);
-  //fit->SetParLimits(2,1,3);
-  //fit->SetParLimits(0,0,10000);
-  //fit->SetParLimits(3,0,2000);
+    fit->SetParLimits(1,1,3);
+    fit->SetParLimits(0,0,100000);
+    fit->SetParLimits(2,0,2200);
+
+  }
+
+  if(subregion==true){
+    fit_ul=10;
+    fit = new TF1("myfit","[0]*exp(-x/[1])+[2]", 1.16, fit_ul);
+    fit->SetParLimits(1,1,3);
+    fit->SetParLimits(0,0,50000);
+    fit->SetParLimits(2,0,2200);
+  }
   
-  TF1 *fit = new TF1("myfit","[0]*exp(-x/[1])+[2]", 1.8, 9);
-  fit->SetParLimits(1,1,3);
-  fit->SetParLimits(0,0,2000);
-  fit->SetParLimits(2,0,2000);
 
   if(optfit==true)
     gStyle->SetOptFit();
@@ -98,6 +116,7 @@ int main(int argc, char **argv)
   cout << N << endl;
 
   double *X = new double[N];
+  double *delta = new double[N];
 
 
   file.close();
@@ -108,8 +127,8 @@ int main(int argc, char **argv)
   while(!file.eof() && test==0)
     {
 
-      file >> X[i]; // extracts 2 floating point values seperated by whitespace
-      X[i]=X[i]/1000;
+      file >> X[i] >> delta[i]; // extracts 2 floating point values seperated by whitespace
+      X[i]=(X[i]-delta[i])/1000;
       i++; 
 
 
@@ -119,13 +138,16 @@ int main(int argc, char **argv)
     }
 
 
-  TH1F *hist = new TH1F("hist",titulo.c_str(),nbins,low_lim,up_lim);
+  TH1F *hist = new TH1F("Par#hat{a}metros estat#acute{i}sticos e do ajuste",titulo.c_str(),nbins,low_lim,up_lim);
 
   for(int i=0;i<N;i++){
 
     hist->Fill(X[i]);
 
   }
+
+  for(int i=0;i<200;i++)
+    cout << 0.1*i << "  " << hist->GetBinContent(i) << endl;
 
   if(optfit==true)
     hist->Fit("myfit","R");//,"",0,10);
@@ -150,13 +172,22 @@ int main(int argc, char **argv)
 
   file.close();
   delete [] X;
+  delete [] delta;
 
   hist->Draw();
-  if(optfit==true)
+  hist->SetTitleOffset(15);
+  gStyle->SetTitleY(1.01);
+  if(optfit==true){
     fit->Draw("same");
+    TF1* fit2 = new TF1("myfit","[0]*exp(-x/[1])+[2]", 0, fit_ul);
+    fit2->SetParameter(0,fit->GetParameter(0));
+    fit2->SetParameter(1,fit->GetParameter(1));
+    fit2->SetParameter(2,fit->GetParameter(2));
+    fit2->Draw("same");
+    }
 
-  hist->GetXaxis()->SetTitle("t");
-  hist->GetYaxis()->SetTitle("N");
+  hist->GetXaxis()->SetTitle("t (#mu s)");
+  hist->GetYaxis()->SetTitle("N (conts)");
   hist->GetYaxis()->SetTitleOffset(1.2);
 
   
