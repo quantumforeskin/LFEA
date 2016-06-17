@@ -41,7 +41,7 @@ int main(int argc, char **argv)
   float up_lim=63;
 
   bool optfit=true;
-  bool stdfit=true;
+  bool stdfit=false;
   bool subregion=false;//fitar subregiao
   float fit_ul=63;//no standart e isto, se subregion=True e o lim superior da subregion
 
@@ -55,11 +55,12 @@ int main(int argc, char **argv)
 
 
   if(stdfit==false){
-    fit = new TF1("myfit","[0]*(0.56*exp(-x/[1])+0.44*exp(-x/1.7))+[2]", 1, 64);
+    fit = new TF1("myfit","[0]*(0.55*exp(-x/[1])+0.45*exp(-x/[2]))+[3]", 1.16, fit_ul);
   
-    fit->SetParLimits(1,1,10);
+    fit->SetParLimits(1,0,3);
+    fit->SetParLimits(2,0,3);
     fit->SetParLimits(0,0,100000);
-    fit->SetParLimits(2,0,2200);
+    fit->SetParLimits(3,0,2200);
 
   }
 
@@ -82,7 +83,7 @@ int main(int argc, char **argv)
 
   //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
   string plot_label[Ngraphs]; //Nome do ficheiro em que e feito o plot MR(H)
-  plot_label[0] = "hist_loop.pdf"; 
+  plot_label[0] = "hist_loop+-.pdf"; 
 
 
   string file1[Ngraphs]; //directoria dos dados para plotar
@@ -141,16 +142,18 @@ int main(int argc, char **argv)
 
 
   int nbins=300;
-  static int Nit=200;
+  static int Nit=74;
   double bins[Nit];
   double param[Nit];
+  double param2[Nit];
   double chi[Nit];
 
 
+  TH1F *hist;
 
   for(int j=0;j<Nit;j++){
 
-  TH1F *hist = new TH1F("Par#hat{a}metros estat#acute{i}sticos e do ajuste",titulo.c_str(),nbins,low_lim,up_lim);
+  hist = new TH1F("Par#hat{a}metros estat#acute{i}sticos e do ajuste",titulo.c_str(),nbins,low_lim,up_lim);
 
   for(int i=0;i<N;i++){
 
@@ -164,11 +167,14 @@ int main(int argc, char **argv)
 
   bins[j]=nbins;
   param[j]=fit->GetParameter(1);
+  param2[j]=fit->GetParameter(2);
   chi[j] =fit->GetChisquare()/fit->GetNDF();
 
 
   //bins[i]=nbins;
   //param[i]=fit->GetParameter(1);
+
+  cout << nbins << endl;
 
   nbins+=50;
 
@@ -192,29 +198,36 @@ int main(int argc, char **argv)
 
 
   TGraph * gr = new TGraph(Nit,bins,param);
-  gr->SetMinimum(0.8);
+  gr->SetMinimum(0);
   gr->SetMaximum(6);
   gr->Draw("AC");
   gr->SetLineColor(4);
   gr->SetTitle("Variac#tilde{a}o do #chi^{2}/ndf e #tau com o n#circ de bins");
 
-  TGraph * gr2 = new TGraph(Nit,bins,chi);
+  TGraph * gr2 = new TGraph(Nit,bins,param2);
   gr2->Draw("same");
-  gr2->SetLineColor(2);
+  gr2->SetLineColor(8);
+
+  TGraph * gr3 = new TGraph(Nit,bins,chi);
+  gr3->Draw("same");
+  gr3->SetLineColor(2);
+
+
 
   double nn[1];
   double tt[1];
-  nn[0]=8500;
-  tt[0]=2.055;
-  TGraph * gr3 = new TGraph(1,nn,tt);
-  gr3->Draw("same,*");
-  gr3->SetLineColor(6);
+  nn[0]=9200;
+  tt[0]=2.272;
+  TGraph * gr4 = new TGraph(1,nn,tt);
+  gr4->Draw("same,*");
+  gr4->SetLineColor(6);
 
   TLegend* leg;
   leg = new TLegend(0.65,0.75,0.9,0.9);//(x1,y1,x2,y2)
-  leg->AddEntry(gr,"#tau (#mu s)","lep");
-  leg->AddEntry(gr2,"#chi^{2}/ndf","lep");
-  leg->AddEntry(gr3,"n#circ bins escolhido","ep");
+  leg->AddEntry(gr,"#tau+ (#mu s)","lep");
+  leg->AddEntry(gr2,"#tau- (#mu s)","lep");
+  leg->AddEntry(gr3,"#chi^{2}/ndf","lep");
+  //leg->AddEntry(gr4,"n#circ bins escolhido","ep");
 
   leg->Draw();
 
