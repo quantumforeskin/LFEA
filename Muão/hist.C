@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 
   string titulo = "Tempo de vida m#acute{e}dia do mu#tilde{a}o";
   //int nbins=350; nbins utilizado para o hist.pdf
-  int nbins=8500;//630 Para cada bin ter 0.1 micros  //5000; 
+  int nbins=380;//8500;//630 Para cada bin ter 0.1 micros  //5000; 
   float low_lim=0;
   float up_lim=63;
 
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 
 
   string file1[Ngraphs]; //directoria dos dados para plotar
-  file1[0]="dados_last.txt";  
+  file1[0]="new.txt";//"dados_last.txt";  
 
 
   for(int j=0;j<Ngraphs;j++){
@@ -151,8 +151,8 @@ int main(int argc, char **argv)
 
   }
 
-  for(int i=0;i<200;i++)
-    cout << 0.1*i << "  " << hist->GetBinContent(i) << endl;
+  //for(int i=0;i<200;i++)
+    //cout << 0.1*i << "  " << hist->GetBinContent(i) << endl;
 
   if(optfit==true)
     hist->Fit("myfit","R");//,"",0,10);
@@ -183,7 +183,7 @@ int main(int argc, char **argv)
 
   hist->Draw();
   hist->SetMinimum(10);
-  hist->SetMaximum(1000);
+  hist->SetMaximum(10000);
   hist->SetTitleOffset(15);
   gStyle->SetTitleY(1.01);
   if(optfit==true){

@@ -48,7 +48,7 @@ int main(int argc, char **argv)
   TF1 *fit;
   if(stdfit==true){//1.16
     fit = new TF1("myfit","[0]*exp(-x/[1])+[2]", 1.16, 63);
-    fit->SetParLimits(1,1,10);
+    fit->SetParLimits(1,1.5,3);
     fit->SetParLimits(0,0,50000);
     fit->SetParLimits(2,0,2200);
   }
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 
 
   string file1[Ngraphs]; //directoria dos dados para plotar
-  file1[0]="dados_last.txt";  
+  file1[0]="new.txt";//"dados_last.txt";  
 
 
   /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
@@ -140,8 +140,8 @@ int main(int argc, char **argv)
 
 
 
-  int nbins=300;
-  static int Nit=200;
+  int nbins=100;
+  static int Nit=250;
   double bins[Nit];
   double param[Nit];
   double chi[Nit];
@@ -170,7 +170,7 @@ int main(int argc, char **argv)
   //bins[i]=nbins;
   //param[i]=fit->GetParameter(1);
 
-  nbins+=50;
+  nbins+=5;
 
   //cout << fit->GetParameter(1) << endl;
 
