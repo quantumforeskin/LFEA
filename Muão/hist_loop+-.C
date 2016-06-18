@@ -54,7 +54,7 @@ int main(int argc, char **argv)
   }
 
 
-  if(stdfit==false){
+  if(stdfit==false){//1.35 da bue bom!
     fit = new TF1("myfit","[0]*(0.55*exp(-x/[1])+0.45*exp(-x/[2]))+[3]", 1.16, fit_ul);
   
     fit->SetParLimits(1,0,3);

@@ -35,7 +35,7 @@ int main(){
 
 for(int j=0;j<1;j++){
 
-  int totalevents=100000;
+  int totalevents=100000000;
   int events=0;
 
   for(int i=0;i<totalevents;i++){
@@ -92,10 +92,19 @@ for(int j=0;j<1;j++){
 
   }
 
+  float events1 = (float)totalevents - (float)events; //eventos q passam so em B
+  float events2 = (float)events;// eventos q passam em S1 e B
+  float total=(float)totalevents;
 
-  float ratio=(float)events/totalevents;
+  float ratio1=events1/total;
+  float eratio1=sqrt((sqrt(events1)/total)*(sqrt(events1)/total)+(events1/(total*total))*(events1/(total*total))*sqrt(total)*sqrt(total));
 
-  cout << ratio << endl;
+  float ratio2=events2/total;
+  float eratio2=sqrt((sqrt(events2)/total)*(sqrt(events2)/total)+(events2/(total*total))*(events2/(total*total))*sqrt(total)*sqrt(total));
+
+
+  cout << ratio1 << "   " << eratio1 << endl;
+  cout << ratio2 << "   " << eratio2 << endl;
 
 
 }

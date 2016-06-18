@@ -33,9 +33,12 @@ using namespace std;
 int main(int argc, char **argv)
 {
 
+  ///////Neste momento o limite inferior do fit esta em 1.35 porque e o q da melhor, mas o grafico q ta no relatorio e para 1.16!!!!!
+
+
   string titulo = "Tempo de vida m#acute{e}dia - mu#tilde{o}es + e -";
   //int nbins=350; nbins utilizado para o hist.pdf
-  int nbins=1500;
+  int nbins=1500;//1500;
   float low_lim=0;
   float up_lim=63;
 
@@ -61,7 +64,7 @@ int main(int argc, char **argv)
 
 
   if(stdfit==false){
-    fit = new TF1("myfit","[0]*(0.55*exp(-x/[1])+0.45*exp(-x/[2]))+[3]", 1.16, fit_ul);
+    fit = new TF1("myfit","[0]*(0.55*exp(-x/[1])+0.45*exp(-x/[2]))+[3]", 1.35, fit_ul);
   
     fit->SetParLimits(1,1,3);
     fit->SetParLimits(2,1,3);
@@ -153,7 +156,7 @@ int main(int argc, char **argv)
   }
 
   for(int i=0;i<200;i++)
-    cout << 0.1*i << "  " << hist->GetBinContent(i) << endl;
+    cout << 63./1500.*i << "  " << hist->GetBinContent(i) << endl;
 
   if(optfit==true)
     hist->Fit("myfit","R");//,"",0,10);

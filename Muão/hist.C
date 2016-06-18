@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 
   string titulo = "Tempo de vida m#acute{e}dia do mu#tilde{a}o";
   //int nbins=350; nbins utilizado para o hist.pdf
-  int nbins=630;//Para cada bin ter 0.1 micros  //5000; 
+  int nbins=8500;//630 Para cada bin ter 0.1 micros  //5000; 
   float low_lim=0;
   float up_lim=63;
 
@@ -44,21 +44,30 @@ int main(int argc, char **argv)
   bool subregion=false;//fitar subregiao
   float fit_ul=63;//no standart e isto, se subregion=True e o lim superior da subregion
 
+  static int Ngraphs=1; //Nº de graficos que quero
+  string plot_label[Ngraphs]; //Nome do ficheiro em que e feito o plot MR(H)
+
   TF1 *fit;
   if(stdfit==true){//1.16
     fit = new TF1("myfit","[0]*exp(-x/[1])+[2]", 1.16, 63);
     fit->SetParLimits(1,1,3);
     fit->SetParLimits(0,0,50000);
     fit->SetParLimits(2,0,2200);
+
+    //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
+
+    plot_label[0] = "hist_std.pdf"; 
   }
 
 
   if(stdfit==false){
-    fit = new TF1("myfit","[0]*(0.56*exp(-x/[1])+0.44*exp(-x/1.7))+[2]", 1, 64);
+    fit = new TF1("myfit","[0]*(0.56*exp(-x/[1])+0.44*exp(-x/1.7))+[2]", 1, fit_ul);
   
     fit->SetParLimits(1,1,3);
     fit->SetParLimits(0,0,100000);
     fit->SetParLimits(2,0,2200);
+
+    plot_label[0] = "hist_+-.pdf"; 
 
   }
 
@@ -68,6 +77,8 @@ int main(int argc, char **argv)
     fit->SetParLimits(1,1,3);
     fit->SetParLimits(0,0,50000);
     fit->SetParLimits(2,0,2200);
+
+    plot_label[0] = "hist_std_sub.pdf"; 
   }
   
 
@@ -80,12 +91,6 @@ int main(int argc, char **argv)
   TApplication theApp("App",&argc, argv);
   theApp.InitializeGraphics();
 
-
-  static int Ngraphs=1; //Nº de graficos que quero
-
-  //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
-  string plot_label[Ngraphs]; //Nome do ficheiro em que e feito o plot MR(H)
-  plot_label[0] = "hist_latest.pdf"; 
 
 
   string file1[Ngraphs]; //directoria dos dados para plotar
@@ -158,6 +163,8 @@ int main(int argc, char **argv)
   c1->GetFrame()->SetFillColor(21);
   c1->GetFrame()->SetBorderSize(12);
 
+  c1->SetLogy();
+
 
   //Legenda///////////////////////////
 
@@ -175,11 +182,17 @@ int main(int argc, char **argv)
   delete [] delta;
 
   hist->Draw();
+  hist->SetMinimum(10);
+  hist->SetMaximum(1000);
   hist->SetTitleOffset(15);
   gStyle->SetTitleY(1.01);
   if(optfit==true){
     fit->Draw("same");
-    TF1* fit2 = new TF1("myfit","[0]*exp(-x/[1])+[2]", 0, fit_ul);
+    TF1* fit2;
+    if(stdfit==true)
+      fit2 = new TF1("fit2","[0]*exp(-x/[1])+[2]", 0, fit_ul);
+    else
+      fit2 = new TF1("fit2","[0]*(0.56*exp(-x/[1])+0.44*exp(-x/1.7))+[2]", 1, fit_ul);
     fit2->SetParameter(0,fit->GetParameter(0));
     fit2->SetParameter(1,fit->GetParameter(1));
     fit2->SetParameter(2,fit->GetParameter(2));
@@ -189,6 +202,7 @@ int main(int argc, char **argv)
   hist->GetXaxis()->SetTitle("t (#mu s)");
   hist->GetYaxis()->SetTitle("N (conts)");
   hist->GetYaxis()->SetTitleOffset(1.2);
+  hist->GetXaxis()->SetTitleOffset(1);
 
   
 

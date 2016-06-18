@@ -50,7 +50,7 @@ int main(int argc, char **argv){
 
   double g=k*q*q*ZA*log(2*me/I);
 
-  static int N=300;
+  static int N=200;
 
   double *E = new double[N];
   double* st= new double[N];
