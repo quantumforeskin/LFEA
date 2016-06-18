@@ -1,0 +1,183 @@
+#include "TROOT.h"  //Principal
+#include "TFrame.h"  //gClient
+#include <TAxis.h>
+#include<TROOT.h>
+#include<TGraphErrors.h>
+#include<TMultiGraph.h>
+#include<TF1.h>
+#include<TGraph.h>
+#include<TCanvas.h>
+#include<TPad.h>
+#include<iostream>
+#include<iomanip>
+#include<TLine.h>
+#include<TLatex.h>
+#include<TArrow.h>
+#include<TLegend.h>
+#include<TText.h>
+#include<TPaveText.h>
+#include<fstream>
+
+
+#include "TApplication.h"  //Janela
+
+#include <algorithm>    // std::min_element, std::max_element
+#include <cmath>
+
+using namespace std;
+
+
+
+int main(int argc, char **argv)
+{
+
+
+  //gROOT->SetBatch(kTRUE);
+
+  bool errors=false; // graficos c/ ou s/ erros
+
+  //faz aparecer o canvas
+  TApplication theApp("App",&argc, argv);
+  theApp.InitializeGraphics();
+
+
+  static int Ngraphs=1;
+
+  //COISAS A PREENCHER PARA CADA ANALISE!!!////////////////////////
+  string plot_label[Ngraphs]; //Nome do ficheiro em que e feito o plot MR(H)
+  plot_label[0] = "plot.pdf"; 
+
+
+  string file1[Ngraphs]; //directoria dos dados para plotar
+  file1[0]="dados.txt";  
+
+
+  for(int j=0;j<Ngraphs;j++){
+
+  /////////////////////////Tirar os dados do file 1 - varrimento 1////////////////////////////
+  ifstream file;
+  file.open (file1[j].c_str());
+
+  static int N=0;
+
+  N=0;
+  char cur = '\0';
+  char last = '\0';
+
+  while (file.get(cur)) {
+      if (cur == '\n' ||
+          (cur == '\f' && last == '\r')){
+         N++;
+      }
+  }
+
+  //N--;
+  
+  cout << N << endl;
+
+  double *X = new double[N];
+  double *Y = new double[N];
+  double *eX = new double[N];
+  double *eY = new double[N];
+
+
+  file.close();
+  file.open (file1[j].c_str());
+
+  TGraph *gr;
+
+  if(errors==false){
+    int i=0;
+    int test=0;
+    while(!file.eof() && test==0)
+      {
+
+	file >> X[i] >> Y[i]; // extracts 2 floating point values seperated by whitespace
+	i++; 
+
+
+	if(i>=N)
+	  test=1;
+
+    }
+
+
+    gr = new TGraph(N,X,Y);
+    gr->SetMarkerStyle(1);
+    gr->SetLineColor(kBlue);
+
+
+  }else{
+    int i=0;
+    int test=0;
+    while(!file.eof() && test==0)
+      {
+
+	file >> X[i] >> Y[i] >> eX[i] >> eY[i]; // extracts 2 floating point values seperated by whitespace
+	i++; 
+
+
+	if(i>=N)
+	  test=1;
+
+      }
+
+    gr = new TGraphErrors(N,X,Y,eX,eY);
+    gr->SetMarkerStyle(1);
+    gr->SetLineColor(kBlue);
+
+  }
+
+
+  TCanvas *c1 = new TCanvas("c1","Nome",200,10,700,500);
+  c1->SetFillColor(0);
+  //c1->SetGrid();
+  c1->GetFrame()->SetFillColor(21);
+  c1->GetFrame()->SetBorderSize(12);
+
+
+
+  TMultiGraph *mg = new TMultiGraph("mg","");
+  mg->Add(gr);
+
+
+
+  //Legenda///////////////////////////
+
+  //TLegend* leg;
+  //leg = new TLegend(0.1,0.8,0.2,0.9);//(x1,y1,x2,y2)
+  
+  //leg->SetHeader("Orientac#tilde{o}es");
+  //leg->AddEntry(MR_H,"#rightarrow","lep");
+  //leg->AddEntry(MR_H2,"#leftarrow","lep");
+
+
+
+  file.close();
+  delete [] X;
+  delete [] Y;
+  delete [] eX;
+  delete [] eY;
+
+
+  mg->Draw("AP");
+  mg->GetXaxis()->SetTitle("t");
+  mg->GetYaxis()->SetTitle("N");
+  mg->GetYaxis()->SetTitleOffset(1.2);
+
+  
+
+  //legenda
+  //leg->Draw();
+  
+
+  c1->Update();
+  c1->Modified();
+  c1->Print(plot_label[j].c_str());
+  //getchar();
+
+  }
+
+  theApp.Terminate();
+  return 0;  
+}
