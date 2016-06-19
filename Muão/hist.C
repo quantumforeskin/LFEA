@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 
   string titulo = "Tempo de vida m#acute{e}dia do mu#tilde{a}o";
   //int nbins=350; nbins utilizado para o hist.pdf
-  int nbins=380;//8500;//630 Para cada bin ter 0.1 micros  //5000; 
+  int nbins=320;//8500;//630 Para cada bin ter 0.1 micros  //5000; 
   float low_lim=0;
   float up_lim=63;
 
@@ -182,8 +182,8 @@ int main(int argc, char **argv)
   delete [] delta;
 
   hist->Draw();
-  hist->SetMinimum(10);
-  hist->SetMaximum(10000);
+  hist->SetMinimum(2);
+  hist->SetMaximum(1000);
   hist->SetTitleOffset(15);
   gStyle->SetTitleY(1.01);
   if(optfit==true){

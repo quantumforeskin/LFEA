@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 
   string titulo = "Tempo de vida m#acute{e}dia - mu#tilde{o}es + e -";
   //int nbins=350; nbins utilizado para o hist.pdf
-  int nbins=148;//1500;
+  int nbins=142;//1500;
   float low_lim=0;
   float up_lim=63;
 

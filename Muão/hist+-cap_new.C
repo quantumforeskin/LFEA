@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 
   string titulo = "Tempo de vida m#acute{e}dia - mu#tilde{o}es + e -";
   //int nbins=350; nbins utilizado para o hist.pdf
-  int nbins=150;
+  int nbins=320;
   float low_lim=0;
   float up_lim=63;
 
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     fit->SetParLimits(0,0,100000);
     fit->SetParLimits(2,0,40);
 
-    plot_label[0] = "hist_+-cap.pdf"; 
+    plot_label[0] = "hist_+-cap_new.pdf"; 
 
   }
 
@@ -185,7 +185,7 @@ int main(int argc, char **argv)
   delete [] delta;
 
   hist->Draw();
-  hist->SetMinimum(10);
+  hist->SetMinimum(2);
   //hist->SetMaximum(10000);
   hist->SetTitleOffset(15);
   gStyle->SetTitleY(1.01);

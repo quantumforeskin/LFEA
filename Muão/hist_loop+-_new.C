@@ -41,7 +41,7 @@ int main(int argc, char **argv)
   float up_lim=63;
 
   bool optfit=true;
-  bool stdfit=false;
+  bool stdfit=true;
   bool subregion=false;//fitar subregiao
   float fit_ul=63;//no standart e isto, se subregion=True e o lim superior da subregion
 
@@ -183,6 +183,39 @@ int main(int argc, char **argv)
 
 
   }
+
+  int count1=0;
+  int count2=0;
+  double media=0;
+  double media2=0;
+  double lim=0.05;
+  for(int j=34;j<66;j++){
+
+    if(param[j]<param[j+1]+lim && param[j]>param[j+1]-lim){
+      media+=param[j];
+      count1++;
+    }
+
+
+    if(param2[j]<param2[j+1]+lim && param2[j]>param2[j+1]-lim){
+      media2+=param2[j];
+      count2++;
+    }
+
+
+  }
+
+  media=media/count1;
+  media2=media2/count2;
+
+
+  cout << "media p1 " << media << endl;
+  cout << "media p2 " << media2 << endl;
+  cout << count1 << endl;
+  cout << count2 << endl;
+
+
+
 
 
 
