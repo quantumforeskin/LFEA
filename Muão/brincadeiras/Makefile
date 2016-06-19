@@ -18,9 +18,9 @@ SRC2=
 OBJ2= $(SRC2:.C=.o)
 EXE2= fitter.exe
 
-SRC3= muon.C
+SRC3= rangetime.C
 OBJ3= $(SRC3:.C=.o)
-EXE3= muon.exe
+EXE3= rangetime.exe
 
 SRC4= main2.C Opt2.C
 OBJ4= $(SRC4:.C=.o)
@@ -35,8 +35,8 @@ all: muon
 	@echo Installing Virus...
 	$(CC)  -c  $(CFLAGS) $(FCLIB)   $<  -o $@ 
 
-muon.exe: muon.exe
-	@./muon.exe	
+muon.exe: rangetime.exe
+	@./rangetime.exe	
 
 MetodosNumericos: $(OBJ2)
 	$(CC) -o $(EXE2) $(OBJ2) $(LDFLAGS) 
